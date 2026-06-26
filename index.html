@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duy & Vy — Our Travel Journal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rose:#e8a0b0; --rose-light:#f9eef1; --rose-deep:#c4637a;
+  --blush:#fdf4f6; --sage:#8faa8f; --cream:#fdf8f3;
+  --text-dark:#2c2020; --text-mid:#6b4f54; --text-soft:#a08090;
+  --gold:#c9a96e; --white:#ffffff;
+  --shadow:0 4px 24px rgba(196,99,122,0.08);
+  --shadow-hover:0 8px 40px rgba(196,99,122,0.15);
+  --radius:20px; --radius-sm:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--blush);color:var(--text-dark);min-height:100vh;}
+
+/* HEADER */
+header{background:var(--white);border-bottom:1px solid #f0dce2;padding:0 24px;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;height:64px;}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;}
+.logo-heart{font-size:22px;}
+.logo-text{font-family:'Playfair Display',serif;font-size:18px;color:var(--rose-deep);font-weight:600;}
+.header-actions{display:flex;gap:8px;align-items:center;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:50px;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all .2s;font-family:'Inter',sans-serif;}
+.btn-primary{background:var(--rose-deep);color:#fff;}
+.btn-primary:hover{background:#b5566c;transform:translateY(-1px);}
+.btn-outline{background:transparent;color:var(--rose-deep);border:1.5px solid var(--rose);}
+.btn-outline:hover{background:var(--rose-light);}
+.btn-ghost{background:transparent;color:var(--text-mid);padding:8px 12px;}
+.btn-ghost:hover{background:var(--rose-light);color:var(--rose-deep);}
+.btn-danger{background:#e05c5c;color:#fff;border:none;}
+.btn-danger:hover{background:#c94a4a;}
+.btn-sm{padding:5px 12px;font-size:12px;}
+.btn-sage{background:#e8f5e9;color:#388e3c;border:none;}
+.btn-sage:hover{background:#c8e6c9;}
+
+/* HERO */
+.hero{text-align:center;padding:80px 24px 60px;position:relative;overflow:hidden;min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;}
+.hero-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;}
+.hero-content{position:relative;z-index:2;}
+.hero-edit-btn{position:absolute;top:16px;right:16px;z-index:10;background:rgba(255,255,255,0.85);border:1.5px solid var(--rose);color:var(--rose-deep);padding:6px 14px;border-radius:50px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;backdrop-filter:blur(4px);display:flex;align-items:center;gap:5px;}
+.hero-edit-btn:hover{background:var(--rose-light);}
+.hero-eyebrow{font-size:12px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--rose-deep);margin-bottom:16px;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(34px,6vw,56px);line-height:1.15;color:var(--text-dark);margin-bottom:16px;}
+.hero h1 em{color:var(--rose-deep);font-style:italic;}
+.hero-sub{font-size:16px;color:var(--text-mid);max-width:420px;margin:0 auto 36px;line-height:1.7;}
+.hero-stats{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;}
+.stat{text-align:center;}
+.stat-num{font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:var(--rose-deep);line-height:1;}
+.stat-label{font-size:12px;color:var(--text-soft);margin-top:4px;letter-spacing:.05em;}
+
+/* TEXT OVERLAY for hero with bg image */
+.hero.has-bg-img .hero-eyebrow,
+.hero.has-bg-img .hero h1,
+.hero.has-bg-img .hero-sub,
+.hero.has-bg-img .stat-num,
+.hero.has-bg-img .stat-label{color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.35);}
+.hero.has-bg-img .hero h1 em{color:#ffc0cb;}
+
+/* MAIN */
+main{max-width:980px;margin:0 auto;padding:48px 16px 80px;}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
+.section-title{font-family:'Playfair Display',serif;font-size:24px;color:var(--text-dark);}
+.section-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+
+/* SORT BUTTON */
+.sort-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:50px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid var(--rose);background:var(--white);color:var(--rose-deep);transition:all .2s;font-family:'Inter',sans-serif;}
+.sort-btn:hover{background:var(--rose-light);}
+.sort-arrow{transition:transform .25s;}
+.sort-btn.asc .sort-arrow{transform:rotate(180deg);}
+
+/* GRID */
+.trips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+
+/* TRIP CARD */
+.trip-card{background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .3s,transform .3s;cursor:pointer;position:relative;}
+.trip-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-4px);}
+.trip-card-banner{height:140px;display:flex;align-items:flex-end;padding:16px;position:relative;overflow:hidden;background-size:cover;background-position:center;}
+.trip-card-emoji{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);font-size:52px;opacity:.3;}
+.trip-card-date-badge{background:rgba(255,255,255,.92);backdrop-filter:blur(4px);border-radius:50px;padding:4px 12px;font-size:12px;font-weight:600;position:relative;z-index:1;}
+.trip-card-body{padding:20px;}
+.trip-card-country{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-soft);margin-bottom:4px;}
+.trip-card-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--text-dark);margin-bottom:8px;line-height:1.25;}
+.trip-card-desc{font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.trip-card-meta{display:flex;align-items:center;justify-content:space-between;}
+.trip-card-days{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-soft);}
+.trip-card-actions{display:flex;gap:6px;opacity:0;transition:opacity .2s;}
+.trip-card:hover .trip-card-actions{opacity:1;}
+.icon-btn{width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s;background:var(--rose-light);color:var(--rose-deep);}
+.icon-btn:hover{background:var(--rose-deep);color:#fff;}
+.icon-btn.danger:hover{background:#e05c5c;}
+.add-card{background:transparent;border:2px dashed var(--rose);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;cursor:pointer;transition:all .2s;min-height:280px;color:var(--rose-deep);gap:12px;}
+.add-card:hover{background:var(--rose-light);border-color:var(--rose-deep);}
+.add-card-icon{font-size:36px;opacity:.6;}
+.add-card-text{font-size:15px;font-weight:500;}
+
+/* OVERLAY */
+.overlay{position:fixed;inset:0;background:rgba(44,32,32,.48);z-index:300;display:none;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;backdrop-filter:blur(2px);}
+.overlay.open{display:flex;}
+
+/* DETAIL MODAL */
+.modal{background:var(--white);border-radius:24px;max-width:880px;width:100%;position:relative;animation:slideUp .3s ease;margin:auto;}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.modal-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;border:none;background:rgba(255,255,255,.85);color:var(--rose-deep);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:all .2s;backdrop-filter:blur(4px);}
+.modal-close:hover{background:var(--rose-deep);color:#fff;}
+.modal-banner{height:200px;display:flex;align-items:center;justify-content:center;font-size:80px;border-radius:24px 24px 0 0;position:relative;overflow:hidden;background-size:cover;background-position:center;}
+.modal-content{padding:28px 32px 36px;}
+.modal-eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-soft);margin-bottom:6px;}
+.modal-title{font-family:'Playfair Display',serif;font-size:28px;color:var(--text-dark);margin-bottom:8px;}
+.modal-dates{font-size:14px;color:var(--text-mid);margin-bottom:20px;}
+.modal-desc{font-size:15px;color:var(--text-mid);line-height:1.75;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid #f0dce2;}
+
+/* TABS */
+.tabs-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #f0dce2;}
+.tab-btn{padding:8px 18px;border-radius:50px;border:1.5px solid transparent;font-size:13px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;background:var(--blush);color:var(--text-mid);}
+.tab-btn.active{color:#fff;border-color:transparent;}
+.tab-btn:hover:not(.active){border-color:var(--rose);color:var(--rose-deep);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ACTIVITY CARDS */
+.activities-list{display:flex;flex-direction:column;gap:16px;}
+.activity-card{background:var(--white);border:1.5px solid #f0dce2;border-radius:16px;overflow:hidden;transition:box-shadow .2s;}
+.activity-card:hover{box-shadow:var(--shadow);}
+.activity-img{width:100%;height:160px;object-fit:cover;display:block;}
+.activity-img-placeholder{width:100%;height:120px;background:var(--rose-light);display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--rose);}
+.activity-body{padding:16px 20px;}
+.activity-title{font-family:'Playfair Display',serif;font-size:17px;color:var(--text-dark);margin-bottom:6px;}
+.activity-desc{font-size:13px;color:var(--text-mid);line-height:1.65;margin-bottom:10px;}
+.activity-tip{background:#fff8f0;border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:8px 12px;font-size:12px;color:#8a6430;margin-bottom:10px;line-height:1.55;}
+.activity-tip-label{font-weight:600;margin-bottom:2px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;}
+.map-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#1a73e8;text-decoration:none;padding:4px 10px;border-radius:50px;background:#e8f0fe;font-weight:500;transition:background .2s;margin-top:4px;}
+.map-link:hover{background:#c5d9fd;}
+.checklist{margin-top:12px;border-top:1px solid #f0dce2;padding-top:12px;}
+.checklist-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-soft);margin-bottom:8px;}
+.checklist-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px;color:var(--text-mid);}
+.checklist-item input[type=checkbox]{width:15px;height:15px;accent-color:var(--rose-deep);cursor:pointer;flex-shrink:0;}
+.checklist-item.checked span{text-decoration:line-through;color:var(--text-soft);}
+
+/* FORM MODAL */
+.form-modal{background:var(--white);border-radius:24px;max-width:660px;width:100%;animation:slideUp .3s ease;margin:auto;}
+.form-header{padding:24px 28px 0;display:flex;justify-content:space-between;align-items:flex-start;}
+.form-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--text-dark);}
+.form-body{padding:16px 28px 28px;}
+.form-group{margin-bottom:18px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-soft);margin-bottom:5px;}
+input[type=text],input[type=date],input[type=url],input[type=color],textarea,select{width:100%;padding:10px 14px;border:1.5px solid #f0dce2;border-radius:var(--radius-sm);font-size:14px;font-family:'Inter',sans-serif;color:var(--text-dark);background:var(--white);transition:border-color .2s;outline:none;}
+input:focus,textarea:focus,select:focus{border-color:var(--rose-deep);}
+textarea{resize:vertical;min-height:72px;}
+.img-input-group{display:flex;flex-direction:column;gap:8px;}
+.img-input-group .row{display:flex;gap:8px;align-items:center;}
+.img-preview{width:100%;height:90px;object-fit:cover;border-radius:8px;margin-top:6px;display:none;}
+.img-preview.show{display:block;}
+
+/* EMOJI + COLOR PICKERS */
+.emoji-picker{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.emoji-option{width:40px;height:40px;border-radius:10px;border:2px solid transparent;background:var(--rose-light);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.emoji-option:hover{border-color:var(--rose);}
+.emoji-option.selected{border-color:var(--rose-deep);background:#fff;}
+.color-picker{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.color-swatch{width:34px;height:34px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s;}
+.color-swatch.selected{border-color:var(--text-dark);transform:scale(1.18);}
+
+/* TAB EDITOR (inside form) */
+.tab-editor-entry{background:var(--blush);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;}
+.tab-editor-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.tab-editor-label{font-size:12px;font-weight:700;color:var(--rose-deep);flex:1;}
+.remove-tab-btn,.remove-act-btn,.remove-check-btn{background:none;border:none;color:var(--text-soft);cursor:pointer;font-size:15px;padding:2px 4px;transition:color .2s;line-height:1;}
+.remove-tab-btn:hover,.remove-act-btn:hover,.remove-check-btn:hover{color:#e05c5c;}
+.tab-style-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+.tab-style-row input[type=color]{width:36px;height:36px;padding:2px;cursor:pointer;border-radius:50%;border:2px solid #f0dce2;}
+.add-sub-btn{display:inline-flex;align-items:center;gap:5px;color:var(--rose-deep);background:none;border:1.5px dashed var(--rose);border-radius:50px;padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;margin-top:6px;}
+.add-sub-btn:hover{background:var(--rose-light);}
+
+/* ACT EDITOR (inside form) */
+.act-editor{background:#fff;border:1px solid #f0dce2;border-radius:10px;padding:12px;margin-bottom:8px;}
+.act-editor-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.act-editor-label{font-size:11px;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:.06em;}
+
+/* CHECKLIST EDITOR */
+.check-editor{background:#fff8f0;border-radius:8px;padding:10px;margin-top:8px;}
+.check-item-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.check-item-row input[type=text]{flex:1;padding:6px 10px;font-size:13px;}
+
+/* HERO EDITOR */
+.hero-form{background:var(--white);border-radius:24px;max-width:560px;width:100%;animation:slideUp .3s ease;margin:auto;}
+
+/* CONFIRM */
+.confirm-modal{background:var(--white);border-radius:20px;max-width:380px;width:100%;padding:32px;text-align:center;animation:slideUp .3s ease;margin:auto;}
+.confirm-icon{font-size:44px;margin-bottom:12px;}
+.confirm-title{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:8px;}
+.confirm-text{font-size:14px;color:var(--text-mid);margin-bottom:24px;line-height:1.6;}
+.confirm-actions{display:flex;gap:10px;justify-content:center;}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:60px 24px;color:var(--text-soft);grid-column:1/-1;}
+.empty-icon{font-size:52px;margin-bottom:16px;}
+.empty-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--text-mid);margin-bottom:8px;}
+.empty-text{font-size:14px;line-height:1.7;}
+
+/* FOOTER */
+footer{text-align:center;padding:36px 24px;font-size:13px;color:var(--text-soft);border-top:1px solid #f0dce2;background:var(--white);position:relative;}
+.footer-text{cursor:pointer;display:inline-block;}
+.footer-text:hover{color:var(--rose-deep);}
+.footer-edit-hint{font-size:11px;color:var(--rose);margin-top:4px;opacity:0;transition:opacity .2s;}
+footer:hover .footer-edit-hint{opacity:1;}
+.footer-edit-input{display:none;border:1.5px solid var(--rose);border-radius:8px;padding:6px 12px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text-dark);width:100%;max-width:400px;margin:0 auto;outline:none;}
+.footer-edit-input.show{display:block;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text-dark);color:#fff;padding:12px 20px;border-radius:50px;font-size:14px;font-weight:500;z-index:999;transition:transform .3s;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* FORM ACTIONS */
+.form-actions{display:flex;gap:10px;justify-content:flex-end;padding-top:8px;}
+
+/* MOBILE */
+@media(max-width:640px){
+  .logo-text{display:none;}
+  .hero{padding:56px 16px 44px;}
+  .hero-stats{gap:24px;}
+  main{padding:32px 12px 60px;}
+  .modal-content{padding:18px 16px 24px;}
+  .form-header{padding:18px 16px 0;}
+  .form-body{padding:14px 16px 24px;}
+  .form-row{grid-template-columns:1fr;}
+  .trip-card-actions{opacity:1;}
+  .section-tools{gap:6px;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" onclick="scrollTo({top:0,behavior:'smooth'})">
+    <span class="logo-heart">💕</span>
+    <span class="logo-text" id="logo-name">Duy &amp; Vy</span>
+  </a>
+  <div class="header-actions">
+    <button class="btn btn-outline btn-sm" onclick="openAddForm()">＋ New Trip</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero" id="hero-section">
+  <div class="hero-bg" id="hero-bg"></div>
+  <div class="hero-overlay" id="hero-overlay" style="background:rgba(253,244,246,0.0);"></div>
+  <button class="hero-edit-btn" onclick="openHeroEditor()">✏️ Edit hero</button>
+  <div class="hero-content">
+    <div class="hero-eyebrow" id="hero-eyebrow">Our Travel Journal</div>
+    <h1 id="hero-h1">Every journey<br><em id="hero-em">with you</em> is home</h1>
+    <p class="hero-sub" id="hero-sub">A little scrapbook of the places we've been, the memories we've made, and all the adventures still to come. 🌸</p>
+    <div class="hero-stats" id="hero-stats"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <div class="section-header">
+    <h2 class="section-title">Our trips 🗺️</h2>
+    <div class="section-tools">
+      <button class="sort-btn asc" id="sort-btn" onclick="toggleSort()">
+        <span>📅 By date</span><span class="sort-arrow">↑</span>
+      </button>
+      <span id="trip-count-label" style="font-size:13px;color:var(--text-soft);"></span>
+    </div>
+  </div>
+  <div class="trips-grid" id="trips-grid"></div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-text" id="footer-display" onclick="startFooterEdit()"></div>
+  <div class="footer-edit-hint">Click to edit</div>
+  <input class="footer-edit-input" id="footer-input" type="text" onblur="saveFooterEdit()" onkeydown="if(event.key==='Enter')this.blur();" />
+</footer>
+
+<!-- ── DETAIL MODAL ── -->
+<div class="overlay" id="detail-overlay" onclick="overlayClick(event,'detail-overlay')">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeOverlay('detail-overlay')">✕</button>
+  <div class="modal-banner" id="det-banner"></div>
+  <div class="modal-content">
+    <div class="modal-eyebrow" id="det-country"></div>
+    <div class="modal-title" id="det-title"></div>
+    <div class="modal-dates" id="det-dates"></div>
+    <div class="modal-desc" id="det-desc"></div>
+    <!-- TABS BAR -->
+    <div class="tabs-bar" id="det-tabs-bar"></div>
+    <!-- TAB PANELS -->
+    <div id="det-tabs-content"></div>
+    <div style="display:flex;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid #f0dce2;">
+      <button class="btn btn-outline" id="det-edit-btn">✏️ Edit trip</button>
+      <button class="btn btn-ghost" id="det-delete-btn" style="color:#e05c5c;margin-left:auto;">Delete</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── FORM MODAL ── -->
+<div class="overlay" id="form-overlay" onclick="overlayClick(event,'form-overlay')">
+<div class="form-modal" onclick="event.stopPropagation()">
+  <div class="form-header">
+    <h2 class="form-title" id="form-modal-title">Add a new trip ✈️</h2>
+    <button class="modal-close" style="position:relative;top:auto;right:auto;" onclick="closeOverlay('form-overlay')">✕</button>
+  </div>
+  <div class="form-body">
+    <div class="form-group"><label>Trip name</label><input type="text" id="f-title" placeholder="e.g. Singapore Adventure"/></div>
+    <div class="form-group"><label>Country / Destination</label><input type="text" id="f-country" placeholder="e.g. Singapore 🇸🇬"/></div>
+    <div class="form-row">
+      <div class="form-group"><label>Start date</label><input type="date" id="f-start"/></div>
+      <div class="form-group"><label>End date</label><input type="date" id="f-end"/></div>
+    </div>
+    <div class="form-group"><label>Description</label><textarea id="f-desc" placeholder="What makes this trip special?"></textarea></div>
+    <div class="form-group">
+      <label>Cover image (card banner)</label>
+      <div class="img-input-group">
+        <div class="row"><input type="url" id="f-cover-url" placeholder="Paste image URL…" oninput="previewImg('f-cover-url','f-cover-preview')"/></div>
+        <div class="row"><label style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--rose-deep);cursor:pointer;"><input type="file" accept="image/*" style="display:none" onchange="fileToUrl(this,'f-cover-url','f-cover-preview')"/>📎 Or upload a photo</label></div>
+        <img id="f-cover-preview" class="img-preview" src="" alt="preview"/>
+      </div>
+    </div>
+    <div class="form-group"><label>Card icon</label><div class="emoji-picker" id="emoji-picker"></div></div>
+    <div class="form-group"><label>Card colour</label><div class="color-picker" id="color-picker"></div></div>
+    <!-- TAB EDITOR -->
+    <div class="form-group">
+      <label>Days / Tabs</label>
+      <div id="tabs-editor"></div>
+      <button class="add-sub-btn" onclick="addTabEditor()">＋ Add day/tab</button>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="closeOverlay('form-overlay')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTrip()">Save trip 💾</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── HERO EDITOR ── -->
+<div class="overlay" id="hero-overlay-modal" onclick="overlayClick(event,'hero-overlay-modal')">
+<div class="hero-form" onclick="event.stopPropagation()">
+  <div class="form-header">
+    <h2 class="form-title">Edit hero section 🌸</h2>
+    <button class="modal-close" style="position:relative;top:auto;right:auto;" onclick="closeOverlay('hero-overlay-modal')">✕</button>
+  </div>
+  <div class="form-body">
+    <div class="form-group"><label>Eyebrow text (small top line)</label><input type="text" id="he-eyebrow" placeholder="Our Travel Journal"/></div>
+    <div class="form-group"><label>Main headline</label><input type="text" id="he-h1" placeholder="Every journey with you is home"/></div>
+    <div class="form-group"><label>Italic / highlighted word(s)</label><input type="text" id="he-em" placeholder="with you"/></div>
+    <div class="form-group"><label>Subtitle / description</label><textarea id="he-sub" rows="2" placeholder="A little scrapbook…"></textarea></div>
+    <div class="form-group">
+      <label>Background image</label>
+      <div class="img-input-group">
+        <div class="row"><input type="url" id="he-img-url" placeholder="Paste image URL…" oninput="previewHeroImg()"/></div>
+        <div class="row"><label style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--rose-deep);cursor:pointer;"><input type="file" accept="image/*" style="display:none" onchange="heroFileUpload(this)"/>📎 Or upload a photo</label></div>
+        <div class="form-group" style="margin-top:6px;margin-bottom:0;"><label>Or paste CSS / code</label><textarea id="he-img-css" rows="2" placeholder='e.g. linear-gradient(135deg,#f9eef1,#fdf4f6) or url("...")' oninput="previewHeroImg()"></textarea></div>
+        <img id="he-img-preview" class="img-preview" style="height:100px;border-radius:10px;" src="" alt="preview"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Dark overlay opacity (0 = none, 0.6 = heavy)</label>
+      <input type="range" id="he-overlay" min="0" max="0.7" step="0.05" value="0" style="width:100%;margin-top:6px;" oninput="updateHeroOverlayPreview()"/>
+      <span id="he-overlay-val" style="font-size:12px;color:var(--text-soft);">0</span>
+    </div>
+    <div class="form-group"><label>Couple name (header)</label><input type="text" id="he-couple" placeholder="Duy &amp; Vy"/></div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="closeOverlay('hero-overlay-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveHero()">Save 💾</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── CONFIRM ── -->
+<div class="overlay" id="confirm-overlay" onclick="overlayClick(event,'confirm-overlay')">
+<div class="confirm-modal" onclick="event.stopPropagation()">
+  <div class="confirm-icon">🗑️</div>
+  <div class="confirm-title">Delete this trip?</div>
+  <div class="confirm-text">This permanently removes the trip and all its memories. Can't be undone.</div>
+  <div class="confirm-actions">
+    <button class="btn btn-ghost" onclick="closeOverlay('confirm-overlay')">Keep it</button>
+    <button class="btn btn-danger btn" onclick="confirmDelete()">Yes, delete</button>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA LAYER
+// ═══════════════════════════════════════════════════════
+const TRIPS_KEY = 'duyvy_trips_v3';
+const SITE_KEY  = 'duyvy_site_v1';
+
+const EMOJIS = ['🌸','✈️','🗺️','🌊','🏔️','🌅','🎡','🍜','🌙','🎭','🏯','🌿','🎑','🎆','🏝️','🌺','🛕','🎠','🍡','🌃'];
+const COLORS = [
+  {name:'Blush',    bg:'#fce4ec', accent:'#e47a90'},
+  {name:'Lavender', bg:'#ede7f6', accent:'#9575cd'},
+  {name:'Sage',     bg:'#e8f5e9', accent:'#66bb6a'},
+  {name:'Sky',      bg:'#e3f2fd', accent:'#64b5f6'},
+  {name:'Peach',    bg:'#fff3e0', accent:'#ffa726'},
+  {name:'Mint',     bg:'#e0f2f1', accent:'#4db6ac'},
+  {name:'Rose gold',bg:'#fbe9e7', accent:'#ef9a9a'},
+  {name:'Mauve',    bg:'#f3e5f5', accent:'#ba68c8'},
+];
+const TAB_SHAPES = [
+  {label:'Pill',  style:'border-radius:50px;'},
+  {label:'Round', style:'border-radius:12px;'},
+  {label:'Square',style:'border-radius:6px;'},
+];
+
+function loadTrips(){try{return JSON.parse(localStorage.getItem(TRIPS_KEY))||defaultTrips();}catch{return defaultTrips();}}
+function loadSite(){try{return JSON.parse(localStorage.getItem(SITE_KEY))||defaultSite();}catch{return defaultSite();}}
+function saveTrips(t){localStorage.setItem(TRIPS_KEY,JSON.stringify(t));}
+function saveSite(s){localStorage.setItem(SITE_KEY,JSON.stringify(s));}
+
+function defaultSite(){
+  return {
+    eyebrow:'Our Travel Journal',
+    h1:'Every journey',
+    em:'with you',
+    sub:'A little scrapbook of the places we\'ve been, the memories we\'ve made, and all the adventures still to come. 🌸',
+    bgUrl:'', bgCss:'', overlayOpacity:0,
+    coupleNames:'Duy & Vy',
+    footer:'Made with ♥ for Duy & Vy · Every memory, forever saved'
+  };
+}
+
+function defaultTrips(){
+  return [{
+    id:'sg2026', title:'Singapore Adventure', country:'Singapore 🇸🇬',
+    startDate:'2026-12-18', endDate:'2026-12-22',
+    desc:'Our very first trip together! Five magical days — BTS ARIRANG concert, Universal Studios, Gardens by the Bay, and late-night walks along the river. Staying at Grand Park City Hall right in the heart of the city. 💕',
+    emoji:'✈️', color:{name:'Blush',bg:'#fce4ec',accent:'#e47a90'}, coverUrl:'',
+    tabs:[
+      {
+        id:'t1', label:'Day 1 – Arrival', color:'#e47a90', shape:'border-radius:50px;',
+        activities:[
+          {id:'a1',title:'Arrival at Changi Airport',desc:'Fly in from Ho Chi Minh City. Changi is magical — allow extra time to explore!',tip:'💡 Get a Singtel/StarHub SIM card at the airport for cheap data.',mapUrl:'https://maps.google.com/?q=Changi+Airport+Singapore',imgUrl:'',checklist:[{text:'Print boarding passes',done:false},{text:'Exchange some SGD',done:false}]},
+          {id:'a2',title:'Jewel Changi – Rain Vortex',desc:'The world\'s tallest indoor waterfall right inside the airport. Don\'t miss the butterfly garden.',tip:'💡 The vortex light show runs at 7:30pm and 8:30pm — perfect for golden-hour portraits!',mapUrl:'https://maps.google.com/?q=Jewel+Changi+Airport',imgUrl:'',checklist:[]},
+          {id:'a3',title:'Check-in: Grand Park City Hall',desc:'Boutique hotel on Coleman Street, central location, walking distance to everything.',tip:'💡 Ask for a high floor — the city views are stunning at night.',mapUrl:'https://maps.google.com/?q=Grand+Park+City+Hall+Singapore',imgUrl:'',checklist:[{text:'Confirm early check-in',done:false}]},
+        ]
+      },
+      {
+        id:'t2', label:'Day 2 – Universal Studios', color:'#9575cd', shape:'border-radius:50px;',
+        activities:[
+          {id:'a4',title:'Universal Studios Singapore',desc:'Full theme park day at Sentosa Island. Highlights: Transformers, Puss in Boots, Jurassic World, and the Hollywood area.',tip:'💡 Arrive at opening (10am) to beat queues. Buy tickets online to skip the box office.',mapUrl:'https://maps.google.com/?q=Universal+Studios+Singapore',imgUrl:'',checklist:[{text:'Buy tickets online',done:false},{text:'Wear comfy shoes',done:false},{text:'Bring sunscreen',done:false}]},
+          {id:'a5',title:'Siloso Beach Sunset',desc:'End the Sentosa day with a quiet walk along Siloso Beach to catch the sunset.',tip:'💡 Golden hour here is incredible for photos — arrive around 6pm.',mapUrl:'https://maps.google.com/?q=Siloso+Beach+Singapore',imgUrl:'',checklist:[]},
+        ]
+      },
+      {
+        id:'t3', label:'Day 3 – BTS Concert 🎤', color:'#7b5cbe', shape:'border-radius:50px;',
+        activities:[
+          {id:'a6',title:'BTS WORLD TOUR "ARIRANG" 💜',desc:'The main event! BTS at National Stadium. Leave the camera at the hotel (detachable lens cameras are prohibited). Just enjoy every second.',tip:'⚠️ National Stadium bans cameras with detachable lenses. Phones are fine. Arrive 1-2 hours early.',mapUrl:'https://maps.google.com/?q=Singapore+National+Stadium',imgUrl:'',checklist:[{text:'Print/download tickets',done:false},{text:'Leave camera at hotel',done:false},{text:'Charge phone fully',done:false},{text:'Wear BTS merch',done:false}]},
+        ]
+      },
+      {
+        id:'t4', label:'Day 4 – Photography Day', color:'#4db6ac', shape:'border-radius:50px;',
+        activities:[
+          {id:'a7',title:'Gardens by the Bay – Golden Hour',desc:'Couple portraits at Supertree Grove during golden hour. The light here is dreamy at 5–6pm.',tip:'💡 Try the bridge between the Supertrees for elevated shots. Shoot from below looking up too!',mapUrl:'https://maps.google.com/?q=Gardens+by+the+Bay+Singapore',imgUrl:'',checklist:[{text:'Charge camera battery',done:false},{text:'Pack extra memory cards',done:false}]},
+          {id:'a8',title:'Christmas Wonderland',desc:'Festive light installations at Gardens by the Bay for the holiday season. Perfect couple photo backdrop!',tip:'💡 Start at the Supertree Grove light show (7:45pm & 8:45pm) then walk through the installations.',mapUrl:'https://maps.google.com/?q=Christmas+Wonderland+Singapore',imgUrl:'',checklist:[]},
+        ]
+      },
+      {
+        id:'t5', label:'Day 5 – Chinatown & Bye', color:'#ffa726', shape:'border-radius:50px;',
+        activities:[
+          {id:'a9',title:'Chinatown Morning Walk',desc:'Last morning in Singapore. Wander through Chinatown for breakfast, souvenirs, and final photos before the airport.',tip:'💡 Try char kway teow or kaya toast at a hawker stall for your last Singapore breakfast.',mapUrl:'https://maps.google.com/?q=Chinatown+Singapore',imgUrl:'',checklist:[{text:'Pack all luggage',done:false},{text:'Buy last souvenirs',done:false}]},
+          {id:'a10',title:'Changi Airport & Departure',desc:'Head to Changi Airport. Check in early and treat yourselves to one last meal in the terminal.',tip:'💡 Allow at least 2.5 hours before flight. Jewel is accessible after security in some terminals!',mapUrl:'https://maps.google.com/?q=Changi+Airport+Singapore',imgUrl:'',checklist:[{text:'Check-in online 24h before',done:false},{text:'Keep boarding passes handy',done:false}]},
+        ]
+      }
+    ]
+  }];
+}
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let trips = loadTrips();
+let site  = loadSite();
+let sortAsc = true;
+let editingId = null;
+let deletingId = null;
+let selectedEmoji = EMOJIS[1];
+let selectedColor = COLORS[0];
+let tabEditorCount = 0;
+let actEditorCount = 0;
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+function renderAll(){renderHero();renderGrid();renderFooter();}
+
+function renderHero(){
+  const s = site;
+  document.getElementById('hero-eyebrow').textContent = s.eyebrow||'';
+  const h1 = document.getElementById('hero-h1');
+  const emEl = document.getElementById('hero-em');
+  if(s.h1 && s.em){
+    h1.childNodes[0] && (h1.childNodes[0].textContent = s.h1+' ');
+    emEl.textContent = s.em;
+  } else {
+    h1.innerHTML = (s.h1||'Every journey')+' <br><em id="hero-em">'+(s.em||'with you')+'</em> is home';
+  }
+  document.getElementById('hero-sub').textContent = s.sub||'';
+  const bg = document.getElementById('hero-bg');
+  const ov = document.getElementById('hero-overlay');
+  const hero = document.getElementById('hero-section');
+  if(s.bgUrl){
+    bg.style.backgroundImage = 'url("'+s.bgUrl+'")';
+    bg.style.background = '';
+    hero.classList.add('has-bg-img');
+  } else if(s.bgCss){
+    bg.style.background = s.bgCss;
+    bg.style.backgroundImage = '';
+    hero.classList.toggle('has-bg-img', s.bgCss.includes('url('));
+  } else {
+    bg.style.background = 'linear-gradient(180deg,#fdf4f6 0%,#fdf4f6 100%)';
+    bg.style.backgroundImage = '';
+    hero.classList.remove('has-bg-img');
+  }
+  const op = parseFloat(s.overlayOpacity)||0;
+  ov.style.background = op>0 ? 'rgba(0,0,0,'+op+')' : 'transparent';
+  document.getElementById('logo-name').textContent = s.coupleNames||'Duy & Vy';
+  document.title = (s.coupleNames||'Duy & Vy')+' — Our Travel Journal';
+  renderStats();
+}
+
+function renderStats(){
+  const countries = new Set(trips.map(t=>t.country)).size;
+  let totalDays=0;
+  trips.forEach(t=>{
+    if(t.startDate&&t.endDate){totalDays+=Math.max(1,Math.round((new Date(t.endDate)-new Date(t.startDate))/86400000)+1);}
+  });
+  document.getElementById('hero-stats').innerHTML = `
+    <div class="stat"><div class="stat-num">${trips.length}</div><div class="stat-label">Trips together</div></div>
+    <div class="stat"><div class="stat-num">${countries}</div><div class="stat-label">Countries</div></div>
+    <div class="stat"><div class="stat-num">${totalDays}</div><div class="stat-label">Days exploring</div></div>`;
+}
+
+function renderFooter(){
+  document.getElementById('footer-display').innerHTML = site.footer||'Made with ♥ for Duy &amp; Vy';
+}
+
+function sortedTrips(){
+  return [...trips].sort((a,b)=>{
+    const da = a.startDate||'9999', db = b.startDate||'9999';
+    return sortAsc ? da.localeCompare(db) : db.localeCompare(da);
+  });
+}
+
+function toggleSort(){
+  sortAsc = !sortAsc;
+  const btn = document.getElementById('sort-btn');
+  btn.classList.toggle('asc', sortAsc);
+  renderGrid();
+}
+
+function fmtDate(s,e){
+  const o={month:'short',day:'numeric',year:'numeric'};
+  if(!s&&!e) return '';
+  if(!e) return new Date(s+'T00:00:00').toLocaleDateString('en-US',o);
+  const sd=new Date(s+'T00:00:00'), ed=new Date(e+'T00:00:00');
+  if(sd.getFullYear()===ed.getFullYear()&&sd.getMonth()===ed.getMonth())
+    return sd.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' – '+ed.getDate()+', '+ed.getFullYear();
+  return sd.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' – '+ed.toLocaleDateString('en-US',o);
+}
+
+function countDays(t){
+  if(t.tabs&&t.tabs.length) return t.tabs.length;
+  if(!t.startDate||!t.endDate) return 0;
+  return Math.max(1,Math.round((new Date(t.endDate)-new Date(t.startDate))/86400000)+1);
+}
+
+function renderGrid(){
+  const grid = document.getElementById('trips-grid');
+  const list = sortedTrips();
+  document.getElementById('trip-count-label').textContent = trips.length ? trips.length+' trip'+(trips.length>1?'s':'') : '';
+  if(!trips.length){
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🌸</div><div class="empty-title">Your journey starts here</div><div class="empty-text">Add your first trip and fill this journal with beautiful memories.</div></div><div class="add-card" onclick="openAddForm()"><div class="add-card-icon">＋</div><div class="add-card-text">Add your first trip</div></div>`;
+    return;
+  }
+  let html = list.map(t=>{
+    const bg = t.color?.bg||'#fce4ec';
+    const ac = t.color?.accent||'#e47a90';
+    const ds = fmtDate(t.startDate,t.endDate);
+    const nd = countDays(t);
+    const bannerStyle = t.coverUrl ? `background:url("${t.coverUrl}") center/cover no-repeat;` : `background:${bg};`;
+    return `<div class="trip-card" onclick="openDetail('${t.id}')">
+      <div class="trip-card-banner" style="${bannerStyle}">
+        ${!t.coverUrl?`<span class="trip-card-emoji">${t.emoji||'✈️'}</span>`:''}
+        ${ds?`<span class="trip-card-date-badge" style="color:${ac}">${ds}</span>`:''}
+      </div>
+      <div class="trip-card-body">
+        <div class="trip-card-country">${esc(t.country||'')}</div>
+        <div class="trip-card-title">${esc(t.title)}</div>
+        <div class="trip-card-desc">${esc(t.desc||'')}</div>
+        <div class="trip-card-meta">
+          <div class="trip-card-days" style="color:${ac}">📅 ${nd} day${nd===1?'':'s'}</div>
+          <div class="trip-card-actions">
+            <button class="icon-btn" title="Edit" onclick="event.stopPropagation();openEditForm('${t.id}')">✏️</button>
+            <button class="icon-btn danger" title="Delete" onclick="event.stopPropagation();askDelete('${t.id}')">🗑️</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  html += `<div class="add-card" onclick="openAddForm()"><div class="add-card-icon">＋</div><div class="add-card-text">Add another trip</div></div>`;
+  grid.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════
+// DETAIL VIEW
+// ═══════════════════════════════════════════════════════
+function openDetail(id){
+  const t = trips.find(x=>x.id===id); if(!t) return;
+  const bg = t.color?.bg||'#fce4ec', ac = t.color?.accent||'#e47a90';
+  const ban = document.getElementById('det-banner');
+  if(t.coverUrl){ban.style.backgroundImage='url("'+t.coverUrl+'")';ban.innerHTML='';}
+  else{ban.style.backgroundImage='';ban.style.background=bg;ban.innerHTML=`<span style="font-size:80px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.1))">${t.emoji||'✈️'}</span>`;}
+  document.getElementById('det-country').textContent=t.country||'';
+  document.getElementById('det-title').textContent=t.title;
+  document.getElementById('det-dates').innerHTML=`📅 ${fmtDate(t.startDate,t.endDate)||'Dates TBD'}`;
+  document.getElementById('det-dates').style.color=ac;
+  document.getElementById('det-desc').textContent=t.desc||'';
+  renderDetailTabs(t, ac);
+  document.getElementById('det-edit-btn').onclick=()=>{closeOverlay('detail-overlay');setTimeout(()=>openEditForm(id),100);};
+  document.getElementById('det-delete-btn').onclick=()=>{closeOverlay('detail-overlay');setTimeout(()=>askDelete(id),100);};
+  openOverlay('detail-overlay');
+}
+
+function renderDetailTabs(t, ac){
+  const bar = document.getElementById('det-tabs-bar');
+  const content = document.getElementById('det-tabs-content');
+  const tabs = t.tabs||[];
+  if(!tabs.length){bar.innerHTML='';content.innerHTML='';return;}
+  let activeIdx = 0;
+  function render(idx){
+    bar.innerHTML = tabs.map((tab,i)=>{
+      const col = tab.color||ac;
+      const shp = tab.shape||'border-radius:50px;';
+      const active = i===idx;
+      return `<button class="tab-btn${active?' active':''}" style="${active?'background:'+col+';color:#fff;'+shp:''+shp}" onclick="renderDetailTabs._switch(${i})">${esc(tab.label||('Day '+(i+1)))}</button>`;
+    }).join('');
+    const tab = tabs[idx];
+    const acts = tab.activities||[];
+    content.innerHTML = `<div class="activities-list">${acts.map(a=>actCardHTML(a)).join('')}</div>`;
+    // re-attach checkbox listeners
+    content.querySelectorAll('.checklist-item input').forEach(cb=>{
+      cb.addEventListener('change',function(){
+        const item = cb.closest('.checklist-item');
+        item.classList.toggle('checked', cb.checked);
+      });
+    });
+  }
+  renderDetailTabs._switch = function(i){activeIdx=i;render(i);};
+  render(0);
+}
+
+function actCardHTML(a){
+  const mapBtn = a.mapUrl ? `<a class="map-link" href="${esc(a.mapUrl)}" target="_blank" rel="noopener">🗺️ Open in Maps</a>` : '';
+  const imgEl = a.imgUrl ? `<img class="activity-img" src="${esc(a.imgUrl)}" alt="" onerror="this.style.display='none'" />` : '';
+  const tipEl = a.tip ? `<div class="activity-tip"><div class="activity-tip-label">💡 Tip</div>${esc(a.tip)}</div>` : '';
+  const checklistEl = (a.checklist&&a.checklist.length) ? `
+    <div class="checklist">
+      <div class="checklist-title">Checklist</div>
+      ${a.checklist.map((c,ci)=>`<div class="checklist-item${c.done?' checked':''}"><input type="checkbox" ${c.done?'checked':''}><span>${esc(c.text)}</span></div>`).join('')}
+    </div>` : '';
+  return `<div class="activity-card">
+    ${imgEl}
+    ${!imgEl?`<div class="activity-img-placeholder">📍</div>`:''}
+    <div class="activity-body">
+      <div class="activity-title">${esc(a.title||'Activity')}</div>
+      ${a.desc?`<div class="activity-desc">${esc(a.desc)}</div>`:''}
+      ${tipEl}
+      ${mapBtn}
+      ${checklistEl}
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// FORM — TRIP
+// ═══════════════════════════════════════════════════════
+function buildEmojiPicker(){
+  document.getElementById('emoji-picker').innerHTML=EMOJIS.map(e=>
+    `<button type="button" class="emoji-option${e===selectedEmoji?' selected':''}" onclick="selectEmoji('${e}')">${e}</button>`).join('');
+}
+function buildColorPicker(){
+  document.getElementById('color-picker').innerHTML=COLORS.map((c,i)=>
+    `<div class="color-swatch${c.name===selectedColor.name?' selected':''}" style="background:${c.bg};border-color:${c.name===selectedColor.name?c.accent:'transparent'}" title="${c.name}" onclick="selectColor(${i})"></div>`).join('');
+}
+function selectEmoji(e){selectedEmoji=e;buildEmojiPicker();}
+function selectColor(i){selectedColor=COLORS[i];buildColorPicker();}
+
+function previewImg(urlId,previewId){
+  const url=document.getElementById(urlId).value.trim();
+  const img=document.getElementById(previewId);
+  if(url){img.src=url;img.classList.add('show');}else{img.classList.remove('show');}
+}
+function fileToUrl(input,urlId,previewId){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const url=e.target.result;
+    document.getElementById(urlId).value=url;
+    const img=document.getElementById(previewId);
+    img.src=url;img.classList.add('show');
+  };
+  reader.readAsDataURL(file);
+}
+
+// TAB EDITOR
+function addTabEditor(tabData){
+  tabEditorCount++;
+  const tId='tab-ed-'+tabEditorCount;
+  const d=tabData||{};
+  const col=d.color||'#e47a90';
+  const shpIdx=TAB_SHAPES.findIndex(s=>s.style===(d.shape||TAB_SHAPES[0].style));
+  const container=document.getElementById('tabs-editor');
+  const div=document.createElement('div');
+  div.className='tab-editor-entry'; div.id=tId;
+  div.innerHTML=`
+    <div class="tab-editor-header">
+      <span class="tab-editor-label">Tab ${container.children.length+1}</span>
+      <button type="button" class="remove-tab-btn" onclick="document.getElementById('${tId}').remove();renumberTabs()">✕</button>
+    </div>
+    <div class="form-row" style="margin-bottom:10px">
+      <div><label>Label</label><input type="text" data-tab-label value="${esc(d.label||'')}"/></div>
+      <div><label>Color</label><input type="color" data-tab-color value="${col}"/></div>
+    </div>
+    <div class="tab-style-row">
+      <span style="font-size:12px;color:var(--text-soft);margin-right:4px">Shape:</span>
+      ${TAB_SHAPES.map((s,i)=>`<button type="button" class="btn btn-sm${(shpIdx<0?i===0:i===shpIdx)?' btn-primary':' btn-outline'}" onclick="selectTabShape(this,'${tId}','${s.style.replace(/'/g,'\\\'')}')" data-shape="${s.style.replace(/"/g,'&quot;')}">${s.label}</button>`).join('')}
+    </div>
+    <input type="hidden" data-tab-shape value="${esc(d.shape||TAB_SHAPES[0].style)}"/>
+    <div style="margin-top:10px">
+      <label style="margin-bottom:8px">Activities / moments</label>
+      <div class="acts-editor" id="acts-${tId}"></div>
+      <button type="button" class="add-sub-btn" onclick="addActEditor('acts-${tId}')">＋ Add activity</button>
+    </div>`;
+  container.appendChild(div);
+  (d.activities||[]).forEach(a=>addActEditor('acts-'+tId, a));
+  renumberTabs();
+}
+
+function renumberTabs(){
+  document.querySelectorAll('#tabs-editor .tab-editor-entry').forEach((el,i)=>{
+    const lbl=el.querySelector('.tab-editor-label');
+    if(lbl) lbl.textContent='Tab '+(i+1);
+  });
+}
+
+function selectTabShape(btn,tId,shape){
+  const entry=document.getElementById(tId);
+  entry.querySelectorAll('.tab-style-row .btn').forEach(b=>{b.classList.remove('btn-primary');b.classList.add('btn-outline');});
+  btn.classList.remove('btn-outline');btn.classList.add('btn-primary');
+  entry.querySelector('[data-tab-shape]').value=shape;
+}
+
+// ACTIVITY EDITOR
+function addActEditor(containerId, actData){
+  actEditorCount++;
+  const aId='act-ed-'+actEditorCount;
+  const a=actData||{};
+  const container=document.getElementById(containerId); if(!container) return;
+  const div=document.createElement('div');
+  div.className='act-editor'; div.id=aId;
+  div.innerHTML=`
+    <div class="act-editor-header">
+      <span class="act-editor-label">Activity</span>
+      <button type="button" class="remove-act-btn" onclick="document.getElementById('${aId}').remove()">✕ Remove</button>
+    </div>
+    <div class="form-group" style="margin-bottom:10px"><label>Title</label><input type="text" data-act-title value="${esc(a.title||'')}"/></div>
+    <div class="form-group" style="margin-bottom:10px"><label>Description</label><textarea data-act-desc rows="2">${esc(a.desc||'')}</textarea></div>
+    <div class="form-group" style="margin-bottom:10px"><label>💡 Tip (highlighted)</label><textarea data-act-tip rows="2">${esc(a.tip||'')}</textarea></div>
+    <div class="form-group" style="margin-bottom:10px">
+      <label>Image</label>
+      <div class="img-input-group">
+        <div class="row"><input type="url" data-act-img-url placeholder="Paste image URL…" value="${esc(a.imgUrl||'')}" oninput="previewActImg(this)"/></div>
+        <div class="row"><label style="text-transform:none;letter-spacing:0;font-size:12px;color:var(--rose-deep);cursor:pointer;"><input type="file" accept="image/*" style="display:none" onchange="actFileUpload(this)"/>📎 Upload photo</label></div>
+        <img class="img-preview${a.imgUrl?' show':''}" src="${esc(a.imgUrl||'')}" alt="preview"/>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:10px"><label>🗺️ Google Maps link</label><input type="url" data-act-map placeholder="https://maps.google.com/…" value="${esc(a.mapUrl||'')}"/></div>
+    <div class="form-group" style="margin-bottom:6px">
+      <label>Checklist</label>
+      <div class="check-editor" id="check-${aId}"></div>
+      <button type="button" class="add-sub-btn" style="margin-top:6px" onclick="addCheckItem('check-${aId}')">＋ Add item</button>
+    </div>`;
+  container.appendChild(div);
+  (a.checklist||[]).forEach(c=>addCheckItem('check-'+aId, c));
+}
+
+function previewActImg(input){
+  const url=input.value.trim();
+  const img=input.closest('.img-input-group').querySelector('.img-preview');
+  if(url){img.src=url;img.classList.add('show');}else{img.classList.remove('show');}
+}
+function actFileUpload(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const url=e.target.result;
+    const group=input.closest('.img-input-group');
+    group.querySelector('[data-act-img-url]').value=url;
+    const img=group.querySelector('.img-preview');
+    img.src=url;img.classList.add('show');
+  };
+  reader.readAsDataURL(file);
+}
+
+function addCheckItem(containerId, item){
+  const c=item||{text:'',done:false};
+  const container=document.getElementById(containerId); if(!container) return;
+  const div=document.createElement('div'); div.className='check-item-row';
+  div.innerHTML=`<input type="text" data-check-text value="${esc(c.text)}" placeholder="e.g. Pack sunscreen"/><button type="button" class="remove-check-btn" onclick="this.parentElement.remove()">✕</button>`;
+  container.appendChild(div);
+}
+
+function collectTabs(){
+  const tabs=[];
+  document.querySelectorAll('#tabs-editor .tab-editor-entry').forEach(tabEl=>{
+    const label=tabEl.querySelector('[data-tab-label]')?.value.trim()||'';
+    const color=tabEl.querySelector('[data-tab-color]')?.value||'#e47a90';
+    const shape=tabEl.querySelector('[data-tab-shape]')?.value||TAB_SHAPES[0].style;
+    const activities=[];
+    tabEl.querySelectorAll('.act-editor').forEach(actEl=>{
+      const imgUrlEl=actEl.querySelector('[data-act-img-url]');
+      const checklist=[];
+      actEl.querySelector('.check-editor')?.querySelectorAll('.check-item-row').forEach(row=>{
+        const txt=row.querySelector('[data-check-text]')?.value.trim()||'';
+        if(txt) checklist.push({text:txt,done:false});
+      });
+      activities.push({
+        id:'a'+Date.now()+Math.random().toString(36).slice(2,6),
+        title:actEl.querySelector('[data-act-title]')?.value.trim()||'',
+        desc:actEl.querySelector('[data-act-desc]')?.value.trim()||'',
+        tip:actEl.querySelector('[data-act-tip]')?.value.trim()||'',
+        imgUrl:imgUrlEl?.value.trim()||'',
+        mapUrl:actEl.querySelector('[data-act-map]')?.value.trim()||'',
+        checklist
+      });
+    });
+    tabs.push({id:'tab'+Date.now()+Math.random().toString(36).slice(2,5), label, color, shape, activities});
+  });
+  return tabs;
+}
+
+function openAddForm(){
+  editingId=null;
+  selectedEmoji=EMOJIS[1];selectedColor=COLORS[0];
+  document.getElementById('form-modal-title').textContent='Add a new trip ✈️';
+  ['f-title','f-country','f-desc','f-cover-url'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-start').value='';document.getElementById('f-end').value='';
+  const pv=document.getElementById('f-cover-preview');pv.src='';pv.classList.remove('show');
+  document.getElementById('tabs-editor').innerHTML='';
+  buildEmojiPicker();buildColorPicker();
+  openOverlay('form-overlay');
+}
+
+function openEditForm(id){
+  const t=trips.find(x=>x.id===id); if(!t) return;
+  editingId=id;selectedEmoji=t.emoji||EMOJIS[1];selectedColor=t.color||COLORS[0];
+  document.getElementById('form-modal-title').textContent='Edit trip ✏️';
+  document.getElementById('f-title').value=t.title||'';
+  document.getElementById('f-country').value=t.country||'';
+  document.getElementById('f-start').value=t.startDate||'';
+  document.getElementById('f-end').value=t.endDate||'';
+  document.getElementById('f-desc').value=t.desc||'';
+  document.getElementById('f-cover-url').value=t.coverUrl||'';
+  const pv=document.getElementById('f-cover-preview');
+  if(t.coverUrl){pv.src=t.coverUrl;pv.classList.add('show');}else{pv.src='';pv.classList.remove('show');}
+  document.getElementById('tabs-editor').innerHTML='';
+  tabEditorCount=0;actEditorCount=0;
+  (t.tabs||[]).forEach(tab=>addTabEditor(tab));
+  buildEmojiPicker();buildColorPicker();
+  openOverlay('form-overlay');
+}
+
+function saveTrip(){
+  const title=document.getElementById('f-title').value.trim();
+  if(!title){showToast('Please enter a trip name 🌸');document.getElementById('f-title').focus();return;}
+  const trip={
+    id:editingId||'trip_'+Date.now(),
+    title,
+    country:document.getElementById('f-country').value.trim(),
+    startDate:document.getElementById('f-start').value,
+    endDate:document.getElementById('f-end').value,
+    desc:document.getElementById('f-desc').value.trim(),
+    emoji:selectedEmoji,
+    color:selectedColor,
+    coverUrl:document.getElementById('f-cover-url').value.trim(),
+    tabs:collectTabs()
+  };
+  if(editingId){const idx=trips.findIndex(x=>x.id===editingId);if(idx>=0)trips[idx]=trip;}
+  else{trips.push(trip);}
+  saveTrips(trips);
+  closeOverlay('form-overlay');
+  renderAll();
+  showToast(editingId?'✅ Trip updated!':'🎉 New trip added!');
+}
+
+// ═══════════════════════════════════════════════════════
+// HERO EDITOR
+// ═══════════════════════════════════════════════════════
+function openHeroEditor(){
+  const s=site;
+  document.getElementById('he-eyebrow').value=s.eyebrow||'';
+  document.getElementById('he-h1').value=s.h1||'Every journey';
+  document.getElementById('he-em').value=s.em||'with you';
+  document.getElementById('he-sub').value=s.sub||'';
+  document.getElementById('he-img-url').value=s.bgUrl||'';
+  document.getElementById('he-img-css').value=s.bgCss||'';
+  document.getElementById('he-overlay').value=s.overlayOpacity||0;
+  document.getElementById('he-overlay-val').textContent=s.overlayOpacity||0;
+  document.getElementById('he-couple').value=s.coupleNames||'';
+  const pv=document.getElementById('he-img-preview');
+  if(s.bgUrl){pv.src=s.bgUrl;pv.classList.add('show');}else{pv.src='';pv.classList.remove('show');}
+  openOverlay('hero-overlay-modal');
+}
+
+function previewHeroImg(){
+  const url=document.getElementById('he-img-url').value.trim();
+  const pv=document.getElementById('he-img-preview');
+  if(url){pv.src=url;pv.classList.add('show');}else{pv.src='';pv.classList.remove('show');}
+}
+function heroFileUpload(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const url=e.target.result;
+    document.getElementById('he-img-url').value=url;
+    const pv=document.getElementById('he-img-preview');
+    pv.src=url;pv.classList.add('show');
+  };
+  reader.readAsDataURL(file);
+}
+function updateHeroOverlayPreview(){
+  const val=document.getElementById('he-overlay').value;
+  document.getElementById('he-overlay-val').textContent=val;
+}
+function saveHero(){
+  site.eyebrow=document.getElementById('he-eyebrow').value.trim();
+  site.h1=document.getElementById('he-h1').value.trim();
+  site.em=document.getElementById('he-em').value.trim();
+  site.sub=document.getElementById('he-sub').value.trim();
+  site.bgUrl=document.getElementById('he-img-url').value.trim();
+  site.bgCss=document.getElementById('he-img-css').value.trim();
+  site.overlayOpacity=parseFloat(document.getElementById('he-overlay').value)||0;
+  site.coupleNames=document.getElementById('he-couple').value.trim();
+  saveSite(site);
+  closeOverlay('hero-overlay-modal');
+  renderHero();
+  showToast('✅ Hero updated!');
+}
+
+// ═══════════════════════════════════════════════════════
+// FOOTER EDITOR
+// ═══════════════════════════════════════════════════════
+function startFooterEdit(){
+  const inp=document.getElementById('footer-input');
+  inp.value=site.footer||'';
+  inp.classList.add('show');
+  document.getElementById('footer-display').style.display='none';
+  inp.focus();inp.select();
+}
+function saveFooterEdit(){
+  const val=document.getElementById('footer-input').value.trim();
+  if(val) site.footer=val;
+  saveSite(site);
+  document.getElementById('footer-input').classList.remove('show');
+  document.getElementById('footer-display').style.display='';
+  renderFooter();
+  showToast('✅ Footer saved!');
+}
+
+// ═══════════════════════════════════════════════════════
+// DELETE
+// ═══════════════════════════════════════════════════════
+function askDelete(id){deletingId=id;openOverlay('confirm-overlay');}
+function confirmDelete(){
+  trips=trips.filter(t=>t.id!==deletingId);
+  saveTrips(trips);closeOverlay('confirm-overlay');renderAll();showToast('🗑️ Trip removed');
+}
+
+// ═══════════════════════════════════════════════════════
+// MODAL HELPERS
+// ═══════════════════════════════════════════════════════
+function openOverlay(id){document.getElementById(id).classList.add('open');}
+function closeOverlay(id){document.getElementById(id).classList.remove('open');}
+function overlayClick(e,id){if(e.target===document.getElementById(id))closeOverlay(id);}
+
+// ═══════════════════════════════════════════════════════
+// UTILITY
+// ═══════════════════════════════════════════════════════
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+renderAll();
+</script>
+</body>
+</html>
