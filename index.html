@@ -2975,7 +2975,7 @@ init();
 
 <script>
 (function() {
-  // 1. DYNAMICALLY INJECT CSS STYLES
+  // 1. INJECT MODAL CSS STYLES
   const style = document.createElement("style");
   style.textContent = `
     .poses-modal {background:var(--white); border-radius:24px; max-width:680px; width:100%; position:relative; animation:slideUp .3s ease; margin:auto;}
@@ -2992,11 +2992,11 @@ init();
   `;
   document.head.appendChild(style);
 
-  // 2. DYNAMICALLY INJECT MODAL HTML LAYOUT
+  // 2. INJECT MODAL WINDOW HTML
   const modalDiv = document.createElement("div");
   modalDiv.id = "poses-overlay";
   modalDiv.className = "overlay";
-  modalDiv.setAttribute("onclick", "overlayClick(event, \"poses-overlay\")");
+  modalDiv.onclick = function(event) { overlayClick(event, "poses-overlay"); };
   modalDiv.innerHTML = `
     <div class="poses-modal" onclick="event.stopPropagation()">
       <button class="modal-close" onclick="closeOverlay(&quot;poses-overlay&quot;)">✕</button>
@@ -3036,112 +3036,133 @@ init();
   `;
   document.body.appendChild(modalDiv);
 
-  // 3. SET GLOBALS AND OVERRIDE EXISTING ENGINE FUNCTIONS
+  // 3. TRACK STATE CONTROLS
   window.posesCurrentTabIdx = null;
   window.posesCurrentActIdx = null;
   window.posesCurrentViewMode = "view";
 
+  // 4. OVERRIDE CORE CARD GENERATOR TO INCLUDE THE BUTTON
   window.actCardHTML = function(a, actIdx, tabIdx) {
-    const mapBtn = a.mapUrl ? `<a class="map-link" href="\${esc(a.mapUrl)}" target="_blank" rel="noopener">🗺️ Open in Maps</a>` : "";
-    const imgEl = a.imgUrl ? `<img class="activity-img" src="\${esc(a.imgUrl)}" alt="" onerror="this.style.display=&quot;none&quot;;var p=this.nextElementSibling;if(p&&p.classList.contains(&quot;activity-img-placeholder&quot;))p.style.display=&quot;flex&quot;;" />` : "";
-    const tipEl = a.tip ? `<div class="activity-tip" style="\${getStyleString(a.styles?.tip)}"><div class="activity-tip-label">💡 Tip</div>\${safeFormat(a.tip)}</div>` : "";
-    const checklistEl = (a.checklist && a.checklist.length) ? `
-      <div class="checklist">
-        <div class="checklist-title">Checklist</div>
-        \${a.checklist.map((c,ci)=><div class="checklist-item\${c.done?&quot; checked&quot;:&quot;&quot;}"><input type="checkbox" data-act-idx="\${actIdx}" data-item-idx="\${ci}" \${c.done?&quot;checked&quot;:&quot;&quot;}><span>\${esc(c.text)}</span></div>).join("")}
-      </div>` : "";
+    const mapBtn = a.mapUrl ? `<a class="map-link" href="${esc(a.mapUrl)}" target="_blank" rel="noopener">🗺️ Open in Maps</a>` : "";
+    const imgEl = a.imgUrl ? `<img class="activity-img" src="${esc(a.imgUrl)}" alt="" onerror="this.style.display=&quot;none&quot;;var p=this.nextElementSibling;if(p&&p.classList.contains(&quot;activity-img-placeholder&quot;))p.style.display=&quot;flex&quot;;" />` : "";
+    const tipEl = a.tip ? `<div class="activity-tip" style="${getStyleString(a.styles?.tip)}"><div class="activity-tip-label">💡 Tip</div>${safeFormat(a.tip)}</div>` : "";
+    
+    let checklistHtml = "";
+    if (a.checklist && a.checklist.length) {
+      checklistHtml = `
+        <div class="checklist">
+          <div class="checklist-title">Checklist</div>
+          ${a.checklist.map((c, ci) => `
+            <div class="checklist-item ${c.done ? "checked" : ""}">
+              <input type="checkbox" data-act-idx="${actIdx}" data-item-idx="${ci}" ${c.done ? "checked" : ""}>
+              <span>${esc(c.text)}</span>
+            </div>
+          `).join("")}
+        </div>`;
+    }
     
     const poseCount = (a.poses && a.poses.length) ? a.poses.length : 0;
-    const poseBtnLabel = poseCount > 0 ? `📸 Poses Guide (\th{poseCount})` : "📸 Poses Guide";
-    const posesBtn = `<button class="btn btn-sm btn-outline btn-sage" onclick="openPosesModal(\th{tabIdx}, \th{actIdx})">\th{poseBtnLabel}</button>`;
+    const poseBtnLabel = poseCount > 0 ? `📸 Poses Guide (${poseCount})` : "📸 Poses Guide";
+    const posesBtn = `<button class="btn btn-sm btn-outline btn-sage" onclick="openPosesModal(${tabIdx}, ${actIdx})">${poseBtnLabel}</button>`;
 
-    return `<div class="activity-card">
-      \${imgEl}
-      <div class="activity-img-placeholder" style="\${imgEl?&quot;display:none&quot;:&quot;display:flex&quot;}">📍</div>
-      <div class="activity-body">
-        <div class="activity-title" style="\${getStyleString(a.styles?.title)}">\th{safeFormat(a.title||&quot;Activity&quot;)}</div>
-        \${a.desc?`<div class="activity-desc" style="\${getStyleString(a.styles?.desc)}">\th{safeFormat(a.desc)}</div>`:""}
-        \${tipEl}
-        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:4px; margin-bottom:4px;">
-          \${mapBtn}
-          \${posesBtn}
+    return `
+      <div class="activity-card">
+        ${imgEl}
+        <div class="activity-img-placeholder" style="${imgEl ? "display:none" : "display:flex"}">📍</div>
+        <div class="activity-body">
+          <div class="activity-title" style="${getStyleString(a.styles?.title)}">${safeFormat(a.title || "Activity")}</div>
+          ${a.desc ? `<div class="activity-desc" style="${getStyleString(a.styles?.desc)}">${safeFormat(a.desc)}</div>` : ""}
+          ${tipEl}
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:4px; margin-bottom:4px;">
+            ${mapBtn}
+            ${posesBtn}
+          </div>
+          ${checklistHtml}
         </div>
-        \${checklistEl}
-      </div>
-    </div>`;
+      </div>`;
   };
 
+  // 5. OVERRIDE TRAFFIC RENDERER TO PASS POSITION VALUES
   window.renderDetailTabs = function(t, ac) {
     const bar = document.getElementById("det-tabs-bar");
     const content = document.getElementById("det-tabs-content");
-    const tabs = t.tabs||[];
-    if(!tabs.length){bar.innerHTML="";content.innerHTML="";return;}
-    function render(idx){
-      bar.innerHTML = tabs.map((tab,i)=>{
-        const col = tab.color||ac;
-        const shp = tab.shape||"border-radius:50px;";
-        const active = i===idx;
-        return `<button class="tab-btn\${active?' active':''}" style="\${active?'background:'+col+';color:#fff;'+shp:''+shp}" onclick="renderDetailTabs._switch(\${i})">\${esc(tab.label||("Day "+(i+1)))}</button>`;
+    const tabs = t.tabs || [];
+    if (!tabs.length) { bar.innerHTML = ""; content.innerHTML = ""; return; }
+    
+    function render(idx) {
+      bar.innerHTML = tabs.map((tab, i) => {
+        const col = tab.color || ac;
+        const shp = tab.shape || "border-radius:50px;";
+        const active = i === idx;
+        return `<button class="tab-btn ${active ? "active" : ""}" style="${active ? "background:" + col + ";color:#fff;" + shp : "" + shp}" onclick="renderDetailTabs._switch(${i})">${esc(tab.label || ("Day " + (i + 1)))}</button>`;
       }).join("");
+      
       const tab = tabs[idx];
-      const acts = tab.activities||[];
-      content.innerHTML = `<div class="activities-list">\${acts.map((a,ai)=>actCardHTML(a,ai,idx)).join("")}</div>`;
-      content.querySelectorAll(".checklist-item input").forEach(cb=>{
-        cb.addEventListener("change",function(){
+      const acts = tab.activities || [];
+      content.innerHTML = `<div class="activities-list">${acts.map((a, ai) => actCardHTML(a, ai, idx)).join("")}</div>`;
+      
+      content.querySelectorAll(".checklist-item input").forEach(cb => {
+        cb.addEventListener("change", function() {
           const item = cb.closest(".checklist-item");
           item.classList.toggle("checked", cb.checked);
-          const ai = parseInt(cb.dataset.actIdx,10);
-          const ci = parseInt(cb.dataset.itemIdx,10);
-          const trip = trips.find(x=>x.id===currentDetailTripId);
-          if(trip && trip.tabs[idx] && trip.tabs[idx].activities[ai] && trip.tabs[idx].activities[ai].checklist[ci]){
+          const ai = parseInt(cb.dataset.actIdx, 10);
+          const ci = parseInt(cb.dataset.itemIdx, 10);
+          const trip = trips.find(x => x.id === currentDetailTripId);
+          if (trip && trip.tabs[idx] && trip.tabs[idx].activities[ai] && trip.tabs[idx].activities[ai].checklist[ci]) {
             trip.tabs[idx].activities[ai].checklist[ci].done = cb.checked;
-            if(useCloud){ db.collection("trips").doc(trip.id).set(trip).catch(e=>{console.error(e);showToast(fbWriteError(e));}); }
+            if (useCloud) { db.collection("trips").doc(trip.id).set(trip).catch(e => { console.error(e); showToast(fbWriteError(e)); }); }
             else { saveTrips(trips); }
           }
         });
       });
     }
-    renderDetailTabs._switch = function(i){render(i);};
+    renderDetailTabs._switch = function(i) { render(i); };
     render(0);
   };
 
-  const originalGetActEditorInnerHtml = window.getActEditorInnerHtml;
-  window.getActEditorInnerHtml = function(aId, a) {
-    let baseHtml = originalGetActEditorInnerHtml(aId, a);
-    const savedPosesJSON = a.poses ? esc(JSON.stringify(a.poses)) : "[]";
-    baseHtml = baseHtml.replace("<div class=\"form-group\" style=\"margin-bottom:6px\">", `<input type="hidden" data-act-poses-pool value="\${esc(savedPosesJSON)}" /><div class="form-group" style="margin-bottom:6px">`);
-    return baseHtml;
-  };
+  // 6. PROTECT INTERFACES SO REGULAR FORM EDITS PRESERVE DATA LINKS
+  if (window.getActEditorInnerHtml) {
+    const originalGetActEditorInnerHtml = window.getActEditorInnerHtml;
+    window.getActEditorInnerHtml = function(aId, a) {
+      let baseHtml = originalGetActEditorInnerHtml(aId, a);
+      const savedPosesJSON = a.poses ? esc(JSON.stringify(a.poses)) : "[]";
+      baseHtml = baseHtml.replace("<div class=\"form-group\" style=\"margin-bottom:6px\">", `<input type="hidden" data-act-poses-pool value="${esc(savedPosesJSON)}" /><div class="form-group" style="margin-bottom:6px">`);
+      return baseHtml;
+    };
+  }
 
   window.collectTabs = function() {
-    const tabs=[];
-    document.querySelectorAll("#tabs-editor .tab-editor-entry").forEach(tabEl=>{
-      const label=tabEl.querySelector("[data-tab-label]")?.value.trim()||"";
-      const color=tabEl.querySelector("[data-tab-color]")?.value||"#e47a90";
-      const shape=tabEl.querySelector("[data-tab-shape]")?.value||TAB_SHAPES[0].style;
-      const activities=[];
-      tabEl.querySelectorAll(".act-editor").forEach(actEl=>{
+    const tabs = [];
+    document.querySelectorAll("#tabs-editor .tab-editor-entry").forEach(tabEl => {
+      const label = tabEl.querySelector("[data-tab-label]")?.value.trim() || "";
+      const color = tabEl.querySelector("[data-tab-color]")?.value || "#e47a90";
+      const shape = tabEl.querySelector("[data-tab-shape]")?.value || TAB_SHAPES[0].style;
+      const activities = [];
+      
+      tabEl.querySelectorAll(".act-editor").forEach(actEl => {
         const aId = actEl.id;
-        const imgUrlEl=actEl.querySelector("[data-act-img-url]");
-        const checklist=[];
-        actEl.querySelector(".check-editor")?.querySelectorAll(".check-item-row").forEach(row=>{
-          const txt=row.querySelector("[data-check-text]")?.value.trim()||"";
-          if(txt) checklist.push({text:txt,done:row.dataset.done stagnation==="1"});
+        const imgUrlEl = actEl.querySelector("[data-act-img-url]");
+        const checklist = [];
+        
+        actEl.querySelector(".check-editor")?.querySelectorAll(".check-item-row").forEach(row => {
+          const txt = row.querySelector("[data-check-text]")?.value.trim() || "";
+          if (txt) checklist.push({ text: txt, done: row.dataset.done === "1" });
         });
         
         let parsedPoses = [];
         try {
-          parsedPoses = JSON.parse(actEl.querySelector("[data-act-poses-pool]")?.value || "[]");
+          const poolVal = actEl.querySelector("[data-act-poses-pool]")?.value;
+          parsedPoses = poolVal ? JSON.parse(poolVal) : [];
         } catch(e) { parsedPoses = []; }
 
         activities.push({
-          id:"a"+Date.now()+Math.random().toString(36).slice(2,6),
-          title:actEl.querySelector("[data-act-title]")?.value.trim()||"",
-          desc:actEl.querySelector("[data-act-desc]")?.value.trim()||"",
-          tip:actEl.querySelector("[data-act-tip]")?.value.trim()||"",
-          imgUrl:imgUrlEl?.value.trim()||"",
-          mapUrl:actEl.querySelector("[data-act-map]")?.value.trim()||"",
-          checklist,
+          id: "a" + Date.now() + Math.random().toString(36).slice(2, 6),
+          title: actEl.querySelector("[data-act-title]")?.value.trim() || "",
+          desc: actEl.querySelector("[data-act-desc]")?.value.trim() || "",
+          tip: actEl.querySelector("[data-act-tip]")?.value.trim() || "",
+          imgUrl: imgUrlEl?.value.trim() || "",
+          mapUrl: actEl.querySelector("[data-act-map]")?.value.trim() || "",
+          checklist: checklist,
           poses: parsedPoses,
           styles: {
             title: collectTypography(aId + "-title"),
@@ -3150,12 +3171,12 @@ init();
           }
         });
       });
-      tabs.push({id:"tab"+Date.now()+Math.random().toString(36).slice(2,5), label, color, shape, activities});
+      tabs.push({ id: "tab" + Date.now() + Math.random().toString(36).slice(2, 5), label, color, shape, activities });
     });
     return tabs;
   };
 
-  // 4. POSES UI SYSTEM LOGIC
+  // 7. POSES LOGIC CORE ENGINE
   window.openPosesModal = function(tabIdx, actIdx) {
     posesCurrentTabIdx = tabIdx;
     posesCurrentActIdx = actIdx;
@@ -3208,8 +3229,8 @@ init();
 
     grid.innerHTML = poses.map(url => `
       <div class="pose-img-wrapper">
-        <a href="\${esc(url)}" target="_blank" title="Click to view full size">
-          <img src="\${esc(url)}" class="pose-display-img" alt="Pose idea" onerror="this.parentElement.innerHTML=&quot;<div style='padding:24px; text-anchor:center; font-size:11px; color:var(--text-soft);'>Invalid Link Image</div>&quot;;" />
+        <a href="${esc(url)}" target="_blank" title="Click to view full size">
+          <img src="${esc(url)}" class="pose-display-img" alt="Pose idea" onerror="this.parentElement.innerHTML=&quot;<div style='padding:24px; text-align:center; font-size:11px; color:var(--text-soft);'>Invalid Link Image</div>&quot;;" />
         </a>
       </div>
     `).join("");
@@ -3228,12 +3249,12 @@ init();
 
     list.innerHTML = poses.map((url, index) => `
       <div class="pose-edit-item">
-        <img src="\${esc(url)}" class="pose-preview-thumb" onerror="this.src=&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='54' height='54'><rect width='54' height='54' fill='%23f9eef1'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23c4637a' font-size='10'>Photo</text></svg>&quot;;" />
-        <div class="pose-url-text">\${esc(url)}</div>
+        <img src="${esc(url)}" class="pose-preview-thumb" onerror="this.src=&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='54' height='54'><rect width='54' height='54' fill='%23f9eef1'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23c4637a' font-size='10'>Photo</text></svg>&quot;;" />
+        <div class="pose-url-text">${esc(url)}</div>
         <div class="pose-controls">
-          <button class="icon-btn" title="Move Up" onclick="movePoseLink(\th{index}, -1)" \th{index === 0 ? "disabled style='opacity:0.35; cursor:not-allowed;'" : ""}>↑</button>
-          <button class="icon-btn" title="Move Down" onclick="movePoseLink(\th{index}, 1)" \th{index === poses.length - 1 ? "disabled style='opacity:0.35; cursor:not-allowed;'" : ""}>↓</button>
-          <button class="icon-btn danger" title="Delete Link" onclick="removePoseLink(\th{index})">✕</button>
+          <button class="icon-btn" title="Move Up" onclick="movePoseLink(${index}, -1)" ${index === 0 ? "disabled style='opacity:0.35; cursor:not-allowed;'" : ""}>↑</button>
+          <button class="icon-btn" title="Move Down" onclick="movePoseLink(${index}, 1)" ${index === poses.length - 1 ? "disabled style='opacity:0.35; cursor:not-allowed;'" : ""}>↓</button>
+          <button class="icon-btn danger" title="Delete Link" onclick="removePoseLink(${index})">✕</button>
         </div>
       </div>
     `).join("");
@@ -3285,7 +3306,7 @@ init();
   };
 
   window.saveTripFromPosesContext = function(trip) {
-    if (useCloud) {
+    if (typeof useCloud !== "undefined" && useCloud) {
       db.collection("trips").doc(trip.id).set(trip).then(() => {
         const ac = trip.color?.accent || "#e47a90";
         renderDetailTabs(trip, ac);
@@ -3300,6 +3321,12 @@ init();
       renderGrid();
     }
   };
+
+  // Re-run the active tabs once to immediately draw the button without requiring a page refresh
+  if (typeof currentDetailTripId !== "undefined" && currentDetailTripId) {
+    const activeTrip = trips.find(x => x.id === currentDetailTripId);
+    if (activeTrip) renderDetailTabs(activeTrip, activeTrip.color?.accent || "#e47a90");
+  }
 })();
 </script>
 
