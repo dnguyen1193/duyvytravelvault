@@ -934,6 +934,7 @@ document.addEventListener('keydown', function(e) {
       
       active.selectionStart = start;
       active.selectionEnd = start + tagStart.length + selText.length + tagEnd.length;
+      active.setValue(newVal); // trigger layout adjustments if necessary
       active.dispatchEvent(new Event('input', { bubbles: true }));
     }
   }
@@ -1959,6 +1960,7 @@ function enableDrag(handle) {
   if (card) card.setAttribute('draggable', 'true');
 }
 
+// Ensure settings block sets up fine without breaking loops
 function disableDrag(handle) {
   const card = handle.closest('.act-editor');
   if (card) card.removeAttribute('draggable');
@@ -2374,6 +2376,7 @@ function openAddForm(){
 
   document.getElementById('tabs-editor').innerHTML='';
   buildEmojiPicker();buildColorPicker();
+  renumberTabs(); // FIX: Explicitly setup and sync day creation controls on initialization
   openOverlay('form-overlay');
 }
 
@@ -2720,7 +2723,7 @@ function showToast(msg){
 }
 
 // ═══════════════════════════════════════════════════════
-//  👉  SPLASH SCREEN GREETING INTERACTION
+//  🌸  SPLASH SCREEN GREETING INTERACTION
 // ═══════════════════════════════════════════════════════
 let chosenVisitor = "";
 
