@@ -3260,11 +3260,11 @@ init();
     `).join("");
   };
 
-  window.addNewPoseLink = function() {
+ window.addNewPoseLink = function() {
     const input = document.getElementById("new-pose-url");
-    const url = input.value.trim();
-    if (!url) {
-      showToast("Please paste a beautiful pose URL link first 🌸");
+    const rawText = input.value.trim();
+    if (!rawText) {
+      showToast("Please paste image links first 🌸");
       return;
     }
 
@@ -3272,12 +3272,35 @@ init();
     if (!context) return;
 
     if (!context.act.poses) context.act.poses = [];
-    context.act.poses.push(url);
-    input.value = "";
-    
-    saveTripFromPosesContext(context.trip);
-    renderPosesEdit();
-    showToast("✨ Added pose layout idea!");
+
+    // This regular expression automatically extracts all direct image URLs from the text block
+    const regex = /(https?:\/\/[^\s[\]&"<>]+?\.(?:jpg|jpeg|png|gif|webp|bmp))/gi;
+    const matches = rawText.match(regex);
+
+    if (matches && matches.length > 0) {
+      matches.forEach(function(url) {
+        if (!context.act.poses.includes(url)) {
+          context.act.poses.push(url);
+        }
+      });
+      input.value = "";
+      saveTripFromPosesContext(context.trip);
+      renderPosesEdit();
+      showToast("✨ Bulk imported " + matches.length + " poses successfully!");
+    } else {
+      // Safety fallback for single pasted links that do not use standard file extensions
+      if (rawText.startsWith("http")) {
+        if (!context.act.poses.includes(rawText)) {
+          context.act.poses.push(rawText);
+        }
+        input.value = "";
+        saveTripFromPosesContext(context.trip);
+        renderPosesEdit();
+        showToast("✨ Added single pose link!");
+      } else {
+        showToast("⚠️ No valid image URLs detected in the pasted text.");
+      }
+    }
   };
 
   window.removePoseLink = function(index) {
