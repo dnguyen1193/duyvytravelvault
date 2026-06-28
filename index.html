@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Duy & Vy — Our Travel Journal</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;700&family=Pacifico&family=Special+Elite&display=swap" rel="stylesheet">
+<!-- Firebase (real-time sync). If you ever see a load error, you can bump the version number below. -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -534,9 +535,11 @@ body.cloud-mode .cloud-only{display:inline-flex;}
 </head>
 <body>
 
+<!-- CUTE GREETING SPLASH OVERLAY -->
 <div class="splash-overlay" id="welcome-splash">
   <div class="splash-card">
     <div style="font-size:36px; margin-bottom:8px;">🌸🏰🌸</div>
+    <!-- Step 1: Who is here? -->
     <div id="splash-step-who">
       <h2 style="font-family:'Playfair Display',serif; font-size:22px; color:var(--text-dark); line-height:1.3; margin-bottom:6px;">Duy & Vy</h2>
       <h3 style="font-family:'Playfair Display',serif; font-size:22px; color:var(--rose-deep); margin-bottom:8px;">Travel Vault</h3>
@@ -553,6 +556,7 @@ body.cloud-mode .cloud-only{display:inline-flex;}
       </div>
     </div>
     
+    <!-- Step 2: Personalized message -->
     <div class="greeting-section" id="splash-step-greet">
       <h2 style="font-family:'Playfair Display',serif; font-size:26px; color:var(--text-dark); margin-bottom:10px;" id="greet-title">Hello, Sweetheart!</h2>
       <p style="font-size:14px; color:var(--text-mid); line-height:1.6;" id="greet-body">Ready to look back at our favorite days?</p>
@@ -565,6 +569,7 @@ body.cloud-mode .cloud-only{display:inline-flex;}
   </div>
 </div>
 
+<!-- LOGIN MODAL -->
 <div class="login-overlay" id="login-overlay">
   <div class="login-card">
     <div style="font-size:42px;margin-bottom:6px;">💕</div>
@@ -578,6 +583,7 @@ body.cloud-mode .cloud-only{display:inline-flex;}
   </div>
 </div>
 
+<!-- HEADER -->
 <header>
   <a class="logo" id="header-logo-container" onclick="scrollTo({top:0,behavior:'smooth'})">
     <span class="logo-heart">💕</span>
@@ -590,6 +596,7 @@ body.cloud-mode .cloud-only{display:inline-flex;}
   </div>
 </header>
 
+<!-- HERO -->
 <div class="hero tp-tc sp-bc" id="hero-section">
   <div class="hero-bg" id="hero-bg"></div>
   <div class="hero-overlay" id="hero-overlay" style="background:transparent;"></div>
@@ -597,17 +604,20 @@ body.cloud-mode .cloud-only{display:inline-flex;}
   
   <button class="hero-edit-btn" id="hero-edit-btn" onclick="openHeroEditor()" type="button">✏️ Edit</button>
   
+  <!-- Separated Text Content Wrapper -->
   <div class="hero-content" id="hero-content">
     <div class="hero-eyebrow" id="hero-eyebrow">Our Travel Journal</div>
     <h1 id="hero-h1"><span id="hero-h1a">Every journey</span><br><em id="hero-em">with you</em><span id="hero-h1b"> is home</span></h1>
     <p class="hero-sub" id="hero-sub">A little scrapbook of the places we've been, the memories we've made, and all the adventures still to come. 🌸</p>
   </div>
 
+  <!-- Separated Stats Content Wrapper -->
   <div class="hero-stats-container" id="hero-stats-container">
     <div class="hero-stats" id="hero-stats"></div>
   </div>
 </div>
 
+<!-- MAIN LIST -->
 <main>
   <div class="section-header">
     <h2 class="section-title">Our trips 🗺️</h2>
@@ -621,12 +631,14 @@ body.cloud-mode .cloud-only{display:inline-flex;}
   <div class="trips-grid" id="trips-grid"></div>
 </main>
 
+<!-- FOOTER -->
 <footer>
   <div class="footer-text" id="footer-display" onclick="startFooterEdit()"></div>
   <div class="footer-edit-hint">Click to edit</div>
   <input class="footer-edit-input" id="footer-input" type="text" onblur="saveFooterEdit()" onkeydown="if(event.key==='Enter')this.blur();" />
 </footer>
 
+<!-- ── DETAIL MODAL ── -->
 <div class="overlay" id="detail-overlay" onclick="overlayClick(event,'detail-overlay')">
 <div class="modal" onclick="event.stopPropagation()">
   <button class="modal-close" onclick="closeOverlay('detail-overlay')">✕</button>
@@ -636,7 +648,9 @@ body.cloud-mode .cloud-only{display:inline-flex;}
     <div class="modal-title" id="det-title"></div>
     <div class="modal-dates" id="det-dates"></div>
     <div class="modal-desc" id="det-desc"></div>
+    <!-- TABS BAR -->
     <div class="tabs-bar" id="det-tabs-bar"></div>
+    <!-- TAB PANELS -->
     <div id="det-tabs-content"></div>
     <div style="display:flex;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid #f0dce2;">
       <button class="btn btn-outline" id="det-edit-btn">✏️ Edit trip</button>
@@ -646,6 +660,7 @@ body.cloud-mode .cloud-only{display:inline-flex;}
 </div>
 </div>
 
+<!-- ── FORM MODAL ── -->
 <div class="overlay" id="form-overlay" onclick="overlayClick(event,'form-overlay')">
 <div class="form-modal" onclick="event.stopPropagation()">
   <div class="form-header">
@@ -657,7 +672,8 @@ body.cloud-mode .cloud-only{display:inline-flex;}
     <div class="form-group">
       <label>Country / Destination</label>
       <select id="f-country" style="width:100%;">
-        </select>
+        <!-- Populated dynamically via JavaScript initialization -->
+      </select>
     </div>
     <div class="form-row">
       <div class="form-group"><label>Start date</label><input type="date" id="f-start"/></div>
@@ -675,14 +691,18 @@ body.cloud-mode .cloud-only{display:inline-flex;}
     <div class="form-group"><label>Card icon</label><div class="emoji-picker" id="emoji-picker"></div></div>
     <div class="form-group"><label>Card colour</label><div class="color-picker" id="color-picker"></div></div>
     
+    <!-- Collapsible Typography Settings -->
     <details style="margin-bottom:18px; background:var(--blush); border-radius:12px; padding:6px 12px; border:1px solid #f0dce2;">
       <summary style="font-size:13px; font-weight:600; color:var(--rose-deep); cursor:pointer;">🎨 Custom Card Typography</summary>
       <div style="margin-top:10px;" id="trip-typo-container"></div>
     </details>
 
+    <!-- SPLIT TABS EDITOR FOR SEPARATED DAY EDITING -->
     <div class="form-group" style="border-top:1.5px solid #f0dce2; padding-top:16px;">
       <label>Days / Tabs (Edit one day at a time)</label>
+      <!-- Horizontal Navigation Bar for tab editing -->
       <div id="tabs-editor-nav" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #f0dce2;"></div>
+      <!-- Tab Contents Container -->
       <div id="tabs-editor"></div>
     </div>
     
@@ -694,6 +714,7 @@ body.cloud-mode .cloud-only{display:inline-flex;}
 </div>
 </div>
 
+<!-- ── HERO EDITOR ── -->
 <div class="overlay" id="hero-overlay-modal" onclick="overlayClick(event,'hero-overlay-modal')">
 <div class="hero-form" onclick="event.stopPropagation()">
   <div class="form-header">
@@ -721,11 +742,13 @@ body.cloud-mode .cloud-only{display:inline-flex;}
       <span id="he-overlay-val" style="font-size:12px;color:var(--text-soft);">0</span>
     </div>
 
+    <!-- Collapsible Typography Editor block for Hero elements -->
     <details style="margin-bottom:18px; background:var(--blush); border-radius:12px; padding:6px 12px; border:1px solid #f0dce2; margin-top: 10px;">
       <summary style="font-size:13px; font-weight:600; color:var(--rose-deep); cursor:pointer;">🎨 Custom Typography Styles</summary>
       <div style="margin-top:10px;" id="hero-typo-settings-block"></div>
     </details>
 
+    <!-- Independent Positions Pickers -->
     <div class="form-group" style="border-top: 1px solid #f0dce2; padding-top: 16px;">
       <label>Main Text Position — tap to move text</label>
       <div class="pos-grid" id="pos-grid">
@@ -756,6 +779,7 @@ body.cloud-mode .cloud-only{display:inline-flex;}
       </div>
     </div>
 
+    <!-- Shadows & Glow Customization -->
     <div class="form-group" style="border-top: 1px solid #f0dce2; padding-top: 16px; margin-top: 16px;">
       <label style="color: var(--rose-deep); font-size: 13px; font-weight: 700; margin-bottom: 12px; display: block;">Text Shadows & Glow Effects 🌟</label>
       
@@ -836,6 +860,7 @@ body.cloud-mode .cloud-only{display:inline-flex;}
       </div>
     </div>
 
+    <!-- FLOATING DECORATIONS -->
     <div class="form-group" style="border-top: 1px solid #f0dce2; padding-top: 20px; margin-top: 20px;">
       <label>Floating Decorations 🎈</label>
       <p style="font-size:12px; color:var(--text-mid); margin-bottom:12px; line-height:1.5;">Add cute floating objects to your background. Adjust coordinates to place them beautifully.</p>
@@ -844,7 +869,7 @@ body.cloud-mode .cloud-only{display:inline-flex;}
     </div>
 
     <div class="form-group" style="border-top: 1px solid #f0dce2; padding-top: 20px; margin-top: 20px;">
-      <label>Couple name (header)</label><input type="text" id="he-couple" placeholder="Duy & Vy"/>
+      <label>Couple name (header)</label><input type="text" id="he-couple" placeholder="Duy &amp; Vy"/>
     </div>
     <div class="form-actions">
       <button class="btn btn-ghost" onclick="closeOverlay('hero-overlay-modal')">Cancel</button>
@@ -854,6 +879,7 @@ body.cloud-mode .cloud-only{display:inline-flex;}
 </div>
 </div>
 
+<!-- DELETE CONFIRM -->
 <div class="overlay" id="confirm-overlay" onclick="overlayClick(event,'confirm-overlay')">
 <div class="confirm-modal" onclick="event.stopPropagation()">
   <div class="confirm-icon">🗑️</div>
@@ -875,9 +901,9 @@ body.cloud-mode .cloud-only{display:inline-flex;}
 function safeFormat(text) {
   if (!text) return '';
   let clean = esc(text);
-  clean = clean.replace(/<b>/gi, '<b>').replace(/<\/b>/gi, '</b>');
-  clean = clean.replace(/<i>/gi, '<i>').replace(/<\/i>/gi, '</i>');
-  clean = clean.replace(/<u>/gi, '<u>').replace(/<\/u>/gi, '</u>');
+  clean = clean.replace(/&lt;b&gt;/gi, '<b>').replace(/&lt;\/b&gt;/gi, '</b>');
+  clean = clean.replace(/&lt;i&gt;/gi, '<i>').replace(/&lt;\/i&gt;/gi, '</i>');
+  clean = clean.replace(/&lt;u&gt;/gi, '<u>').replace(/&lt;\/u&gt;/gi, '</u>');
   clean = clean.replace(/\n/g, '<br>');
   return clean;
 }
@@ -908,6 +934,7 @@ document.addEventListener('keydown', function(e) {
       
       active.selectionStart = start;
       active.selectionEnd = start + tagStart.length + selText.length + tagEnd.length;
+      active.setValue(newVal); // trigger layout adjustments if necessary
       active.dispatchEvent(new Event('input', { bubbles: true }));
     }
   }
@@ -1066,7 +1093,7 @@ function getTypographyEditorHtml(prefix, label, s = {}) {
               <input type="checkbox" id="${prefix}-italic" ${italic} style="accent-color:var(--rose-deep);"/> <i>I</i>
             </label>
             <label style="cursor:pointer; display:inline-flex; align-items:center; gap:2px; font-size:11px;">
-              <input type="checkbox" id="${prefix}-underline" ${underline} style="checked" style="accent-color:var(--rose-deep);"/> <u>U</u>
+              <input type="checkbox" id="${prefix}-underline" ${underline} style="accent-color:var(--rose-deep);"/> <u>U</u>
             </label>
           </div>
         </div>
@@ -1175,12 +1202,10 @@ const DECOR_ASSETS = [
 ];
 
 const EMOJIS = ['🌸','✈️','🗺️','🌊','🏔️','🌅','🎡','🍜','🌙','🎭','🏯','🌿','🎆','🏝️','🌺','🛕','🎠','🍡'];
-
-// 60 Unique expanded decorations list using double quotes safely
 const DECOR_EMOJIS = [
-  "🦋","🌸","🌹","🌷","🌻","🌼","🌿","🍃","🍁","✈️","🛫","🧳","🧭","🗺️","📍","📸","📷","💕","💖","💝","💘","✨","⭐","🌙","☀️","🎈","🎀","✉️","💌","🧸","🌍","🏖️","🏝️","🏞️","🗻","🗼","🗽","🏰","🛕","🎡","🎢","🎠","⛺","⛵","🚂","🚗","🚕","🛵","🚲","🧋","🍹","🥂","🍜","🍣","🍱","🍰","🍦","🍩","🍿","🎟️"
+  '✈️','🧳','🧭','🗺️','📍','📸','💕','✨','🎀','☀️','🌙','⭐','🎈','🌸','🌿','🎡',
+  '🏰','⛺','⛵','🪐','✉️','🧸','🍩','🍹','🍿','🍦','🚕','🚲','🛵','🚇','🛸','🗽','🗼','🗻','🎠'
 ];
-
 const COLORS = [
   {name:'Blush',    bg:'#fce4ec', accent:'#e47a90'},
   {name:'Lavender', bg:'#ede7f6', accent:'#9575cd'},
@@ -1935,6 +1960,7 @@ function enableDrag(handle) {
   if (card) card.setAttribute('draggable', 'true');
 }
 
+// Ensure settings block sets up fine without breaking loops
 function disableDrag(handle) {
   const card = handle.closest('.act-editor');
   if (card) card.removeAttribute('draggable');
@@ -2253,7 +2279,6 @@ function getActEditorInnerHtml(aId, a) {
     </div>`;
 }
 
-// Ensure proper re-layout synchronization inside moments execution blocks
 function addActEditor(containerId, actData){
   actEditorCount++;
   const aId='act-ed-'+actEditorCount;
@@ -2351,7 +2376,7 @@ function openAddForm(){
 
   document.getElementById('tabs-editor').innerHTML='';
   buildEmojiPicker();buildColorPicker();
-  renumberTabs(); // Preserved fix: Setup and synchronize layout controllers safely
+  renumberTabs(); // FIX: Explicitly setup and sync day creation controls on initialization
   openOverlay('form-overlay');
 }
 
@@ -2689,7 +2714,7 @@ function closeOverlay(id){
 function overlayClick(e,id){if(e.target===document.getElementById(id))closeOverlay(id);}
 
 function esc(s){
-  return String(s).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"').replace(/'/g,''');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 function showToast(msg){
   const t=document.getElementById('toast');
@@ -2776,7 +2801,7 @@ function triggerFlyAway() {
   
   const clone = document.createElement('div');
   clone.className = 'flying-title-clone';
-  clone.innerHTML = `<span style="font-size: 24px; margin-right: 12px;">💕</span> Duy & Vy`;
+  clone.innerHTML = `<span style="font-size: 24px; margin-right: 12px;">💕</span> Duy &amp; Vy`;
   
   clone.style.left = '50%';
   clone.style.top = '45%';
