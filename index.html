@@ -2989,6 +2989,22 @@ init();
     .pose-preview-thumb {width:54px; height:54px; object-fit:cover; border-radius:6px; background:#fff;}
     .pose-url-text {flex:1; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text-mid);}
     .pose-controls {display:flex; gap:4px;}
+
+    /* NEW COORD MATCHER FOR MAP LINK THICKNESS */
+    .map-link {
+      padding: 5px 12px !important;
+      font-size: 12px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      border: 1.5px solid transparent !important;
+    }
+    @media(max-width:640px){
+      .map-link {
+        padding: 4px 8px !important;
+        font-size: 11px !important;
+        min-height: 32px !important;
+      }
+    }
   `;
   document.head.appendChild(style);
 
