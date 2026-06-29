@@ -3376,6 +3376,112 @@ init();
     const activeTrip = trips.find(x => x.id === currentDetailTripId);
     if (activeTrip) renderDetailTabs(activeTrip, activeTrip.color?.accent || "#e47a90");
   }
+
+// ... This is the end of your existing template code ...
+  if (typeof currentDetailTripId !== "undefined" && currentDetailTripId) {
+    const activeTrip = trips.find(function(x) { return x.id === id; });
+    if (activeTrip) renderDetailTabs(activeTrip, activeTrip.color?.accent || "#e47a90");
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //   🌤️ INTERACTIVE BACKGROUND WEATHER ENGINE
+  // ═══════════════════════════════════════════════════════
+  window.weatherCache = {};
+
+  const weatherStyle = document.createElement("style");
+  weatherStyle.textContent = ".weather-fade-in { animation: magicEntrance 0.4s ease both; } .weather-badge { font-weight: 600; color: var(--rose-deep); background: #fff; padding: 2px 8px; border-radius: 20px; border: 1px solid #f0dce2; }";
+  document.head.appendChild(weatherStyle);
+
+  function getWeatherCondition(code) {
+    if (code === 0) return { text: "Clear Skies", emoji: "☀️" };
+    if (code >= 1 && code <= 3) return { text: "Partly Cloudy", emoji: "⛅" };
+    if (code === 45 || code === 48) return { text: "Foggy", emoji: "🌫️" };
+    if (code >= 51 && code <= 55) return { text: "Light Drizzle", emoji: "🌧️" };
+    if (code >= 61 && code <= 65) return { text: "Rainy", emoji: "🌧️" };
+    if (code >= 71 && code <= 75) return { text: "Snowy", emoji: "❄️" };
+    if (code >= 80 && code <= 82) return { text: "Rain Showers", emoji: "🌦️" };
+    if (code === 95 || code === 96) return { text: "Thunderstorm", emoji: "⛈️" };
+    return { text: "Clear", emoji: "🌸" };
+  }
+
+  window.updateDestinationWeather = async function(destinationStr) {
+    if (!destinationStr) return;
+    
+    const cleanName = destinationStr.split(/[\uD800-\uDFFF\u2600-\u27BF]/)[0].trim();
+    if (!cleanName) return;
+
+    const cacheKey = cleanName.toLowerCase();
+
+    let weatherDiv = document.getElementById("det-weather-widget");
+    if (!weatherDiv) {
+      weatherDiv = document.createElement("div");
+      weatherDiv.id = "det-weather-widget";
+      weatherDiv.style.cssText = "margin-bottom: 20px; padding: 12px 16px; background: var(--rose-light); border-radius: 12px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dark); border: 1px solid #f0dce2; font-family: \"Inter\", sans-serif;";
+      const detDates = document.getElementById("det-dates");
+      if (detDates) {
+        detDates.parentNode.insertBefore(weatherDiv, detDates.nextSibling);
+      }
+    }
+
+    if (window.weatherCache[cacheKey]) {
+      weatherDiv.innerHTML = window.weatherCache[cacheKey];
+      return;
+    }
+
+    weatherDiv.innerHTML = "<span style=\"color: var(--text-soft);\">✨ Loading destination forecast...</span>";
+
+    try {
+      const geoUrl = "https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(cleanName) + "&count=1&language=en&format=json";
+      const geoResponse = await fetch(geoUrl);
+      const geoData = await geoResponse.json();
+
+      if (!geoData.results || geoData.results.length === 0) {
+        weatherDiv.innerHTML = "🍃 Ready for adventures in " + esc(cleanName);
+        return;
+      }
+
+      const location = geoData.results[0];
+      const lat = location.latitude;
+      const lon = location.longitude;
+
+      const weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&current_weather=true&temperature_unit=fahrenheit";
+      const weatherResponse = await fetch(weatherUrl);
+      const weatherData = await weatherResponse.json();
+
+      if (!weatherData.current_weather) {
+        weatherDiv.innerHTML = "🍃 Ready for adventures in " + esc(cleanName);
+        return;
+      }
+
+      const temp = Math.round(weatherData.current_weather.temperature);
+      const condition = getWeatherCondition(weatherData.current_weather.weathercode);
+
+      weatherDiv.innerHTML = "<div class=\"weather-fade-in\" style=\"display: flex; align-items: center; gap: 8px; width: 100%;\"><span style=\"font-size: 18px;\">" + condition.emoji + "</span><div style=\"flex: 1;\">Right now in <b>" + esc(location.name) + "</b>, it is " + condition.text.toLowerCase() + " and feels like <span class=\"weather-badge\">" + temp + "°F</span></div></div>";
+      window.weatherCache[cacheKey] = weatherDiv.innerHTML;
+
+    } catch (error) {
+      console.warn("Weather sync failed quietly:", error);
+      weatherDiv.innerHTML = "🍃 Destination ready!";
+    }
+  };
+
+  if (window.openDetail) {
+    const originalOpenDetail = window.openDetail;
+    window.openDetail = function(id) {
+      originalOpenDetail(id);
+      const currentTrip = trips.find(function(x) { return x.id === id; });
+      if (currentTrip && (currentTrip.country || currentTrip.title)) {
+        const queryDestination = currentTrip.country || currentTrip.title;
+        setTimeout(function() {
+          window.updateDestinationWeather(queryDestination);
+        }, 50);
+      }
+    };
+  }
+
+})();
+</script>
+
 })();
 </script>
 
