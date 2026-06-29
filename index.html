@@ -899,43 +899,41 @@ body.cloud-mode .cloud-only{display:inline-flex;}
 //  🔒 FORMATTING ENGINE (Rich text shortcut translation)
 // ═══════════════════════════════════════════════════════
 function safeFormat(text) {
-  if (!text) return '';
+  if (!text) return "";
   let clean = esc(text);
-  clean = clean.replace(/&lt;b&gt;/gi, '<b>').replace(/&lt;\/b&gt;/gi, '</b>');
-  clean = clean.replace(/&lt;i&gt;/gi, '<i>').replace(/&lt;\/i&gt;/gi, '</i>');
-  clean = clean.replace(/&lt;u&gt;/gi, '<u>').replace(/&lt;\/u&gt;/gi, '</u>');
-  clean = clean.replace(/\n/g, '<br>');
+  clean = clean.replace(/<b>/gi, "<b>").replace(/<\/b>/gi, "</b>");
+  clean = clean.replace(/<i>/gi, "<i>").replace(/<\/i>/gi, "</i>");
+  clean = clean.replace(/<u>/gi, "<u>").replace(/<\/u>/gi, "</u>");
+  clean = clean.replace(/\n/g, "<br>");
   return clean;
 }
 
-// Global Event Listener to catch Ctrl+B, Ctrl+I, Ctrl+U on ALL text inputs/areas
-document.addEventListener('keydown', function(e) {
-  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+document.addEventListener("keydown", function(e) {
+  const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
   const modifier = isMac ? e.metaKey : e.ctrlKey;
   if (!modifier) return;
   
   const key = e.key.toLowerCase();
-  if (key === 'b' || key === 'i' || key === 'u') {
+  if (key === "b" || key === "i" || key === "u") {
     const active = document.activeElement;
-    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) {
+    if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) {
       e.preventDefault();
       const start = active.selectionStart;
       const end = active.selectionEnd;
       const val = active.value;
       const selText = val.substring(start, end);
       
-      let tagStart = '', tagEnd = '';
-      if (key === 'b') { tagStart = '<b>'; tagEnd = '</b>'; }
-      else if (key === 'i') { tagStart = '<i>'; tagEnd = '</i>'; }
-      else if (key === 'u') { tagStart = '<u>'; tagEnd = '</u>'; }
+      let tagStart = "", tagEnd = "";
+      if (key === "b") { tagStart = "<b>"; tagEnd = "</b>"; }
+      else if (key === "i") { tagStart = "<i>"; tagEnd = "</i>"; }
+      else if (key === "u") { tagStart = "<u>"; tagEnd = "</u>"; }
       
       const newVal = val.substring(0, start) + tagStart + selText + tagEnd + val.substring(end);
       active.value = newVal;
       
       active.selectionStart = start;
       active.selectionEnd = start + tagStart.length + selText.length + tagEnd.length;
-      active.setValue(newVal); // trigger layout adjustments if necessary
-      active.dispatchEvent(new Event('input', { bubbles: true }));
+      active.dispatchEvent(new Event("input", { bubbles: true }));
     }
   }
 });
@@ -984,29 +982,29 @@ const US_STATES = [
 ];
 
 function populateCountriesDropdown() {
-  const select = document.getElementById('f-country');
+  const select = document.getElementById("f-country");
   if(!select) return;
-  select.innerHTML = '';
+  select.innerHTML = "";
   
-  const defOpt = document.createElement('option');
-  defOpt.value = '';
-  defOpt.textContent = '-- Select Country or US State --';
+  const defOpt = document.createElement("option");
+  defOpt.value = "";
+  defOpt.textContent = "-- Select Country or US State --";
   select.appendChild(defOpt);
 
-  const ogCountries = document.createElement('optgroup');
+  const ogCountries = document.createElement("optgroup");
   ogCountries.label = "All Countries";
   COUNTRIES.forEach(c => {
-    const opt = document.createElement('option');
+    const opt = document.createElement("option");
     opt.value = `${c.name} ${c.flag}`;
     opt.textContent = `${c.flag} ${c.name}`;
     ogCountries.appendChild(opt);
   });
   select.appendChild(ogCountries);
 
-  const ogStates = document.createElement('optgroup');
+  const ogStates = document.createElement("optgroup");
   ogStates.label = "United States - States";
   US_STATES.forEach(s => {
-    const opt = document.createElement('option');
+    const opt = document.createElement("option");
     opt.value = `${s.name}, USA ${s.icon}`;
     opt.textContent = `${s.icon} ${s.name} (USA)`;
     ogStates.appendChild(opt);
@@ -1021,7 +1019,7 @@ function selectDropdownValue(selectId, val) {
   populateCountriesDropdown();
   
   if (!val) {
-    select.value = '';
+    select.value = "";
     return;
   }
   
@@ -1035,7 +1033,7 @@ function selectDropdownValue(selectId, val) {
   }
   
   if (!found) {
-    const opt = document.createElement('option');
+    const opt = document.createElement("option");
     opt.value = val;
     opt.textContent = val;
     select.appendChild(opt);
@@ -1047,13 +1045,13 @@ function selectDropdownValue(selectId, val) {
 //  ⚙️  TYPOGRAPHY ENGINE UTILITIES
 // ═══════════════════════════════════════════════════════
 function getTypographyEditorHtml(prefix, label, s = {}) {
-  const font = s.font || '';
-  const bold = s.bold ? 'checked' : '';
-  const italic = s.italic ? 'checked' : '';
-  const underline = s.underline ? 'checked' : '';
-  const size = s.size || '';
-  const color = s.color || '';
-  const colorEnabled = s.color ? 'checked' : '';
+  const font = s.font || "";
+  const bold = s.bold ? "checked" : "";
+  const italic = s.italic ? "checked" : "";
+  const underline = s.underline ? "checked" : "";
+  const size = s.size || "";
+  const color = s.color || "";
+  const colorEnabled = s.color ? "checked" : "";
   
   return `
     <div class="typography-editor-block" style="background:#fff; border:1.5px solid #f0dce2; border-radius:12px; padding:12px; margin-bottom:12px;">
@@ -1063,18 +1061,18 @@ function getTypographyEditorHtml(prefix, label, s = {}) {
           <label style="font-size:10px;">Font Family</label>
           <select id="${prefix}-font" style="padding:6px 10px; font-size:13px;">
             <option value="" style="font-family:'Inter'">Default (Inter)</option>
-            <option value="'Playfair Display', serif" ${font === "'Playfair Display', serif" ? 'selected' : ''} style="font-family:'Playfair Display'">Playfair Display 🌹</option>
-            <option value="'Caveat', cursive" ${font === "'Caveat', cursive" ? 'selected' : ''} style="font-family:'Caveat'">Caveat Handwriting ✍️</option>
-            <option value="'Pacifico', cursive" ${font === "'Pacifico', cursive" ? 'selected' : ''} style="font-family:'Pacifico'">Pacifico Script 🏄</option>
-            <option value="'Special Elite', monospace" ${font === "'Special Elite', monospace" ? 'selected' : ''} style="font-family:'Special Elite'">Typewriter ⌨️</option>
-            <option value="Georgia, serif" ${font === "Georgia, serif" ? 'selected' : ''} style="font-family:Georgia">Georgia 📚</option>
+            <option value="'Playfair Display', serif" ${font === "'Playfair Display', serif" ? "selected" : ""} style="font-family:'Playfair Display'">Playfair Display 🌹</option>
+            <option value="'Caveat', cursive" ${font === "'Caveat', cursive" ? "selected" : ""} style="font-family:'Caveat'">Caveat Handwriting ✍️</option>
+            <option value="'Pacifico', cursive" ${font === "'Pacifico', cursive" ? "selected" : ""} style="font-family:'Pacifico'">Pacifico Script 🏄</option>
+            <option value="'Special Elite', monospace" ${font === "'Special Elite', monospace" ? "selected" : ""} style="font-family:'Special Elite'">Typewriter ⌨️</option>
+            <option value="Georgia, serif" ${font === "Georgia, serif" ? "selected" : ""} style="font-family:Georgia">Georgia 📚</option>
           </select>
         </div>
         <div>
           <label style="font-size:10px;">Font Color</label>
           <div style="display:flex; gap:4px; align-items:center;">
             <input type="checkbox" id="${prefix}-color-enable" ${colorEnabled} style="width:14px; height:14px; accent-color:var(--rose-deep);" title="Enable color override"/>
-            <input type="color" id="${prefix}-color" value="${color || '#c4637a'}" style="flex:1; height:32px; padding:1px; cursor:pointer; border-radius:6px; border:1px solid #f0dce2;"/>
+            <input type="color" id="${prefix}-color" value="${color || "#c4637a"}" style="flex:1; height:32px; padding:1px; cursor:pointer; border-radius:6px; border:1px solid #f0dce2;"/>
           </div>
         </div>
       </div>
@@ -1115,8 +1113,8 @@ function collectTypography(prefix) {
   
   return {
     font: fontEl.value,
-    color: (colorEnabledEl && colorEnabledEl.checked) ? colorEl.value : '',
-    size: sizeEl.value ? parseInt(sizeEl.value, 10) : '',
+    color: (colorEnabledEl && colorEnabledEl.checked) ? colorEl.value : "",
+    size: sizeEl.value ? parseInt(sizeEl.value, 10) : "",
     bold: boldEl.checked,
     italic: italicEl.checked,
     underline: underlineEl.checked
@@ -1124,8 +1122,8 @@ function collectTypography(prefix) {
 }
 
 function getStyleString(s) {
-  if (!s) return '';
-  let str = '';
+  if (!s) return "";
+  let str = "";
   if (s.font) str += `font-family: ${s.font} !important;`;
   if (s.bold) str += `font-weight: 700 !important;`;
   if (s.italic) str += `font-style: italic !important;`;
@@ -1138,20 +1136,20 @@ function getStyleString(s) {
 function applyCustomStyles(element, s) {
   if (!element) return;
   if (!s) {
-    element.style.fontFamily = '';
-    element.style.fontWeight = '';
-    element.style.fontStyle = '';
-    element.style.textDecoration = '';
-    element.style.fontSize = '';
-    element.style.color = '';
+    element.style.fontFamily = "";
+    element.style.fontWeight = "";
+    element.style.fontStyle = "";
+    element.style.textDecoration = "";
+    element.style.fontSize = "";
+    element.style.color = "";
     return;
   }
-  element.style.fontFamily = s.font || '';
-  element.style.fontWeight = s.bold ? '700' : '';
-  element.style.fontStyle = s.italic ? 'italic' : '';
-  element.style.textDecoration = s.underline ? 'underline' : '';
-  element.style.fontSize = s.size ? s.size + 'px' : '';
-  element.style.color = s.color || '';
+  element.style.fontFamily = s.font || "";
+  element.style.fontWeight = s.bold ? "700" : "";
+  element.style.fontStyle = s.italic ? "italic" : "";
+  element.style.textDecoration = s.underline ? "underline" : "";
+  element.style.fontSize = s.size ? s.size + "px" : "";
+  element.style.color = s.color || "";
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1170,7 +1168,7 @@ const FIREBASE_CONFIG = {
 let db = null, fbAuth = null, fbStorage = null, useCloud = false;
 (function initFirebase(){
   try{
-    if(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey.indexOf('PASTE')===-1 && typeof firebase!=='undefined'){
+    if(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey.indexOf("PASTE")===-1 && typeof firebase!=="undefined"){
       firebase.initializeApp(FIREBASE_CONFIG);
       fbAuth = firebase.auth();
       db = firebase.firestore();
@@ -1178,82 +1176,50 @@ let db = null, fbAuth = null, fbStorage = null, useCloud = false;
       try{ db.enablePersistence({synchronizeTabs:true}).catch(()=>{}); }catch(e){}
       useCloud = true;
     }
-  }catch(err){ console.error('Firebase init failed — using on-device mode.', err); useCloud = false; }
+  }catch(err){ console.error("Firebase init failed — using on-device mode.", err); useCloud = false; }
 })();
 
 // ═══════════════════════════════════════════════════════
 // DATA LAYERS
 // ═══════════════════════════════════════════════════════
-const TRIPS_KEY = 'duyvy_trips_v4';
-const SITE_KEY  = 'duyvy_site_v2';
+const TRIPS_KEY = "duyvy_trips_v4";
+const SITE_KEY  = "duyvy_site_v2";
 
-// 30 Premium customizable assets: 10 vectors & 35 emojis
 const DECOR_ASSETS = [
-  { id: 'hd-heart', name: 'Hand-drawn Heart 💖', svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,85 C50,85 15,55 15,30 C15,15 30,5 45,15 C50,18 50,18 50,18 C50,18 50,18 55,15 C70,5 85,15 85,30 C85,55 50,85 50,85 Z" fill="#ff8aa1" stroke="#4b3124" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
-  { id: 'hd-plane', name: 'Cartoon Airplane ✈️', svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M85,50 C85,40 25,40 15,45 C10,47 10,53 15,55 C25,60 85,60 85,50 Z" fill="#fcf7ef" stroke="#4b3124" stroke-width="5"/><path d="M55,45 L40,25 H50 L65,45 Z" fill="#fcf7ef" stroke="#4b3124" stroke-width="5" stroke-linejoin="round"/><path d="M50,55 L35,70 H45 L60,55 Z" fill="#fcf7ef" stroke="#4b3124" stroke-width="5" stroke-linejoin="round"/><path d="M20,45 L15,30 H25 L30,45 Z" fill="#fcf7ef" stroke="#4b3124" stroke-width="5" stroke-linejoin="round"/><circle cx="65" cy="50" r="2.5" fill="#4b3124"/><circle cx="55" cy="50" r="2.5" fill="#4b3124"/><circle cx="45" cy="50" r="2.5" fill="#4b3124"/></svg>' },
-  { id: 'hd-suitcase', name: 'Retro Suitcase 🧳', svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="15" y="35" width="70" height="50" rx="8" fill="#d8a176" stroke="#4b3124" stroke-width="5"/><path d="M35,35 V25 C35,20 65,20 65,25 V35" fill="none" stroke="#4b3124" stroke-width="5" stroke-linecap="round"/><line x1="30" y1="35" x2="30" y2="85" stroke="#4b3124" stroke-width="5"/><line x1="70" y1="35" x2="70" y2="85" stroke="#4b3124" stroke-width="5"/><path d="M15,50 V43 C15,38.5 18.5,35 23,35 H30" fill="none" stroke="#4b3124" stroke-width="5"/><path d="M85,50 V43 C85,38.5 81.5,35 77,35 H70" fill="none" stroke="#4b3124" stroke-width="5"/><path d="M15,70 V77 C15,81.5 18.5,85 23,85 H30" fill="none" stroke="#4b3124" stroke-width="5"/><path d="M85,70 V77 C85,81.5 81.5,85 77,85 H70" fill="none" stroke="#4b3124" stroke-width="5"/></svg>' },
-  { id: 'hd-compass', name: 'Compass 🧭', svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="18" r="8" fill="none" stroke="#4b3124" stroke-width="5"/><circle cx="50" cy="60" r="35" fill="#fcf7ef" stroke="#4b3124" stroke-width="5"/><circle cx="50" cy="60" r="26" fill="none" stroke="#4b3124" stroke-width="2" stroke-dasharray="2 4"/><path d="M50,35 L56,60 L50,85 L44,60 Z" fill="#e86a78" stroke="#4b3124" stroke-width="3" stroke-linejoin="round"/><path d="M50,35 L56,60 L50,60 Z" fill="#cc4f5d"/><circle cx="50" cy="60" r="4" fill="#4b3124"/><text x="50" y="34" font-family="sans-serif" font-size="11" font-weight="bold" fill="#4b3124" text-anchor="middle">N</text><text x="50" y="93" font-family="sans-serif" font-size="11" font-weight="bold" fill="#4b3124" text-anchor="middle">S</text></svg>' },
-  { id: 'hd-swirl', name: 'Swirl Path 〰️', svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M10,80 C20,95 45,95 55,75 C65,55 35,40 30,60 C25,80 55,85 80,60" fill="none" stroke="#4b3124" stroke-width="4" stroke-dasharray="8 6" stroke-linecap="round"/></svg>' },
-  { id: 'hd-cloud', name: 'Fluffy Cloud ☁️', svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M25,65 C20,65 15,60 15,53 C15,47 20,42 26,42 C28,35 35,30 43,30 C52,30 59,37 60,45 C65,43 71,46 73,51 C77,52 80,56 80,61 C80,67 75,72 68,72 L25,72 Z" fill="#f0f4f8" stroke="#4b3124" stroke-width="5" stroke-linejoin="round"/></svg>' },
-  { id: 'hd-star', name: 'Cute Star ⭐', svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,15 L62,38 L88,42 L69,60 L74,85 L50,73 L26,85 L31,60 L12,42 L38,38 Z" fill="#fbe251" stroke="#4b3124" stroke-width="5" stroke-linejoin="round"/></svg>' },
-  { id: 'hd-sparkle', name: 'Retro Sparkle ✨', svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,15 C50,35 35,50 15,50 C35,50 50,65 50,85 C50,65 65,50 85,50 C65,50 50,35 50,15 Z" fill="#fff9db" stroke="#4b3124" stroke-width="5" stroke-linejoin="round"/></svg>' },
-  { id: 'hd-balloon', name: 'Lovely Balloon 🎈', svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,20 C33,20 20,33 20,50 C20,65 31,76 45,79 L42,87 L58,87 L55,79 C69,76 80,65 80,50 C80,33 67,20 50,20 Z" fill="#e86a78" stroke="#4b3124" stroke-width="5"/><path d="M48,87 C48,93 52,93 52,97" fill="none" stroke="#4b3124" stroke-width="4"/><ellipse cx="35" cy="38" rx="4" ry="8" fill="#fff" transform="rotate(-15 35 38)"/></svg>' },
-  { id: 'hd-camera', name: 'Retro Camera 📷', svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="15" y="35" width="70" height="48" rx="8" fill="#a3b899" stroke="#4b3124" stroke-width="5"/><rect x="35" y="23" width="30" height="12" rx="4" fill="#a3b899" stroke="#4b3124" stroke-width="5"/><circle cx="50" cy="59" r="18" fill="#fff" stroke="#4b3124" stroke-width="5"/><circle cx="50" cy="59" r="10" fill="#4b3124"/><circle cx="28" cy="45" r="4" fill="#ff8aa1"/><rect x="70" y="42" width="6" height="6" rx="1" fill="#4b3124"/></svg>' }
+  { id: "hd-heart", name: "Hand-drawn Heart 💖", svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,85 C50,85 15,55 15,30 C15,15 30,5 45,15 C50,18 50,18 50,18 C50,18 50,18 55,15 C70,5 85,15 85,30 C85,55 50,85 50,85 Z" fill="#ff8aa1" stroke="#4b3124" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
+  { id: "hd-plane", name: "Cartoon Airplane ✈️", svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M85,50 C85,40 25,40 15,45 C10,47 10,53 15,55 C25,60 85,60 85,50 Z" fill="#fcf7ef" stroke="#4b3124" stroke-width="5"/><path d="M55,45 L40,25 H50 L65,45 Z" fill="#fcf7ef" stroke="#4b3124" stroke-width="5" stroke-linejoin="round"/><path d="M50,55 L35,70 H45 L60,55 Z" fill="#fcf7ef" stroke="#4b3124" stroke-width="5" stroke-linejoin="round"/><path d="M20,45 L15,30 H25 L30,45 Z" fill="#fcf7ef" stroke="#4b3124" stroke-width="5" stroke-linejoin="round"/><circle cx="65" cy="50" r="2.5" fill="#4b3124"/><circle cx="55" cy="50" r="2.5" fill="#4b3124"/><circle cx="45" cy="50" r="2.5" fill="#4b3124"/></svg>' },
+  { id: "hd-suitcase", name: "Retro Suitcase 🧳", svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="15" y="35" width="70" height="50" rx="8" fill="#d8a176" stroke="#4b3124" stroke-width="5"/><path d="M35,35 V25 C35,20 65,20 65,25 V35" fill="none" stroke="#4b3124" stroke-width="5" stroke-linecap="round"/><line x1="30" y1="35" x2="30" y2="85" stroke="#4b3124" stroke-width="5"/><line x1="70" y1="35" x2="70" y2="85" stroke="#4b3124" stroke-width="5"/><path d="M15,50 V43 C15,38.5 18.5,35 23,35 H30" fill="none" stroke="#4b3124" stroke-width="5"/><path d="M85,50 V43 C85,38.5 81.5,35 77,35 H70" fill="none" stroke="#4b3124" stroke-width="5"/><path d="M15,70 V77 C15,81.5 18.5,85 23,85 H30" fill="none" stroke="#4b3124" stroke-width="5"/><path d="M85,70 V77 C85,81.5 81.5,85 77,85 H70" fill="none" stroke="#4b3124" stroke-width="5"/></svg>' },
+  { id: "hd-compass", name: "Compass 🧭", svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="18" r="8" fill="none" stroke="#4b3124" stroke-width="5"/><circle cx="50" cy="60" r="35" fill="#fcf7ef" stroke="#4b3124" stroke-width="5"/><circle cx="50" cy="60" r="26" fill="none" stroke="#4b3124" stroke-width="2" stroke-dasharray="2 4"/><path d="M50,35 L56,60 L50,85 L44,60 Z" fill="#e86a78" stroke="#4b3124" stroke-width="3" stroke-linejoin="round"/><path d="M50,35 L56,60 L50,60 Z" fill="#cc4f5d"/><circle cx="50" cy="60" r="4" fill="#4b3124"/><text x="50" y="34" font-family="sans-serif" font-size="11" font-weight="bold" fill="#4b3124" text-anchor="middle">N</text><text x="50" y="93" font-family="sans-serif" font-size="11" font-weight="bold" fill="#4b3124" text-anchor="middle">S</text></svg>' },
+  { id: "hd-swirl", name: "Swirl Path 〰️", svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M10,80 C20,95 45,95 55,75 C65,55 35,40 30,60 C25,80 55,85 80,60" fill="none" stroke="#4b3124" stroke-width="4" stroke-dasharray="8 6" stroke-linecap="round"/></svg>' },
+  { id: "hd-cloud", name: "Fluffy Cloud ☁️", svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M25,65 C20,65 15,60 15,53 C15,47 20,42 26,42 C28,35 35,30 43,30 C52,30 59,37 60,45 C65,43 71,46 73,51 C77,52 80,56 80,61 C80,67 75,72 68,72 L25,72 Z" fill="#f0f4f8" stroke="#4b3124" stroke-width="5" stroke-linejoin="round"/></svg>' },
+  { id: "hd-star", name: "Cute Star ⭐", svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,15 L62,38 L88,42 L69,60 L74,85 L50,73 L26,85 L31,60 L12,42 L38,38 Z" fill="#fbe251" stroke="#4b3124" stroke-width="5" stroke-linejoin="round"/></svg>' },
+  { id: "hd-sparkle", name: "Retro Sparkle ✨", svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,15 C50,35 35,50 15,50 C35,50 50,65 50,85 C50,65 65,50 85,50 C65,50 50,35 50,15 Z" fill="#fff9db" stroke="#4b3124" stroke-width="5" stroke-linejoin="round"/></svg>' },
+  { id: "hd-balloon", name: "Lovely Balloon 🎈", svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,20 C33,20 20,33 20,50 C20,65 31,76 45,79 L42,87 L58,87 L55,79 C69,76 80,65 80,50 C80,33 67,20 50,20 Z" fill="#e86a78" stroke="#4b3124" stroke-width="5"/><path d="M48,87 C48,93 52,93 52,97" fill="none" stroke="#4b3124" stroke-width="4"/><ellipse cx="35" cy="38" rx="4" ry="8" fill="#fff" transform="rotate(-15 35 38)"/></svg>' },
+  { id: "hd-camera", name: "Retro Camera 📷", svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="15" y="35" width="70" height="48" rx="8" fill="#a3b899" stroke="#4b3124" stroke-width="5"/><rect x="35" y="23" width="30" height="12" rx="4" fill="#a3b899" stroke="#4b3124" stroke-width="5"/><circle cx="50" cy="59" r="18" fill="#fff" stroke="#4b3124" stroke-width="5"/><circle cx="50" cy="59" r="10" fill="#4b3124"/><circle cx="28" cy="45" r="4" fill="#ff8aa1"/><rect x="70" y="42" width="6" height="6" rx="1" fill="#4b3124"/></svg>' }
 ];
 
-const EMOJIS = ['🌸','✈️','🗺️','🌊','🏔️','🌅','🎡','🍜','🌙','🎭','🏯','🌿','🎆','🏝️','🌺','🛕','🎠','🍡'];
+const EMOJIS = ["🌸","✈️","🗺️","🌊","🏔️","🌅","🎡","🍜","🌙","🎭","🏯","🌿","🎆","🏝️","🌺","🛕","🎠","🍡"];
 const DECOR_EMOJIS = [
-  // === AIRPLANES & FLIGHT (HAND-DRAWN / SKETCH STYLE) ===
   "✈️", "🛩️", "🛫", "🛬", "🪂", "🛩", "🛫", "🛬", "🪂", "✈", 
-
-  // === TRAVEL & TRANSPORTATION ===
-  "🧳", "🧭", "🗺️", "📍", "🕶️", "🎒", "🛍️", "🎟️",
-  "🌍", "🌎", "🌏", "🏖️", "🏝️", "🌋", "🗻",
+  "🧳", "🧭", "🗺️", "📍", "🕶️", "🎒", "🛍️", "🎟️", "🌍", "🌎", "🌏", "🏖️", "🏝️", "🌋", "🗻",
   "🛸", "🚀", "🚁", "🏎️", "🏎", "🏍️", "🚜", "🚚", "🚓", "🚑", "🚒", "🚙", "🚗", 
-  "🚕", "🚲", "🛵", "🚇", "🛳️", "⛵", "🚂", "🚌", "🚡", "🚠",
-
-  // === LANDMARKS & ATTRACTIONS ===
-  "🎡", "🏰", "⛺", "🎠", "🗽", "🗼", "🏟️", "🏛️", "⛩️", "🛕",
-
-  // === WEATHER, SKY & NATURE ===
-  "☀️", "🌙", "⭐", "🪐", "☁️", "🌈", "⚡",
-  "🌸", "🌿", "🌻", "🌷", "🍀",
-
-  // === ROMANCE, SPARKS & CELEBRATION ===
-  "💕", "✨", "🎀", "🎈", "✉️", "💌", "💖", "💗", "💓", "💞", "💍", "💎",
-
-  // === SWEETS, DRINKS & DESSERTS ===
-  "🍩", "🍹", "🍿", "🍦", "🥂", "🍷", "🍺", "☕", "🍵", "🥞", "🧁", "🎂", 
-  "🍫", "🍬", "🍭", "🍪", "🍮", "🧇", "🍰", "🧋", "🍯",
-
-  // === SAVORY FOOD & INGREDIENTS ===
-  "🍣", "🍜", "🍕", "🍟", "🥐", "🥑", "🍔", "🌮", "🥪", "🥨", "🥯", "🧀", 
-  "🍙", "🍡", "🍤", "🥚",
-
-  // === FRUITS ===
-  "🍓", "🍒", "🍑", "🍉", "🍇", "Pineapple 🍍", "🍋", "🍌", "🥭", "🥝", "🥥", "🍏",
-
-  // === ANIMALS & PETS ===
-  "🧸", "🐾", "🐶", "🐹", "🐭", "🐨", "🐷", "🐸", "🐵", "🐮", "🐑", "🐧",
-  "🦆", "🦉", "🐢", "🐬", "🐙", "🐣", "🦌", "🦕", "🐯", "🦁", "🐱", "🐰", 
-  "🦊", "🐻", "🐼", "🦔", "🦦", "🦋", "🐝",
-
-  // === HOBBIES & MISC ===
-  "📸", "🎨", "✏️", "🛹"
+  " \%)$.", "🚖", "🚲", "🛵", "🚇", "🛳️", "⛵", "🚂", "🚌", "🚡", "🚠", "🎡", "🏰", "⛺", "🎠", "🗽", "🗼", "🏟️", "🏛️", "⛩️", "🛕", "☀️", "🌙", "⭐", "🪐", "☁️", "🌈", "⚡", "🌸", "🌿", "🌻", "🌷", "🍀", "💕", "✨", "🎀", "🎈", "✉️", "💌", "💖", "💗", "💓", "💞", "💍", "💎", "🍩", "🍹", "🍿", "🍦", "🥂", "🍷", "🍺", "☕", "🍵", "🥞", "🧁", "🎂", "🍫", "🍬", "🍭", "🍪", "🍮", "🧇", "🍰", "🧋", "🍯", "🍣", "🍜", "🍕", "🍟", "🥐", "🥑", "🍔", "🌮", "🥪", "🥨", "🥯", "🧀", 
+  "🍙", "🍡", "🍤", "🥚", "🍓", "🍒", "🍑", "🍉", "🍇", "🍍", "🍋", "🍌", "🥭", "🥝", "🥥", "🍏", "🧸", "🐾", "🐶", "🐹", "🐭", "🐨", "🐷", "🐸", "🐵", "🐮", "🐑", "🐧", "🦆", "🦉", "🐢", "🐬", "🐙", "🐣", "🦌", "🦕", "🐯", "🦁", "🐱", "🐰", 
+  "🦊", "🐻", "🐼", "🦔", "🦦", "🦋", "🐝", "📸", "🎨", "✏️", "🛹"
 ];
 const COLORS = [
-  {name:'Blush',    bg:'#fce4ec', accent:'#e47a90'},
-  {name:'Lavender', bg:'#ede7f6', accent:'#9575cd'},
-  {name:'Sage',     bg:'#e8f5e9', accent:'#66bb6a'},
-  {name:'Sky',      bg:'#e3f2fd', accent:'#64b5f6'},
-  {name:'Peach',    bg:'#fff3e0', accent:'#ffa726'},
-  {name:'Mint',     bg:'#e0f2f1', accent:'#4db6ac'},
-  {name:'Rose gold',bg:'#fbe9e7', accent:'#ef9a9a'}
+  {name:"Blush",    bg:"#fce4ec", accent:"#e47a90"},
+  {name:"Lavender", bg:"#ede7f6", accent:"#9575cd"},
+  {name:"Sage",     bg:"#e8f5e9", accent:"#66bb6a"},
+  {name:"Sky",      bg:"#e3f2fd", accent:"#64b5f6"},
+  {name:"Peach",    bg:"#fff3e0", accent:"#ffa726"},
+  {name:"Mint",     bg:"#e0f2f1", accent:"#4db6ac"},
+  {name:"Rose gold",bg:"#fbe9e7", accent:"#ef9a9a"}
 ];
 const TAB_SHAPES = [
-  {label:'Pill',  style:'border-radius:50px;'},
-  {label:'Round', style:'border-radius:12px;'},
-  {label:'Square',style:'border-radius:6px;'}
+  {label:"Pill",  style:"border-radius:50px;"},
+  {label:"Round", style:"border-radius:12px;"},
+  {label:"Square",style:"border-radius:6px;"}
 ];
 
 function loadTrips(){try{return JSON.parse(localStorage.getItem(TRIPS_KEY))||defaultTrips();}catch{return defaultTrips();}}
@@ -1261,7 +1227,7 @@ function loadSite(){try{return JSON.parse(localStorage.getItem(SITE_KEY))||defau
 function safeSetItem(key,obj){
   try{localStorage.setItem(key,JSON.stringify(obj));return true;}
   catch(err){
-    showToast('⚠️ Storage full — try using image links instead of uploads');
+    showToast("⚠️ Storage full — try using image links instead of uploads");
     return false;
   }
 }
@@ -1608,94 +1574,94 @@ let activeFormTabIdx = 0;
 function renderAll(){renderHero();renderGrid();renderFooter();}
 
 function getShadowStyle(style, color) {
-  if (!style || style === 'none') return 'none';
-  if (style === 'soft') return `1px 1px 3px ${color}`;
-  if (style === 'medium') return `2px 2px 6px ${color}`;
-  if (style === 'strong') return `3px 3px 10px ${color}`;
-  if (style === 'glow') return `0 0 10px ${color}, 0 0 4px ${color}`;
-  return 'none';
+  if (!style || style === "none") return "none";
+  if (style === "soft") return `1px 1px 3px ${color}`;
+  if (style === "medium") return `2px 2px 6px ${color}`;
+  if (style === "strong") return `3px 3px 10px ${color}`;
+  if (style === "glow") return `0 0 10px ${color}, 0 0 4px ${color}`;
+  return "none";
 }
 
 function renderHero(){
   const s = site;
-  document.getElementById('hero-eyebrow').innerHTML = safeFormat(s.eyebrow||'');
-  document.getElementById('hero-h1a').innerHTML = safeFormat(s.h1a!==undefined ? s.h1a : 'Every journey');
-  document.getElementById('hero-em').innerHTML = safeFormat(s.em||'');
-  document.getElementById('hero-h1b').innerHTML = safeFormat(s.h1b!==undefined ? s.h1b : ' is home');
-  const emEl = document.getElementById('hero-em');
-  emEl.style.display = s.em ? '' : 'none';
-  document.getElementById('hero-sub').innerHTML = safeFormat(s.sub||'');
+  document.getElementById("hero-eyebrow").innerHTML = safeFormat(s.eyebrow||"");
+  document.getElementById("hero-h1a").innerHTML = safeFormat(s.h1a!==undefined ? s.h1a : "Every journey");
+  document.getElementById("hero-em").innerHTML = safeFormat(s.em||"");
+  document.getElementById("hero-h1b").innerHTML = safeFormat(s.h1b!==undefined ? s.h1b : " is home");
+  const emEl = document.getElementById("hero-em");
+  emEl.style.display = s.em ? "" : "none";
+  document.getElementById("hero-sub").innerHTML = safeFormat(s.sub||"");
 
-  const bg   = document.getElementById('hero-bg');
-  const ov   = document.getElementById('hero-overlay');
-  const hero = document.getElementById('hero-section');
+  const bg   = document.getElementById("hero-bg");
+  const ov   = document.getElementById("hero-overlay");
+  const hero = document.getElementById("hero-section");
 
-  applyCustomStyles(document.getElementById('hero-eyebrow'), s.styles?.eyebrow);
-  applyCustomStyles(document.getElementById('hero-h1'), s.styles?.headline);
-  applyCustomStyles(document.getElementById('hero-sub'), s.styles?.subtitle);
+  applyCustomStyles(document.getElementById("hero-eyebrow"), s.styles?.eyebrow);
+  applyCustomStyles(document.getElementById("hero-h1"), s.styles?.headline);
+  applyCustomStyles(document.getElementById("hero-sub"), s.styles?.subtitle);
 
   if(s.bgUrl){
-    bg.innerHTML = ''; bg.className = 'hero-bg'; bg.removeAttribute('style');
-    const img = document.createElement('img'); img.className = 'hero-img'; img.alt = ''; img.src = s.bgUrl;
-    bg.appendChild(img); hero.classList.add('has-bg-img','custom-bg');
+    bg.innerHTML = ""; bg.className = "hero-bg"; bg.removeAttribute("style");
+    const img = document.createElement("img"); img.className = "hero-img"; img.alt = ""; img.src = s.bgUrl;
+    bg.appendChild(img); hero.classList.add("has-bg-img","custom-bg");
   } else if(s.bgCss){
-    bg.innerHTML = ''; bg.className = 'hero-bg has-css-bg'; bg.style.background = s.bgCss;
-    hero.classList.add('custom-bg');
-    hero.classList.toggle('has-bg-img', s.bgCss.includes('url(')||s.bgCss.includes('gradient'));
+    bg.innerHTML = ""; bg.className = "hero-bg has-css-bg"; bg.style.background = s.bgCss;
+    hero.classList.add("custom-bg");
+    hero.classList.toggle("has-bg-img", s.bgCss.includes("url(")||s.bgCss.includes("gradient"));
   } else {
-    bg.innerHTML = ''; bg.className = 'hero-bg'; bg.removeAttribute('style');
-    hero.classList.remove('has-bg-img','custom-bg');
+    bg.innerHTML = ""; bg.className = "hero-bg"; bg.removeAttribute("style");
+    hero.classList.remove("has-bg-img","custom-bg");
   }
 
   const op = parseFloat(s.overlayOpacity)||0;
-  ov.style.background = op>0 ? 'rgba(0,0,0,'+op+')' : 'transparent';
+  ov.style.background = op>0 ? "rgba(0,0,0,"+op+")" : "transparent";
 
-  const POS=['tp-tl','tp-tc','tp-tr','tp-ml','tp-mc','tp-mr','tp-bl','tp-bc','tp-br'];
+  const POS=["tp-tl","tp-tc","tp-tr","tp-ml","tp-mc","tp-mr","tp-bl","tp-bc","tp-br"];
   POS.forEach(c=>hero.classList.remove(c));
-  hero.classList.add('tp-'+(s.textPos||'mc'));
+  hero.classList.add("tp-"+(s.textPos||"mc"));
 
-  const SP=['sp-tl','sp-tc','sp-tr','sp-ml','sp-mc','sp-mr','sp-bl','sp-bc','sp-br'];
+  const SP=["sp-tl","sp-tc","sp-tr","sp-ml","sp-mc","sp-mr","sp-bl","sp-bc","sp-br"];
   SP.forEach(c=>hero.classList.remove(c));
-  hero.classList.add('sp-'+(s.statsPos||'bc'));
+  hero.classList.add("sp-"+(s.statsPos||"bc"));
 
-  const floatingLayer = document.getElementById('hero-floating-layer');
+  const floatingLayer = document.getElementById("hero-floating-layer");
   if(floatingLayer) {
-    floatingLayer.innerHTML = '';
+    floatingLayer.innerHTML = "";
     (s.floatingObjects || []).forEach(obj => {
-      const el = document.createElement('div');
-      el.className = 'floating-obj';
+      const el = document.createElement("div");
+      el.className = "floating-obj";
       
       const assetId = obj.assetId || obj.emoji; 
       const handDrawn = DECOR_ASSETS.find(a => a.id === assetId);
       
       if (handDrawn) {
         el.innerHTML = handDrawn.svg;
-        el.style.width = obj.size + 'px';
-        el.style.height = obj.size + 'px';
+        el.style.width = obj.size + "px";
+        el.style.height = obj.size + "px";
       } else {
         el.textContent = assetId;
-        el.style.fontSize = obj.size + 'px';
+        el.style.fontSize = obj.size + "px";
       }
       
-      el.style.left = obj.x + '%';
-      el.style.top = obj.y + '%';
-      el.style.animationDelay = (Math.random() * 2) + 's';
+      el.style.left = obj.x + "%";
+      el.style.top = obj.y + "%";
+      el.style.animationDelay = (Math.random() * 2) + "s";
       floatingLayer.appendChild(el);
     });
   }
 
-  document.getElementById('logo-name').textContent = s.coupleNames||'Duy & Vy';
-  document.title = (s.coupleNames||'Duy & Vy')+' — Our Travel Journal';
+  document.getElementById("logo-name").textContent = s.coupleNames||"Duy & Vy";
+  document.title = (s.coupleNames||"Duy & Vy")+" — Our Travel Journal";
   renderStats();
   applyShadows();
 }
 
 function applyShadows() {
   const s = site;
-  const eyebrow = document.getElementById('hero-eyebrow');
-  const h1 = document.getElementById('hero-h1');
-  const sub = document.getElementById('hero-sub');
-  const stats = document.getElementById('hero-stats');
+  const eyebrow = document.getElementById("hero-eyebrow");
+  const h1 = document.getElementById("hero-h1");
+  const sub = document.getElementById("hero-sub");
+  const stats = document.getElementById("hero-stats");
   
   const eyeS = getShadowStyle(s.eyebrowShadow, s.eyebrowShadowColor);
   const h1S = getShadowStyle(s.headlineShadow, s.headlineShadowColor);
@@ -1708,25 +1674,25 @@ function applyShadows() {
   
   if(stats) {
     stats.style.textShadow = statS;
-    stats.querySelectorAll('.stat-num').forEach(el => el.style.textShadow = statS);
-    stats.querySelectorAll('.stat-label').forEach(el => el.style.textShadow = statS);
+    stats.querySelectorAll(".stat-num").forEach(el => el.style.textShadow = statS);
+    stats.querySelectorAll(".stat-label").forEach(el => el.style.textShadow = statS);
   }
 }
 
 function updateShadowsLive() {
-  const eyebrowStyle = document.getElementById('he-eyebrow-shadow').value;
-  const eyebrowColor = document.getElementById('he-eyebrow-shadow-color').value;
-  const headlineStyle = document.getElementById('he-headline-shadow').value;
-  const headlineColor = document.getElementById('he-headline-shadow-color').value;
-  const subtitleStyle = document.getElementById('he-subtitle-shadow').value;
-  const subtitleColor = document.getElementById('he-subtitle-shadow-color').value;
-  const statsStyle = document.getElementById('he-stats-shadow').value;
-  const statsColor = document.getElementById('he-stats-shadow-color').value;
+  const eyebrowStyle = document.getElementById("he-eyebrow-shadow").value;
+  const eyebrowColor = document.getElementById("he-eyebrow-shadow-color").value;
+  const headlineStyle = document.getElementById("he-headline-shadow").value;
+  const headlineColor = document.getElementById("he-headline-shadow-color").value;
+  const subtitleStyle = document.getElementById("he-subtitle-shadow").value;
+  const subtitleColor = document.getElementById("he-subtitle-shadow-color").value;
+  const statsStyle = document.getElementById("he-stats-shadow").value;
+  const statsColor = document.getElementById("he-stats-shadow-color").value;
   
-  const eyebrow = document.getElementById('hero-eyebrow');
-  const h1 = document.getElementById('hero-h1');
-  const sub = document.getElementById('hero-sub');
-  const stats = document.getElementById('hero-stats');
+  const eyebrow = document.getElementById("hero-eyebrow");
+  const h1 = document.getElementById("hero-h1");
+  const sub = document.getElementById("hero-sub");
+  const stats = document.getElementById("hero-stats");
   
   const eyeS = getShadowStyle(eyebrowStyle, eyebrowColor);
   const h1S = getShadowStyle(headlineStyle, headlineColor);
@@ -1738,8 +1704,8 @@ function updateShadowsLive() {
   if(sub) sub.style.textShadow = subS;
   if(stats) {
     stats.style.textShadow = statS;
-    stats.querySelectorAll('.stat-num').forEach(el => el.style.textShadow = statS);
-    stats.querySelectorAll('.stat-label').forEach(el => el.style.textShadow = statS);
+    stats.querySelectorAll(".stat-num").forEach(el => el.style.textShadow = statS);
+    stats.querySelectorAll(".stat-label").forEach(el => el.style.textShadow = statS);
   }
 }
 
@@ -1749,44 +1715,45 @@ function renderStats(){
   trips.forEach(t=>{
     if(t.startDate&&t.endDate){totalDays+=Math.max(1,Math.round((new Date(t.endDate)-new Date(t.startDate))/86400000)+1);}
   });
-  const container = document.getElementById('hero-stats');
+  const container = document.getElementById("hero-stats");
   if(container) {
     container.innerHTML = `
       <div class="stat"><div class="stat-num">${trips.length}</div><div class="stat-label">Trips together</div></div>
       <div class="stat"><div class="stat-num">${countries}</div><div class="stat-label">Countries</div></div>
       <div class="stat"><div class="stat-num">${totalDays}</div><div class="stat-label">Days exploring</div></div>`;
       
-    container.querySelectorAll('.stat-num').forEach(el => applyCustomStyles(el, site.styles?.statsNum));
-    container.querySelectorAll('.stat-label').forEach(el => applyCustomStyles(el, site.styles?.statsLabel));
+    container.querySelectorAll(".stat-num").forEach(el => applyCustomStyles(el, site.styles?.statsNum));
+    container.querySelectorAll(".stat-label").forEach(el => applyCustomStyles(el, site.styles?.statsLabel));
   }
 }
 
 function renderFooter(){
-  document.getElementById('footer-display').innerHTML = site.footer||'Made with ♥ for Duy & Vy';
+  document.getElementById("footer-display").innerHTML = site.footer||"Made with ♥ for Duy & Vy";
 }
 
 function sortedTrips(){
   return [...trips].sort((a,b)=>{
-    const da = a.startDate||'9999', db = b.startDate||'9999';
+    const da = a.startDate||"9999", db = b.startDate||"9999";
     return sortAsc ? da.localeCompare(db) : db.localeCompare(da);
   });
 }
 
+// Fixed duplicate function fragments and localized layout assignments
 function toggleSort(){
   sortAsc = !sortAsc;
-  const btn = document.getElementById('sort-btn');
-  btn.classList.toggle('asc', sortAsc);
+  const btn = document.getElementById("sort-btn");
+  btn.classList.toggle("asc", sortAsc);
   renderGrid();
 }
 
 function fmtDate(s,e){
-  const o={month:'short',day:'numeric',year:'numeric'};
-  if(!s&&!e) return '';
-  if(!e) return new Date(s+'T00:00:00').toLocaleDateString('en-US',o);
-  const sd=new Date(s+'T00:00:00'), ed=new Date(e+'T00:00:00');
+  const o={month:"short",day:"numeric",year:"numeric"};
+  if(!s&&!e) return "";
+  if(!e) return new Date(s+"T00:00:00").toLocaleDateString("en-US",o);
+  const sd=new Date(s+"T00:00:00"), ed=new Date(e+"T00:00:00");
   if(sd.getFullYear()===ed.getFullYear()&&sd.getMonth()===ed.getMonth())
-    return sd.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' – '+ed.getDate()+', '+ed.getFullYear();
-  return sd.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' – '+ed.toLocaleDateString('en-US',o);
+    return sd.toLocaleDateString("en-US",{month:"short",day:"numeric"})+" – "+ed.getDate()+", "+ed.getFullYear();
+  return sd.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+" – "+ed.toLocaleDateString("en-US",o);
 }
 
 function countDays(t){
@@ -1796,29 +1763,29 @@ function countDays(t){
 }
 
 function renderGrid(){
-  const grid = document.getElementById('trips-grid');
+  const grid = document.getElementById("trips-grid");
   const list = sortedTrips();
-  document.getElementById('trip-count-label').textContent = trips.length ? trips.length+' trip'+(trips.length>1?'s':'') : '';
+  document.getElementById("trip-count-label").textContent = trips.length ? trips.length+" trip"+(trips.length>1?"s":"") : "";
   if(!trips.length){
     grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🌸</div><div class="empty-title">Your journey starts here</div><div class="empty-text">Add your first trip and fill this journal with beautiful memories.</div></div><div class="add-card" onclick="openAddForm()"><div class="add-card-icon">＋</div><div class="add-card-text">Add your first trip</div></div>`;
     return;
   }
   let html = list.map(t=>{
-    const bg = t.color?.bg||'#fce4ec';
-    const ac = t.color?.accent||'#e47a90';
+    const bg = t.color?.bg||"#fce4ec";
+    const ac = t.color?.accent||"#e47a90";
     const ds = fmtDate(t.startDate,t.endDate);
     const nd = countDays(t);
     return `<div class="trip-card" onclick="openDetail('${t.id}')">
-      <div class="trip-card-banner" style="background:${bg};" data-cover="${esc(t.coverUrl||'')}" data-bg="${esc(bg)}">
-        ${!t.coverUrl?`<span class="trip-card-emoji">${t.emoji||'✈️'}</span>`:''}
-        ${ds?`<span class="trip-card-date-badge" style="color:${ac}">${ds}</span>`:''}
+      <div class="trip-card-banner" style="background:${bg};" data-cover="${esc(t.coverUrl||"")}" data-bg="${esc(bg)}">
+        ${!t.coverUrl?`<span class="trip-card-emoji">${t.emoji||"✈️"}</span>`:""}
+        ${ds?`<span class="trip-card-date-badge" style="color:${ac}">${ds}</span>`:""}
       </div>
       <div class="trip-card-body">
-        <div class="trip-card-country" style="${getStyleString(t.styles?.country)}">${safeFormat(t.country||'')}</div>
+        <div class="trip-card-country" style="${getStyleString(t.styles?.country)}">${safeFormat(t.country||"")}</div>
         <div class="trip-card-title" style="${getStyleString(t.styles?.title)}">${safeFormat(t.title)}</div>
-        <div class="trip-card-desc" style="${getStyleString(t.styles?.desc)}">${safeFormat(t.desc||'')}</div>
+        <div class="trip-card-desc" style="${getStyleString(t.styles?.desc)}">${safeFormat(t.desc||"")}</div>
         <div class="trip-card-meta">
-          <div class="trip-card-days" style="color:${ac}">📅 ${nd} day${nd===1?'':'s'}</div>
+          <div class="trip-card-days" style="color:${ac}">📅 ${nd} day${nd===1?"":"s"}</div>
           <div class="trip-card-actions">
             <button class="icon-btn" title="Edit" onclick="event.stopPropagation();openEditForm('${t.id}')">✏️</button>
             <button class="icon-btn danger" title="Delete" onclick="event.stopPropagation();askDelete('${t.id}')">🗑️</button>
@@ -1826,15 +1793,15 @@ function renderGrid(){
         </div>
       </div>
     </div>`;
-  }).join('');
+  }).join("");
   html += `<div class="add-card" onclick="openAddForm()"><div class="add-card-icon">＋</div><div class="add-card-text">Add another trip</div></div>`;
   grid.innerHTML = html;
-  grid.querySelectorAll('.trip-card-banner[data-cover]').forEach(el=>{
+  grid.querySelectorAll(".trip-card-banner[data-cover]").forEach(el=>{
     const url = el.dataset.cover;
     if(url){
       el.style.backgroundImage = 'url("'+url+'")';
-      el.style.backgroundSize = 'cover';
-      el.style.backgroundPosition = 'center';
+      el.style.backgroundSize = "cover";
+      el.style.backgroundPosition = "center";
     }
   });
 }
@@ -1842,66 +1809,66 @@ function renderGrid(){
 function openDetail(id){
   const t = trips.find(x=>x.id===id); if(!t) return;
   currentDetailTripId = id;
-  const bg = t.color?.bg||'#fce4ec', ac = t.color?.accent||'#e47a90';
-  const ban = document.getElementById('det-banner');
+  const bg = t.color?.bg||"#fce4ec", ac = t.color?.accent||"#e47a90";
+  const ban = document.getElementById("det-banner");
   if(t.coverUrl){
     ban.style.backgroundImage='url("'+t.coverUrl+'")';
-    ban.style.backgroundSize='cover';
-    ban.style.backgroundPosition='center';
-    ban.style.backgroundColor='';
-    ban.innerHTML='';
+    ban.style.backgroundSize="cover";
+    ban.style.backgroundPosition="center";
+    ban.style.backgroundColor="";
+    ban.innerHTML="";
   } else {
-    ban.style.backgroundImage='';
+    ban.style.backgroundImage="";
     ban.style.backgroundColor=bg;
-    ban.innerHTML=`<span style="font-size:80px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.1))">${t.emoji||'✈️'}</span>`;
+    ban.innerHTML=`<span style="font-size:80px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.1))">${t.emoji||"✈️"}</span>`;
   }
   
-  const countryEl = document.getElementById('det-country');
-  const titleEl = document.getElementById('det-title');
-  const descEl = document.getElementById('det-desc');
+  const countryEl = document.getElementById("det-country");
+  const titleEl = document.getElementById("det-title");
+  const descEl = document.getElementById("det-desc");
   
-  countryEl.innerHTML=safeFormat(t.country||'');
+  countryEl.innerHTML=safeFormat(t.country||"");
   titleEl.innerHTML=safeFormat(t.title);
-  descEl.innerHTML=safeFormat(t.desc||'');
+  descEl.innerHTML=safeFormat(t.desc||"");
   
   applyCustomStyles(countryEl, t.styles?.country);
   applyCustomStyles(titleEl, t.styles?.title);
   applyCustomStyles(descEl, t.styles?.desc);
 
-  document.getElementById('det-dates').innerHTML=`📅 ${fmtDate(t.startDate,t.endDate)||'Dates TBD'}`;
-  document.getElementById('det-dates').style.color=ac;
+  document.getElementById("det-dates").innerHTML=`📅 ${fmtDate(t.startDate,t.endDate)||"Dates TBD"}`;
+  document.getElementById("det-dates").style.color=ac;
   
   renderDetailTabs(t, ac);
-  document.getElementById('det-edit-btn').onclick=()=>{closeOverlay('detail-overlay');setTimeout(()=>openEditForm(id),100);};
-  document.getElementById('det-delete-btn').onclick=()=>{closeOverlay('detail-overlay');setTimeout(()=>askDelete(id),100);};
-  openOverlay('detail-overlay');
+  document.getElementById("det-edit-btn").onclick=()=>{closeOverlay("detail-overlay");setTimeout(()=>openEditForm(id),100);};
+  document.getElementById("det-delete-btn").onclick=()=>{closeOverlay("detail-overlay");setTimeout(()=>askDelete(id),100);};
+  openOverlay("detail-overlay");
 }
 
 function renderDetailTabs(t, ac){
-  const bar = document.getElementById('det-tabs-bar');
-  const content = document.getElementById('det-tabs-content');
+  const bar = document.getElementById("det-tabs-bar");
+  const content = document.getElementById("det-tabs-content");
   const tabs = t.tabs||[];
-  if(!tabs.length){bar.innerHTML='';content.innerHTML='';return;}
+  if(!tabs.length){bar.innerHTML="";content.innerHTML="";return;}
   function render(idx){
     bar.innerHTML = tabs.map((tab,i)=>{
       const col = tab.color||ac;
-      const shp = tab.shape||'border-radius:50px;';
+      const shp = tab.shape||"border-radius:50px;";
       const active = i===idx;
-      return `<button class="tab-btn${active?' active':''}" style="${active?'background:'+col+';color:#fff;'+shp:''+shp}" onclick="renderDetailTabs._switch(${i})">${esc(tab.label||('Day '+(i+1)))}</button>`;
-    }).join('');
+      return `<button class="tab-btn${active?' active':''}" style="${active?'background:'+col+';color:#fff;'+shp:''+shp}" onclick="renderDetailTabs._switch(${i})">${esc(tab.label||("Day "+(i+1)))}</button>`;
+    }).join("");
     const tab = tabs[idx];
     const acts = tab.activities||[];
-    content.innerHTML = `<div class="activities-list">${acts.map((a,ai)=>actCardHTML(a,ai)).join('')}</div>`;
-    content.querySelectorAll('.checklist-item input').forEach(cb=>{
-      cb.addEventListener('change',function(){
-        const item = cb.closest('.checklist-item');
-        item.classList.toggle('checked', cb.checked);
+    content.innerHTML = `<div class="activities-list">${acts.map((a,ai)=>actCardHTML(a,ai,idx)).join("")}</div>`;
+    content.querySelectorAll(".checklist-item input").forEach(cb=>{
+      cb.addEventListener("change",function(){
+        const item = cb.closest(".checklist-item");
+        item.classList.toggle("checked", cb.checked);
         const ai = parseInt(cb.dataset.actIdx,10);
         const ci = parseInt(cb.dataset.itemIdx,10);
         const trip = trips.find(x=>x.id===currentDetailTripId);
         if(trip && trip.tabs[idx] && trip.tabs[idx].activities[ai] && trip.tabs[idx].activities[ai].checklist[ci]){
           trip.tabs[idx].activities[ai].checklist[ci].done = cb.checked;
-          if(useCloud){ db.collection('trips').doc(trip.id).set(trip).catch(e=>{console.error(e);showToast(fbWriteError(e));}); }
+          if(useCloud){ db.collection("trips").doc(trip.id).set(trip).catch(e=>{console.error(e);showToast(fbWriteError(e));}); }
           else { saveTrips(trips); }
         }
       });
@@ -1911,15 +1878,20 @@ function renderDetailTabs(t, ac){
   render(0);
 }
 
-function actCardHTML(a, actIdx){
-  const mapBtn = a.mapUrl ? `<a class="map-link" href="${esc(a.mapUrl)}" target="_blank" rel="noopener">🗺️ Open in Maps</a>` : '';
-  const imgEl = a.imgUrl ? `<img class="activity-img" src="${esc(a.imgUrl)}" alt="" onerror="this.style.display='none';var p=this.nextElementSibling;if(p&&p.classList.contains('activity-img-placeholder'))p.style.display='flex';" />` : '';
-  const tipEl = a.tip ? `<div class="activity-tip" style="${getStyleString(a.styles?.tip)}"><div class="activity-tip-label">💡 Tip</div>${safeFormat(a.tip)}</div>` : '';
+function actCardHTML(a, actIdx, tabIdx){
+  const mapBtn = a.mapUrl ? `<a class="map-link" href="${esc(a.mapUrl)}" target="_blank" rel="noopener">🗺️ Open in Maps</a>` : "";
+  const imgEl = a.imgUrl ? `<img class="activity-img" src="${esc(a.imgUrl)}" alt="" onerror="this.style.display='none';var p=this.nextElementSibling;if(p&&p.classList.contains('activity-img-placeholder'))p.style.display='flex';" />` : "";
+  const tipEl = a.tip ? `<div class="activity-tip" style="${getStyleString(a.styles?.tip)}"><div class="activity-tip-label">💡 Tip</div>${safeFormat(a.tip)}</div>` : "";
   const checklistEl = (a.checklist&&a.checklist.length) ? `
     <div class="checklist">
       <div class="checklist-title">Checklist</div>
-      ${a.checklist.map((c,ci)=>`<div class="checklist-item${c.done?' checked':''}"><input type="checkbox" data-act-idx="${actIdx}" data-item-idx="${ci}" ${c.done?'checked':''}><span>${esc(c.text)}</span></div>`).join('')}
-    </div>` : '';
+      ${a.checklist.map((c,ci)=>`<div class="checklist-item${c.done?' checked':''}"><input type="checkbox" data-act-idx="${actIdx}" data-item-idx="${ci}" ${c.done?'checked':''}><span>${esc(c.text)}</span></div>`).join("")}
+    </div>` : "";
+
+  const poseCount = (a.poses && a.poses.length) ? a.poses.length : 0;
+  const poseBtnLabel = poseCount > 0 ? "📸 Pose Guide (" + poseCount + ")" : "📸 Pose Guide";
+  const posesBtn = `<button class="btn btn-sm btn-outline btn-sage" onclick="openPosesModal(${tabIdx}, ${actIdx})">${poseBtnLabel}</button>`;
+
   return `<div class="activity-card">
     ${imgEl}
     <div class="activity-img-placeholder" style="${imgEl?'display:none':'display:flex'}">📍</div>
@@ -1927,19 +1899,22 @@ function actCardHTML(a, actIdx){
       <div class="activity-title" style="${getStyleString(a.styles?.title)}">${safeFormat(a.title||'Activity')}</div>
       ${a.desc?`<div class="activity-desc" style="${getStyleString(a.styles?.desc)}">${safeFormat(a.desc)}</div>`:''}
       ${tipEl}
-      ${mapBtn}
+      <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:4px; margin-bottom:4px;">
+        ${mapBtn}
+        ${posesBtn}
+      </div>
       ${checklistEl}
     </div>
   </div>`;
 }
 
 function buildEmojiPicker(){
-  document.getElementById('emoji-picker').innerHTML=EMOJIS.map(e=>
-    `<button type="button" class="emoji-option${e===selectedEmoji?' selected':''}" onclick="selectEmoji('${e}')">${e}</button>`).join('');
+  document.getElementById("emoji-picker").innerHTML=EMOJIS.map(e=>
+    `<button type="button" class="emoji-option${e===selectedEmoji?' selected':''}" onclick="selectEmoji('${e}')">${e}</button>`).join("");
 }
 function buildColorPicker(){
-  document.getElementById('color-picker').innerHTML=COLORS.map((c,i)=>
-    `<div class="color-swatch${c.name===selectedColor.name?' selected':''}" style="background:${c.bg};border-color:${c.name===selectedColor.name?c.accent:'transparent'}" title="${c.name}" onclick="selectColor(${i})"></div>`).join('');
+  document.getElementById("color-picker").innerHTML=COLORS.map((c,i)=>
+    `<div class="color-swatch${c.name===selectedColor.name?' selected':''}" style="background:${c.bg};border-color:${c.name===selectedColor.name?c.accent:'transparent'}" title="${c.name}" onclick="selectColor(${i})"></div>`).join("");
 }
 function selectEmoji(e){selectedEmoji=e;buildEmojiPicker();}
 function selectColor(i){selectedColor=COLORS[i];buildColorPicker();}
@@ -1950,7 +1925,7 @@ function compressImage(file, cb, maxDim, quality){
   let done = false;
   const finish = url => { if(done) return; done = true; cb(url); };
   const reader = new FileReader();
-  reader.onerror = () => finish('');
+  reader.onerror = () => finish("");
   reader.onload = e => {
     const dataUrl = e.target.result;
     if(!/^image\//.test(file.type) || /gif|svg/.test(file.type)){ finish(dataUrl); return; }
@@ -1965,13 +1940,13 @@ function compressImage(file, cb, maxDim, quality){
           const scale = Math.min(maxDim/w, maxDim/h);
           w = Math.round(w*scale); h = Math.round(h*scale);
         }
-        const canvas = document.createElement('canvas');
+        const canvas = document.createElement("canvas");
         canvas.width = w; canvas.height = h;
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#ffffff';
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#ffffff";
         ctx.fillRect(0,0,w,h);
         ctx.drawImage(img,0,0,w,h);
-        const out = canvas.toDataURL('image/jpeg', quality);
+        const out = canvas.toDataURL("image/jpeg", quality);
         finish(out && out.length < dataUrl.length ? out : dataUrl);
       }catch(err){ finish(dataUrl); }
     };
@@ -1984,40 +1959,39 @@ function compressImage(file, cb, maxDim, quality){
 function previewImg(urlId,previewId){
   const url=document.getElementById(urlId).value.trim();
   const img=document.getElementById(previewId);
-  if(url){img.src=url;img.classList.add('show');}else{img.classList.remove('show');}
+  if(url){img.src=url;img.classList.add("show");}else{img.classList.remove("show");}
 }
 
 // ═══════════════════════════════════════════════════════
 //  ⚙️  DRAG & DROP + INSERTION ENGINE
 // ═══════════════════════════════════════════════════════
 function enableDrag(handle) {
-  const card = handle.closest('.act-editor');
-  if (card) card.setAttribute('draggable', 'true');
+  const card = handle.closest(".act-editor");
+  if (card) card.setAttribute("draggable", "true");
 }
 
-// Ensure settings block sets up fine without breaking loops
 function disableDrag(handle) {
-  const card = handle.closest('.act-editor');
-  if (card) card.removeAttribute('draggable');
+  const card = handle.closest(".act-editor");
+  if (card) card.removeAttribute("draggable");
 }
 
 function setupActCardDragEvents(card) {
-  card.addEventListener('dragstart', e => {
-    card.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', card.id);
+  card.addEventListener("dragstart", e => {
+    card.classList.add("dragging");
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", card.id);
   });
-  card.addEventListener('dragend', () => {
-    card.classList.remove('dragging');
-    card.removeAttribute('draggable');
+  card.addEventListener("dragend", () => {
+    card.classList.remove("dragging");
+    card.removeAttribute("draggable");
     refreshAllDividers();
   });
 }
 
 function setupActsContainerDropEvents(container) {
-  container.addEventListener('dragover', e => {
+  container.addEventListener("dragover", e => {
     e.preventDefault();
-    const draggingCard = document.querySelector('.act-editor.dragging');
+    const draggingCard = document.querySelector(".act-editor.dragging");
     if (!draggingCard) return;
     
     const afterElement = getDragAfterElement(container, e.clientY);
@@ -2028,14 +2002,14 @@ function setupActsContainerDropEvents(container) {
     }
   });
 
-  container.addEventListener('drop', e => {
+  container.addEventListener("drop", e => {
     e.preventDefault();
     refreshAllDividers();
   });
 }
 
 function getDragAfterElement(container, y) {
-  const draggableElements = [...container.querySelectorAll('.act-editor:not(.dragging)')];
+  const draggableElements = [...container.querySelectorAll(".act-editor:not(.dragging)")];
   return draggableElements.reduce((closest, child) => {
     const box = child.getBoundingClientRect();
     const offset = y - box.top - box.height / 2;
@@ -2049,9 +2023,9 @@ function getDragAfterElement(container, y) {
 
 function refreshDividersInContainer(container) {
   if (!container) return;
-  container.querySelectorAll('.insert-divider').forEach(d => d.remove());
+  container.querySelectorAll(".insert-divider").forEach(d => d.remove());
   
-  const cards = container.querySelectorAll('.act-editor');
+  const cards = container.querySelectorAll(".act-editor");
   if (cards.length === 0) {
     const div = createInsertDivider(container.id, null);
     container.appendChild(div);
@@ -2068,20 +2042,20 @@ function refreshDividersInContainer(container) {
 }
 
 function refreshAllDividers() {
-  document.querySelectorAll('.acts-editor').forEach(container => {
+  document.querySelectorAll(".acts-editor").forEach(container => {
     refreshDividersInContainer(container);
   });
 }
 
 function createInsertDivider(containerId, beforeElement) {
-  const div = document.createElement('div');
-  div.className = 'insert-divider';
+  const div = document.createElement("div");
+  div.className = "insert-divider";
   div.innerHTML = `<span class="insert-btn-inner">＋ Insert Activity Here</span>`;
   div.onclick = () => {
     actEditorCount++;
-    const aId = 'act-ed-' + actEditorCount;
-    const card = document.createElement('div');
-    card.className = 'act-editor';
+    const aId = "act-ed-" + actEditorCount;
+    const card = document.createElement("div");
+    card.className = "act-editor";
     card.id = aId;
     
     setupActCardDragEvents(card);
@@ -2095,7 +2069,7 @@ function createInsertDivider(containerId, beforeElement) {
     }
     
     refreshDividersInContainer(container);
-    showToast('🌸 New activity card inserted!');
+    showToast("🌸 New activity card inserted!");
   };
   return div;
 }
@@ -2126,10 +2100,10 @@ function uploadImage(file, opts){
         return;
       }
       try {
-        const name = 'uploads/' + Date.now() + '_' + Math.random().toString(36).slice(2,9) + '.jpg';
+        const name = "uploads/" + Date.now() + "_" + Math.random().toString(36).slice(2,9) + ".jpg";
         const ref = fbStorage.ref(name);
         
-        const uploadPromise = ref.putString(dataUrl, 'data_url', {contentType:'image/jpeg'})
+        const uploadPromise = ref.putString(dataUrl, "data_url", {contentType:"image/jpeg"})
           .then(() => ref.getDownloadURL());
           
         const timeoutPromise = new Promise((_, reject) => 
@@ -2163,38 +2137,38 @@ function fileToUrl(input,urlId,previewId){
   const file=input.files[0]; if(!file) return;
   const img=document.getElementById(previewId);
   uploadImage(file, {
-    onPreview: d => { img.src=d; img.classList.add('show'); },
+    onPreview: d => { img.src=d; img.classList.add("show"); },
     onDone: (url, err) => {
       if(url){ document.getElementById(urlId).value=url; if(useCloud && fbStorage){ img.src=url; } }
-      else { showToast('⚠️ Photo upload failed — check connection or paste a link'); }
+      else { showToast("⚠️ Photo upload failed — check connection or paste a link"); }
     }
   });
 }
 
 // ═══════════════════════════════════════════════════════
-//  👉  SEPARATE TAB EDITING SYSTEM
+//   👉  SEPARATE TAB EDITING SYSTEM
 // ═══════════════════════════════════════════════════════
 function addTabEditor(tabData){
   tabEditorCount++;
-  const tId='tab-ed-'+tabEditorCount;
+  const tId="tab-ed-"+tabEditorCount;
   const d=tabData||{};
-  const col=d.color||'#e47a90';
+  const col=d.color||"#e47a90";
   const shpIdx=TAB_SHAPES.findIndex(s=>s.style===(d.shape||TAB_SHAPES[0].style));
-  const container=document.getElementById('tabs-editor');
-  const div=document.createElement('div');
-  div.className='tab-editor-entry'; div.id=tId;
+  const container=document.getElementById("tabs-editor");
+  const div=document.createElement("div");
+  div.className="tab-editor-entry"; div.id=tId;
   div.innerHTML=`
     <div class="tab-editor-header">
       <span class="tab-editor-label">Tab ${container.children.length+1}</span>
       <button type="button" class="remove-tab-btn" onclick="document.getElementById('${tId}').remove(); activeFormTabIdx = Math.max(0, activeFormTabIdx - 1); renumberTabs()">✕ Delete Day</button>
     </div>
     <div class="form-row" style="margin-bottom:10px">
-      <div><label>Label</label><input type="text" data-tab-label value="${esc(d.label||'')}" placeholder="e.g. Day 1 – Jewel Changi"/></div>
+      <div><label>Label</label><input type="text" data-tab-label value="${esc(d.label||"")}" placeholder="e.g. Day 1 – Jewel Changi"/></div>
       <div><label>Color</label><input type="color" data-tab-color value="${col}"/></div>
     </div>
     <div class="tab-style-row">
       <span style="font-size:12px;color:var(--text-soft);margin-right:4px">Shape:</span>
-      ${TAB_SHAPES.map((s,i)=>`<button type="button" class="btn btn-sm${(shpIdx<0?i===0:i===shpIdx)?' btn-primary':' btn-outline'}" onclick="selectTabShape(this,'${tId}','${s.style}')" data-shape="${s.style}">${s.label}</button>`).join('')}
+      ${TAB_SHAPES.map((s,i)=>`<button type="button" class="btn btn-sm${(shpIdx<0?i===0:i===shpIdx)?' btn-primary':' btn-outline'}" onclick="selectTabShape(this,'${tId}','${s.style}')" data-shape="${s.style}">${s.label}</button>`).join("")}
     </div>
     <input type="hidden" data-tab-shape value="${esc(d.shape||TAB_SHAPES[0].style)}"/>
     <div style="margin-top:10px">
@@ -2204,47 +2178,47 @@ function addTabEditor(tabData){
     </div>`;
   container.appendChild(div);
 
-  const labelInput = div.querySelector('[data-tab-label]');
+  const labelInput = div.querySelector("[data-tab-label]");
   if(labelInput) {
-    labelInput.addEventListener('input', () => {
+    labelInput.addEventListener("input", () => {
       renumberTabs();
     });
   }
 
-  const actsContainer = div.querySelector('.acts-editor');
+  const actsContainer = div.querySelector(".acts-editor");
   setupActsContainerDropEvents(actsContainer);
 
-  (d.activities||[]).forEach(a=>addActEditor('acts-'+tId, a));
+  (d.activities||[]).forEach(a=>addActEditor("acts-"+tId, a));
   
   refreshDividersInContainer(actsContainer);
   renumberTabs();
 }
 
 function renumberTabs(){
-  const nav = document.getElementById('tabs-editor-nav');
-  const container = document.getElementById('tabs-editor');
+  const nav = document.getElementById("tabs-editor-nav");
+  const container = document.getElementById("tabs-editor");
   if(!nav || !container) return;
   
-  nav.innerHTML = '';
-  const entries = container.querySelectorAll('.tab-editor-entry');
+  nav.innerHTML = "";
+  const entries = container.querySelectorAll(".tab-editor-entry");
   
   if (activeFormTabIdx >= entries.length && entries.length > 0) {
     activeFormTabIdx = entries.length - 1;
   }
   
   entries.forEach((el, i) => {
-    const lbl = el.querySelector('.tab-editor-label');
-    if(lbl) lbl.textContent = 'Day ' + (i+1);
+    const lbl = el.querySelector(".tab-editor-label");
+    if(lbl) lbl.textContent = "Day " + (i+1);
     
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = `tab-btn ${i === activeFormTabIdx ? 'active' : ''}`;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = `tab-btn ${i === activeFormTabIdx ? "active" : ""}`;
     if(i === activeFormTabIdx) {
-      btn.style.background = 'var(--rose-deep)';
-      btn.style.color = '#fff';
+      btn.style.background = "var(--rose-deep)";
+      btn.style.color = "#fff";
     }
     
-    const inputVal = el.querySelector('[data-tab-label]')?.value.trim() || ('Day ' + (i+1));
+    const inputVal = el.querySelector("[data-tab-label]")?.value.trim() || ("Day " + (i+1));
     btn.textContent = inputVal;
     btn.onclick = () => {
       activeFormTabIdx = i;
@@ -2252,18 +2226,18 @@ function renumberTabs(){
     };
     nav.appendChild(btn);
     
-    el.style.display = i === activeFormTabIdx ? 'block' : 'none';
+    el.style.display = i === activeFormTabIdx ? "block" : "none";
   });
   
-  const addBtn = document.createElement('button');
-  addBtn.type = 'button';
-  addBtn.className = 'tab-btn';
-  addBtn.style.border = '1.5px dashed var(--rose)';
-  addBtn.style.color = 'var(--rose-deep)';
-  addBtn.textContent = '＋ Add day';
+  const addBtn = document.createElement("button");
+  addBtn.type = "button";
+  addBtn.className = "tab-btn";
+  addBtn.style.border = "1.5px dashed var(--rose)";
+  addBtn.style.color = "var(--rose-deep)";
+  addBtn.textContent = "＋ Add day";
   addBtn.onclick = () => {
     addTabEditor();
-    activeFormTabIdx = container.querySelectorAll('.tab-editor-entry').length - 1;
+    activeFormTabIdx = container.querySelectorAll(".tab-editor-entry").length - 1;
     renumberTabs();
   };
   nav.appendChild(addBtn);
@@ -2271,9 +2245,9 @@ function renumberTabs(){
 
 function selectTabShape(btn,tId,shape){
   const entry=document.getElementById(tId);
-  entry.querySelectorAll('.tab-style-row .btn').forEach(b=>{b.classList.remove('btn-primary');b.classList.add('btn-outline');});
-  btn.classList.remove('btn-outline');btn.classList.add('btn-primary');
-  entry.querySelector('[data-tab-shape]').value=shape;
+  entry.querySelectorAll(".tab-style-row .btn").forEach(b=>{b.classList.remove("btn-primary");b.classList.add("btn-outline");});
+  btn.classList.remove("btn-outline");btn.classList.add("btn-primary");
+  entry.querySelector("[data-tab-shape]").value=shape;
 }
 
 function getActEditorInnerHtml(aId, a) {
@@ -2285,28 +2259,28 @@ function getActEditorInnerHtml(aId, a) {
       </div>
       <button type="button" class="remove-act-btn" onclick="const p = this.closest('.acts-editor'); document.getElementById('${aId}').remove(); refreshDividersInContainer(p)">✕ Remove Activity</button>
     </div>
-    <div class="form-group" style="margin-bottom:10px"><label>Title</label><input type="text" data-act-title value="${esc(a.title||'')}"/></div>
-    <div class="form-group" style="margin-bottom:10px"><label>Description</label><textarea data-act-desc rows="2">${esc(a.desc||'')}</textarea></div>
-    <div class="form-group" style="margin-bottom:10px"><label>💡 Tip (highlighted)</label><textarea data-act-tip rows="2">${esc(a.tip||'')}</textarea></div>
+    <div class="form-group" style="margin-bottom:10px"><label>Title</label><input type="text" data-act-title value="${esc(a.title||"")}"/></div>
+    <div class="form-group" style="margin-bottom:10px"><label>Description</label><textarea data-act-desc rows="2">${esc(a.desc||"")}</textarea></div>
+    <div class="form-group" style="margin-bottom:10px"><label>💡 Tip (highlighted)</label><textarea data-act-tip rows="2">${esc(a.tip||"")}</textarea></div>
     
     <details style="margin-bottom:12px; background:var(--blush); border-radius:12px; padding:6px 12px; border:1px solid #f0dce2;">
       <summary style="font-size:12px; font-weight:600; color:var(--rose-deep); cursor:pointer;">🎨 Custom Moment Typography</summary>
       <div style="margin-top:10px;">
-        ${getTypographyEditorHtml(aId + '-title', 'Moment Title', a.styles?.title)}
-        ${getTypographyEditorHtml(aId + '-desc', 'Moment Description', a.styles?.desc)}
-        ${getTypographyEditorHtml(aId + '-tip', 'Moment Tip text', a.styles?.tip)}
+        ${getTypographyEditorHtml(aId + "-title", "Moment Title", a.styles?.title)}
+        ${getTypographyEditorHtml(aId + "-desc", "Moment Description", a.styles?.desc)}
+        ${getTypographyEditorHtml(aId + "-tip", "Moment Tip text", a.styles?.tip)}
       </div>
     </details>
 
     <div class="form-group" style="margin-bottom:10px">
       <label>Image</label>
       <div class="img-input-group">
-        <div class="row"><input type="url" data-act-img-url placeholder="Paste image URL…" value="${esc(a.imgUrl||'')}" oninput="previewActImg(this)"/></div>
+        <div class="row"><input type="url" data-act-img-url placeholder="Paste image URL…" value="${esc(a.imgUrl||"")}" oninput="previewActImg(this)"/></div>
         <div class="row"><label style="text-transform:none;letter-spacing:0;font-size:12px;color:var(--rose-deep);cursor:pointer;"><input type="file" accept="image/*" style="display:none" onchange="actFileUpload(this)"/>📎 Upload photo</label></div>
-        <img class="img-preview${a.imgUrl?' show':''}" src="${esc(a.imgUrl||'')}" alt="preview"/>
+        <img class="img-preview${a.imgUrl?' show':''}" src="${esc(a.imgUrl||"")}" alt="preview"/>
       </div>
     </div>
-    <div class="form-group" style="margin-bottom:10px"><label>🗺️ Google Maps link</label><input type="url" data-act-map placeholder="https://maps.google.com/…" value="${esc(a.mapUrl||'')}"/></div>
+    <div class="form-group" style="margin-bottom:10px"><label>🗺️ Google Maps link</label><input type="url" data-act-map placeholder="https://maps.google.com/…" value="${esc(a.mapUrl||"")}"/></div>
     <div class="form-group" style="margin-bottom:6px">
       <label>Checklist</label>
       <div class="check-editor" id="check-${aId}"></div>
@@ -2316,80 +2290,80 @@ function getActEditorInnerHtml(aId, a) {
 
 function addActEditor(containerId, actData){
   actEditorCount++;
-  const aId='act-ed-'+actEditorCount;
+  const aId="act-ed-"+actEditorCount;
   const a=actData||{};
   const container=document.getElementById(containerId); if(!container) return;
-  const div=document.createElement('div');
-  div.className='act-editor'; div.id=aId;
+  const div=document.createElement("div");
+  div.className="act-editor"; div.id=aId;
   
   setupActCardDragEvents(div);
   
   div.innerHTML=getActEditorInnerHtml(aId, a);
   container.appendChild(div);
-  (a.checklist||[]).forEach(c=>addCheckItem('check-'+aId, c));
+  (a.checklist||[]).forEach(c=>addCheckItem("check-"+aId, c));
   
   refreshDividersInContainer(container);
 }
 
 function previewActImg(input){
   const url=input.value.trim();
-  const img=input.closest('.img-input-group').querySelector('.img-preview');
-  if(url){img.src=url;img.classList.add('show');}else{img.classList.remove('show');}
+  const img=input.closest(".img-input-group").querySelector(".img-preview");
+  if(url){img.src=url;img.classList.add("show");}else{img.classList.remove("show");}
 }
 function actFileUpload(input){
   const file=input.files[0]; if(!file) return;
-  const group=input.closest('.img-input-group');
-  const urlField=group.querySelector('[data-act-img-url]');
-  const img=group.querySelector('.img-preview');
+  const group=input.closest(".img-input-group");
+  const urlField=group.querySelector("[data-act-img-url]");
+  const img=group.querySelector(".img-preview");
   uploadImage(file, {
-    onPreview: d => { img.src=d; img.classList.add('show'); },
+    onPreview: d => { img.src=d; img.classList.add("show"); },
     onDone: (url, err) => {
       if(url){ urlField.value=url; if(useCloud && fbStorage){ img.src=url; } }
-      else { showToast('⚠️ Photo upload failed — check connection or paste a link'); }
+      else { showToast("⚠️ Photo upload failed — check connection or paste a link"); }
     }
   });
 }
 
 function addCheckItem(containerId, item){
-  const c=item||{text:'',done:false};
+  const c=item||{text:"",done:false};
   const container=document.getElementById(containerId); if(!container) return;
-  const div=document.createElement('div'); div.className='check-item-row';
-  div.dataset.done = c.done ? '1' : '0';
+  const div=document.createElement("div"); div.className="check-item-row";
+  div.dataset.done = c.done ? "1" : "0";
   div.innerHTML=`<input type="text" data-check-text value="${esc(c.text)}" placeholder="e.g. Pack sunscreen"/><button type="button" class="remove-check-btn" onclick="this.parentElement.remove()">✕</button>`;
   container.appendChild(div);
 }
 
 function collectTabs(){
   const tabs=[];
-  document.querySelectorAll('#tabs-editor .tab-editor-entry').forEach(tabEl=>{
-    const label=tabEl.querySelector('[data-tab-label]')?.value.trim()||'';
-    const color=tabEl.querySelector('[data-tab-color]')?.value||'#e47a90';
-    const shape=tabEl.querySelector('[data-tab-shape]')?.value||TAB_SHAPES[0].style;
+  document.querySelectorAll("#tabs-editor .tab-editor-entry").forEach(tabEl=>{
+    const label=tabEl.querySelector("[data-tab-label]")?.value.trim()||"";
+    const color=tabEl.querySelector("[data-tab-color]")?.value||"#e47a90";
+    const shape=tabEl.querySelector("[data-tab-shape]")?.value||TAB_SHAPES[0].style;
     const activities=[];
-    tabEl.querySelectorAll('.act-editor').forEach(actEl=>{
+    tabEl.querySelectorAll(".act-editor").forEach(actEl=>{
       const aId = actEl.id;
-      const imgUrlEl=actEl.querySelector('[data-act-img-url]');
+      const imgUrlEl=actEl.querySelector("[data-act-img-url]");
       const checklist=[];
-      actEl.querySelector('.check-editor')?.querySelectorAll('.check-item-row').forEach(row=>{
-        const txt=row.querySelector('[data-check-text]')?.value.trim()||'';
-        if(txt) checklist.push({text:txt,done:row.dataset.done==='1'});
+      actEl.querySelector(".check-editor")?.querySelectorAll(".check-item-row").forEach(row=>{
+        const txt=row.querySelector("[data-check-text]")?.value.trim()||"";
+        if(txt) checklist.push({text:txt,done:row.dataset.done==="1"});
       });
       activities.push({
-        id:'a'+Date.now()+Math.random().toString(36).slice(2,6),
-        title:actEl.querySelector('[data-act-title]')?.value.trim()||'',
-        desc:actEl.querySelector('[data-act-desc]')?.value.trim()||'',
-        tip:actEl.querySelector('[data-act-tip]')?.value.trim()||'',
-        imgUrl:imgUrlEl?.value.trim()||'',
-        mapUrl:actEl.querySelector('[data-act-map]')?.value.trim()||'',
+        id:"a"+Date.now()+Math.random().toString(36).slice(2,6),
+        title:actEl.querySelector("[data-act-title]")?.value.trim()||"",
+        desc:actEl.querySelector("[data-act-desc]")?.value.trim()||"",
+        tip:actEl.querySelector("[data-act-tip]")?.value.trim()||"",
+        imgUrl:imgUrlEl?.value.trim()||"",
+        mapUrl:actEl.querySelector("[data-act-map]")?.value.trim()||"",
         checklist,
         styles: {
-          title: collectTypography(aId + '-title'),
-          desc: collectTypography(aId + '-desc'),
-          tip: collectTypography(aId + '-tip')
+          title: collectTypography(aId + "-title"),
+          desc: collectTypography(aId + "-desc"),
+          tip: collectTypography(aId + "-tip")
         }
       });
     });
-    tabs.push({id:'tab'+Date.now()+Math.random().toString(36).slice(2,5), label, color, shape, activities});
+    tabs.push({id:"tab"+Date.now()+Math.random().toString(36).slice(2,5), label, color, shape, activities});
   });
   return tabs;
 }
@@ -2398,21 +2372,21 @@ function openAddForm(){
   editingId=null;
   activeFormTabIdx=0; 
   selectedEmoji=EMOJIS[1];selectedColor=COLORS[0];
-  document.getElementById('form-modal-title').textContent='Add a new trip ✈️';
-  selectDropdownValue('f-country', '');
-  ['f-title','f-desc','f-cover-url'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f-start').value='';document.getElementById('f-end').value='';
-  const pv=document.getElementById('f-cover-preview');pv.src='';pv.classList.remove('show');
+  document.getElementById("form-modal-title").textContent="Add a new trip ✈️";
+  selectDropdownValue("f-country", "");
+  ["f-title","f-desc","f-cover-url"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("f-start").value="";document.getElementById("f-end").value="";
+  const pv=document.getElementById("f-cover-preview");pv.src="";pv.classList.remove("show");
   
-  document.getElementById('trip-typo-container').innerHTML = 
-    getTypographyEditorHtml('f-typo-title', 'Trip Title', {}) +
-    getTypographyEditorHtml('f-typo-country', 'Destination Header', {}) +
-    getTypographyEditorHtml('f-typo-desc', 'Card Description', {});
+  document.getElementById("trip-typo-container").innerHTML = 
+    getTypographyEditorHtml("f-typo-title", "Trip Title", {}) +
+    getTypographyEditorHtml("f-typo-country", "Destination Header", {}) +
+    getTypographyEditorHtml("f-typo-desc", "Card Description", {});
 
-  document.getElementById('tabs-editor').innerHTML='';
+  document.getElementById("tabs-editor").innerHTML="";
   buildEmojiPicker();buildColorPicker();
-  renumberTabs(); // FIX: Explicitly setup and sync day creation controls on initialization
-  openOverlay('form-overlay');
+  renumberTabs(); 
+  openOverlay("form-overlay");
 }
 
 function openEditForm(id){
@@ -2420,52 +2394,52 @@ function openEditForm(id){
   editingId=id;
   activeFormTabIdx=0; 
   selectedEmoji=t.emoji||EMOJIS[1];selectedColor=t.color||COLORS[0];
-  document.getElementById('form-modal-title').textContent='Edit trip ✏️';
-  document.getElementById('f-title').value=t.title||'';
-  selectDropdownValue('f-country', t.country||'');
-  document.getElementById('f-start').value=t.startDate||'';
-  document.getElementById('f-end').value=t.endDate||'';
-  document.getElementById('f-desc').value=t.desc||'';
-  document.getElementById('f-cover-url').value=t.coverUrl||'';
-  const pv=document.getElementById('f-cover-preview');
-  if(t.coverUrl){pv.src=t.coverUrl;pv.classList.add('show');}else{pv.src='';pv.classList.remove('show');}
+  document.getElementById("form-modal-title").textContent="Edit trip ✏️";
+  document.getElementById("f-title").value=t.title|| "";
+  selectDropdownValue("f-country", t.country||"");
+  document.getElementById("f-start").value=t.startDate||"";
+  document.getElementById("f-end").value=t.endDate||"";
+  document.getElementById("f-desc").value=t.desc||"";
+  document.getElementById("f-cover-url").value=t.coverUrl||"";
+  const pv=document.getElementById("f-cover-preview");
+  if(t.coverUrl){pv.src=t.coverUrl;pv.classList.add("show");}else{pv.src="";pv.classList.remove("show");}
   
-  document.getElementById('trip-typo-container').innerHTML = 
-    getTypographyEditorHtml('f-typo-title', 'Trip Title', t.styles?.title) +
-    getTypographyEditorHtml('f-typo-country', 'Destination Header', t.styles?.country) +
-    getTypographyEditorHtml('f-typo-desc', 'Card Description', t.styles?.desc);
+  document.getElementById("trip-typo-container").innerHTML = 
+    getTypographyEditorHtml("f-typo-title", "Trip Title", t.styles?.title) +
+    getTypographyEditorHtml("f-typo-country", "Destination Header", t.styles?.country) +
+    getTypographyEditorHtml("f-typo-desc", "Card Description", t.styles?.desc);
 
-  document.getElementById('tabs-editor').innerHTML='';
+  document.getElementById("tabs-editor").innerHTML="";
   tabEditorCount=0;actEditorCount=0;
   (t.tabs||[]).forEach(tab=>addTabEditor(tab));
   buildEmojiPicker();buildColorPicker();
-  openOverlay('form-overlay');
+  openOverlay("form-overlay");
 }
 
 function saveTrip(){
-  const title=document.getElementById('f-title').value.trim();
-  if(!title){showToast('Please enter a trip name 🌸');document.getElementById('f-title').focus();return;}
-  if(pendingUploads>0){showToast('⏳ A photo is still uploading — one moment…');return;}
+  const title=document.getElementById("f-title").value.trim();
+  if(!title){showToast("Please enter a trip name 🌸");document.getElementById("f-title").focus();return;}
+  if(pendingUploads>0){showToast("⏳ A photo is still uploading — one moment…");return;}
   const trip={
-    id:editingId||'trip_'+Date.now(),
+    id:editingId||"trip_"+Date.now(),
     title,
-    country:document.getElementById('f-country').value.trim(),
-    startDate:document.getElementById('f-start').value,
-    endDate:document.getElementById('f-end').value,
-    desc:document.getElementById('f-desc').value.trim(),
+    country:document.getElementById("f-country").value.trim(),
+    startDate:document.getElementById("f-start").value,
+    endDate:document.getElementById("f-end").value,
+    desc:document.getElementById("f-desc").value.trim(),
     emoji:selectedEmoji,
     color:selectedColor,
-    coverUrl:document.getElementById('f-cover-url').value.trim(),
+    coverUrl:document.getElementById("f-cover-url").value.trim(),
     styles: {
-      title: collectTypography('f-typo-title'),
-      country: collectTypography('f-typo-country'),
-      desc: collectTypography('f-typo-desc')
+      title: collectTypography("f-typo-title"),
+      country: collectTypography("f-typo-country"),
+      desc: collectTypography("f-typo-desc")
     },
     tabs:collectTabs()
   };
   persistTrip(trip);
-  closeOverlay('form-overlay');
-  showToast(editingId?'✅ Trip updated!':'🎉 New trip added!');
+  closeOverlay("form-overlay");
+  showToast(editingId?"✅ Trip updated!":"🎉 New trip added!");
 }
 
 function docByteSize(obj){
@@ -2474,15 +2448,15 @@ function docByteSize(obj){
 }
 function tooBigToSync(obj){ return docByteSize(obj) > 950000; }
 function fbWriteError(e){
-  const m = ((e&&e.message)||'')+'';
+  const m = ((e&&e.message)||"")+"";
   if(/too large|exceeds the maximum|invalid-argument|longer than/i.test(m))
-    return '⚠️ Too many/large photos to sync this — try image links instead';
-  return '⚠️ Sync failed — check your connection';
+    return "⚠️ Too many/large photos to sync this — try image links instead";
+  return "⚠️ Sync failed — check your connection";
 }
 function persistTrip(trip){
   if(useCloud){
-    if(tooBigToSync(trip)){ showToast('⚠️ This trip has too many/large photos to sync — use image links or fewer photos'); return; }
-    db.collection('trips').doc(trip.id).set(trip).catch(e=>{console.error(e);showToast(fbWriteError(e));});
+    if(tooBigToSync(trip)){ showToast("⚠️ This trip has too many/large photos to sync — use image links or fewer photos"); return; }
+    db.collection("trips").doc(trip.id).set(trip).catch(e=>{console.error(e);showToast(fbWriteError(e));});
   } else {
     const idx=trips.findIndex(x=>x.id===trip.id);
     if(idx>=0) trips[idx]=trip; else trips.push(trip);
@@ -2491,15 +2465,15 @@ function persistTrip(trip){
 }
 function persistDelete(id){
   if(useCloud){
-    db.collection('trips').doc(id).delete().catch(e=>{console.error(e);showToast(fbWriteError(e));});
+    db.collection("trips").doc(id).delete().catch(e=>{console.error(e);showToast(fbWriteError(e));});
   } else {
     trips=trips.filter(t=>t.id!==id); saveTrips(trips); renderAll();
   }
 }
 function persistSite(){
   if(useCloud){
-    if(tooBigToSync(site)){ showToast('⚠️ That hero image is too large to sync — try a smaller one or an image link'); return; }
-    db.collection('meta').doc('site').set(site).catch(e=>{console.error(e);showToast(fbWriteError(e));});
+    if(tooBigToSync(site)){ showToast("⚠️ That hero image is too large to sync — try a smaller one or an image link"); return; }
+    db.collection("meta").doc("site").set(site).catch(e=>{console.error(e);showToast(fbWriteError(e));});
   } else {
     saveSite(site);
   }
@@ -2510,105 +2484,105 @@ function persistSite(){
 // ═══════════════════════════════════════════════════════
 function openHeroEditor(){
   const s=site;
-  document.getElementById('he-eyebrow').value=s.eyebrow||'';
-  document.getElementById('he-h1a').value=s.h1a!==undefined ? s.h1a : (s.h1||'Every journey');
-  document.getElementById('he-em').value=s.em||'';
-  document.getElementById('he-h1b').value=(s.h1b!==undefined ? s.h1b : ' is home').trim();
-  document.getElementById('he-sub').value=s.sub||'';
-  document.getElementById('he-img-url').value=s.bgUrl||'';
-  document.getElementById('he-img-css').value=s.bgCss||'';
-  document.getElementById('he-overlay').value=s.overlayOpacity||0;
-  document.getElementById('he-overlay-val').textContent=s.overlayOpacity||0;
-  document.getElementById('he-couple').value=s.coupleNames||'';
+  document.getElementById("he-eyebrow").value=s.eyebrow||"";
+  document.getElementById("he-h1a").value=s.h1a!==undefined ? s.h1a : (s.h1||"Every journey");
+  document.getElementById("he-em").value=s.em||"";
+  document.getElementById("he-h1b").value=(s.h1b!==undefined ? s.h1b : " is home").trim();
+  document.getElementById("he-sub").value=s.sub||"";
+  document.getElementById("he-img-url").value=s.bgUrl||"";
+  document.getElementById("he-img-css").value=s.bgCss||"";
+  document.getElementById("he-overlay").value=s.overlayOpacity||0;
+  document.getElementById("he-overlay-val").textContent=s.overlayOpacity||0;
+  document.getElementById("he-couple").value=s.coupleNames||"";
   
-  document.getElementById('hero-typo-settings-block').innerHTML = 
-    getTypographyEditorHtml('he-typo-eyebrow', 'Eyebrow', s.styles?.eyebrow) +
-    getTypographyEditorHtml('he-typo-headline', 'Headline', s.styles?.headline) +
-    getTypographyEditorHtml('he-typo-subtitle', 'Subtitle', s.styles?.subtitle) +
-    getTypographyEditorHtml('he-typo-stats-num', 'Stats Numbers', s.styles?.statsNum) +
-    getTypographyEditorHtml('he-typo-stats-label', 'Stats Labels', s.styles?.statsLabel);
+  document.getElementById("hero-typo-settings-block").innerHTML = 
+    getTypographyEditorHtml("he-typo-eyebrow", "Eyebrow", s.styles?.eyebrow) +
+    getTypographyEditorHtml("he-typo-headline", "Headline", s.styles?.headline) +
+    getTypographyEditorHtml("he-typo-subtitle", "Subtitle", s.styles?.subtitle) +
+    getTypographyEditorHtml("he-typo-stats-num", "Stats Numbers", s.styles?.statsNum) +
+    getTypographyEditorHtml("he-typo-stats-label", "Stats Labels", s.styles?.statsLabel);
 
-  document.getElementById('he-eyebrow-shadow').value = s.eyebrowShadow || 'none';
-  document.getElementById('he-eyebrow-shadow-color').value = s.eyebrowShadowColor || '#000000';
-  document.getElementById('he-headline-shadow').value = s.headlineShadow || 'none';
-  document.getElementById('he-headline-shadow-color').value = s.headlineShadowColor || '#000000';
-  document.getElementById('he-subtitle-shadow').value = s.subtitleShadow || 'none';
-  document.getElementById('he-subtitle-shadow-color').value = s.subtitleShadowColor || '#000000';
-  document.getElementById('he-stats-shadow').value = s.statsShadow || 'none';
-  document.getElementById('he-stats-shadow-color').value = s.statsShadowColor || '#000000';
+  document.getElementById("he-eyebrow-shadow").value = s.eyebrowShadow || "none";
+  document.getElementById("he-eyebrow-shadow-color").value = s.eyebrowShadowColor || "#000000";
+  document.getElementById("he-headline-shadow").value = s.headlineShadow || "none";
+  document.getElementById("he-headline-shadow-color").value = s.headlineShadowColor || "#000000";
+  document.getElementById("he-subtitle-shadow").value = s.subtitleShadow || "none";
+  document.getElementById("he-subtitle-shadow-color").value = s.subtitleShadowColor || "#000000";
+  document.getElementById("he-stats-shadow").value = s.statsShadow || "none";
+  document.getElementById("he-stats-shadow-color").value = s.statsShadowColor || "#000000";
 
-  const pv=document.getElementById('he-img-preview');
-  if(s.bgUrl){pv.src=s.bgUrl;pv.classList.add('show');}else{pv.src='';pv.classList.remove('show');}
+  const pv=document.getElementById("he-img-preview");
+  if(s.bgUrl){pv.src=s.bgUrl;pv.classList.add("show");}else{pv.src="";pv.classList.remove("show");}
   
-  const pos=s.textPos||'mc';
-  document.querySelectorAll('.pos-btn').forEach(b=>{
-    b.classList.toggle('selected', b.dataset.pos===pos);
+  const pos=s.textPos||"mc";
+  document.querySelectorAll(".pos-btn").forEach(b=>{
+    b.classList.toggle("selected", b.dataset.pos===pos);
   });
 
-  const statsPos=s.statsPos||'bc';
-  document.querySelectorAll('.stats-pos-btn').forEach(b=>{
-    b.classList.toggle('selected', b.dataset.statsPos===statsPos);
+  const statsPos=s.statsPos||"bc";
+  document.querySelectorAll(".stats-pos-btn").forEach(b=>{
+    b.classList.toggle("selected", b.dataset.statsPos===statsPos);
   });
 
-  document.getElementById('hero-decorations-list').innerHTML = '';
+  document.getElementById("hero-decorations-list").innerHTML = "";
   (s.floatingObjects || []).forEach(obj => addHeroDecoration(obj));
 
-  openOverlay('hero-overlay-modal');
+  openOverlay("hero-overlay-modal");
 }
 
 function selectTextPos(pos){
-  document.querySelectorAll('.pos-btn').forEach(b=>{
-    b.classList.toggle('selected', b.dataset.pos===pos);
+  document.querySelectorAll(".pos-btn").forEach(b=>{
+    b.classList.toggle("selected", b.dataset.pos===pos);
   });
-  const hero=document.getElementById('hero-section');
-  const POS=['tp-tl','tp-tc','tp-tr','tp-ml','tp-mc','tp-mr','tp-bl','tp-bc','tp-br'];
+  const hero=document.getElementById("hero-section");
+  const POS=["tp-tl","tp-tc","tp-tr","tp-ml","tp-mc","tp-mr","tp-bl","tp-bc","tp-br"];
   POS.forEach(c=>hero.classList.remove(c));
-  hero.classList.add('tp-'+pos);
+  hero.classList.add("tp-"+pos);
 }
 
 function selectStatsPos(pos){
-  document.querySelectorAll('.stats-pos-btn').forEach(b=>{
-    b.classList.toggle('selected', b.dataset.statsPos===pos);
+  document.querySelectorAll(".stats-pos-btn").forEach(b=>{
+    b.classList.toggle("selected", b.dataset.statsPos===pos);
   });
-  const hero=document.getElementById('hero-section');
-  const SP=['sp-tl','sp-tc','sp-tr','sp-ml','sp-mc','sp-mr','sp-bl','sp-bc','sp-br'];
+  const hero=document.getElementById("hero-section");
+  const SP=["sp-tl","sp-tc","sp-tr","sp-ml","sp-mc","sp-mr","sp-bl","sp-bc","sp-br"];
   SP.forEach(c=>hero.classList.remove(c));
-  hero.classList.add('sp-'+pos);
+  hero.classList.add("sp-"+pos);
 }
 
 function previewHeroImg(){
-  const url=document.getElementById('he-img-url').value.trim();
-  const pv=document.getElementById('he-img-preview');
-  if(url){pv.src=url;pv.classList.add('show');}else{pv.src='';pv.classList.remove('show');}
+  const url=document.getElementById("he-img-url").value.trim();
+  const pv=document.getElementById("he-img-preview");
+  if(url){pv.src=url;pv.classList.add("show");}else{pv.src="";pv.classList.remove("show");}
 }
 function heroFileUpload(input){
   const file=input.files[0]; if(!file) return;
-  const pv=document.getElementById('he-img-preview');
+  const pv=document.getElementById("he-img-preview");
   uploadImage(file, {
-    onPreview: d => { pv.src=d; pv.classList.add('show'); },
+    onPreview: d => { pv.src=d; pv.classList.add("show"); },
     onDone: (url, err) => {
-      if(url){ document.getElementById('he-img-url').value=url; if(useCloud && fbStorage){ pv.src=url; } }
-      else { showToast('⚠️ Photo upload failed — check connection or paste a link'); }
+      if(url){ document.getElementById("he-img-url").value=url; if(useCloud && fbStorage){ pv.src=url; } }
+      else { showToast("⚠️ Photo upload failed — check connection or paste a link"); }
     }
   });
 }
 function updateHeroOverlayPreview(){
-  const val=document.getElementById('he-overlay').value;
-  document.getElementById('he-overlay-val').textContent=val;
+  const val=document.getElementById("he-overlay").value;
+  document.getElementById("he-overlay-val").textContent=val;
 }
 
 function addHeroDecoration(obj = {}) {
-  const list = document.getElementById('hero-decorations-list');
-  const row = document.createElement('div');
-  row.className = 'decor-row';
+  const list = document.getElementById("hero-decorations-list");
+  const row = document.createElement("div");
+  row.className = "decor-row";
   
-  const currentAssetId = obj.assetId || obj.emoji || 'hd-heart';
+  const currentAssetId = obj.assetId || obj.emoji || "hd-heart";
   
   let optionsHtml = '<optgroup label="Hand-Drawn Styles">';
-  optionsHtml += DECOR_ASSETS.map(a => `<option value="${a.id}" ${currentAssetId===a.id?'selected':''}>${a.name}</option>`).join('');
-  optionsHtml += '</optgroup><optgroup label="Standard Emojis">';
-  optionsHtml += DECOR_EMOJIS.map(e => `<option value="${e}" ${currentAssetId===e?'selected':''}>${e}</option>`).join('');
-  optionsHtml += '</optgroup>';
+  optionsHtml += DECOR_ASSETS.map(a => `<option value="${a.id}" ${currentAssetId===a.id?'selected':''}>${a.name}</option>`).join("");
+  optionsHtml += "</optgroup><optgroup label=\"Standard Emojis\">";
+  optionsHtml += DECOR_EMOJIS.map(e => `<option value="${e}" ${currentAssetId===e?'selected':''}>${e}</option>`).join("");
+  optionsHtml += "</optgroup>";
   
   row.innerHTML = `
     <select data-decor-asset onchange="updateHeroDecorationsLive()" style="max-width: 140px; font-size: 14px;">
@@ -2634,12 +2608,12 @@ function addHeroDecoration(obj = {}) {
 
 function collectHeroDecorations() {
   const list = [];
-  document.querySelectorAll('#hero-decorations-list .decor-row').forEach(row => {
+  document.querySelectorAll("#hero-decorations-list .decor-row").forEach(row => {
     list.push({
-      assetId: row.querySelector('[data-decor-asset]').value,
-      x: parseFloat(row.querySelector('[data-decor-x]').value) || 0,
-      y: parseFloat(row.querySelector('[data-decor-y]').value) || 0,
-      size: parseFloat(row.querySelector('[data-decor-size]').value) || 60
+      assetId: row.querySelector("[data-decor-asset]").value,
+      x: parseFloat(row.querySelector("[data-decor-x]").value) || 0,
+      y: parseFloat(row.querySelector("[data-decor-y]").value) || 0,
+      size: parseFloat(row.querySelector("[data-decor-size]").value) || 60
     });
   });
   return list;
@@ -2647,114 +2621,114 @@ function collectHeroDecorations() {
 
 function updateHeroDecorationsLive() {
   const decors = collectHeroDecorations();
-  const floatingLayer = document.getElementById('hero-floating-layer');
+  const floatingLayer = document.getElementById("hero-floating-layer");
   if(!floatingLayer) return;
-  floatingLayer.innerHTML = '';
+  floatingLayer.innerHTML = "";
   decors.forEach(obj => {
-    const el = document.createElement('div');
-    el.className = 'floating-obj';
+    const el = document.createElement("div");
+    el.className = "floating-obj";
     
     const handDrawn = DECOR_ASSETS.find(a => a.id === obj.assetId);
     if (handDrawn) {
       el.innerHTML = handDrawn.svg;
-      el.style.width = obj.size + 'px';
-      el.style.height = obj.size + 'px';
+      el.style.width = obj.size + "px";
+      el.style.height = obj.size + "px";
     } else {
       el.textContent = obj.assetId;
-      el.style.fontSize = obj.size + 'px';
+      el.style.fontSize = obj.size + "px";
     }
     
-    el.style.left = obj.x + '%';
-    el.style.top = obj.y + '%';
-    el.style.animation = 'none'; 
+    el.style.left = obj.x + "%";
+    el.style.top = obj.y + "%";
+    el.style.animation = "none"; 
     floatingLayer.appendChild(el);
   });
 }
 
 function saveHero(){
-  if(pendingUploads>0){showToast('⏳ The image is still uploading — one moment…');return;}
-  site.eyebrow=document.getElementById('he-eyebrow').value.trim();
-  site.h1a=document.getElementById('he-h1a').value.trim();
-  site.em=document.getElementById('he-em').value.trim();
-  const h1bRaw=document.getElementById('he-h1b').value.trim();
-  site.h1b=h1bRaw ? ' '+h1bRaw : '';
+  if(pendingUploads>0){showToast("⏳ The image is still uploading — one moment…");return;}
+  site.eyebrow=document.getElementById("he-eyebrow").value.trim();
+  site.h1a=document.getElementById("he-h1a").value.trim();
+  site.em=document.getElementById("he-em").value.trim();
+  const h1bRaw=document.getElementById("he-h1b").value.trim();
+  site.h1b=h1bRaw ? " "+h1bRaw : "";
   delete site.h1;
-  site.sub=document.getElementById('he-sub').value.trim();
-  site.bgUrl=document.getElementById('he-img-url').value.trim();
-  site.bgCss=document.getElementById('he-img-css').value.trim();
-  site.overlayOpacity=parseFloat(document.getElementById('he-overlay').value)||0;
-  site.coupleNames=document.getElementById('he-couple').value.trim();
+  site.sub=document.getElementById("he-sub").value.trim();
+  site.bgUrl=document.getElementById("he-img-url").value.trim();
+  site.bgCss=document.getElementById("he-img-css").value.trim();
+  site.overlayOpacity=parseFloat(document.getElementById("he-overlay").value)||0;
+  site.coupleNames=document.getElementById("he-couple").value.trim();
   
-  const selPos=document.querySelector('.pos-btn.selected');
-  site.textPos=selPos ? selPos.dataset.pos : 'mc';
-  const selStatsPos=document.querySelector('.stats-pos-btn.selected');
-  site.statsPos=selStatsPos ? selStatsPos.dataset.statsPos : 'bc';
+  const selPos=document.querySelector(".pos-btn.selected");
+  site.textPos=selPos ? selPos.dataset.pos : "mc";
+  const selStatsPos=document.querySelector(".stats-pos-btn.selected");
+  site.statsPos=selStatsPos ? selStatsPos.dataset.statsPos : "bc";
   
-  site.eyebrowShadow = document.getElementById('he-eyebrow-shadow').value;
-  site.eyebrowShadowColor = document.getElementById('he-eyebrow-shadow-color').value;
-  site.headlineShadow = document.getElementById('he-headline-shadow').value;
-  site.headlineShadowColor = document.getElementById('he-headline-shadow-color').value;
-  site.subtitleShadow = document.getElementById('he-subtitle-shadow').value;
-  site.subtitleShadowColor = document.getElementById('he-subtitle-shadow-color').value;
-  site.statsShadow = document.getElementById('he-stats-shadow').value;
-  site.statsShadowColor = document.getElementById('he-stats-shadow-color').value;
+  site.eyebrowShadow = document.getElementById("he-eyebrow-shadow").value;
+  site.eyebrowShadowColor = document.getElementById("he-eyebrow-shadow-color").value;
+  site.headlineShadow = document.getElementById("he-headline-shadow").value;
+  site.headlineShadowColor = document.getElementById("he-headline-shadow-color").value;
+  site.subtitleShadow = document.getElementById("he-subtitle-shadow").value;
+  site.subtitleShadowColor = document.getElementById("he-subtitle-shadow-color").value;
+  site.statsShadow = document.getElementById("he-stats-shadow").value;
+  site.statsShadowColor = document.getElementById("he-stats-shadow-color").value;
 
   site.styles = {
-    eyebrow: collectTypography('he-typo-eyebrow'),
-    headline: collectTypography('he-typo-headline'),
-    subtitle: collectTypography('he-typo-subtitle'),
-    statsNum: collectTypography('he-typo-stats-num'),
-    statsLabel: collectTypography('he-typo-stats-label')
+    eyebrow: collectTypography("he-typo-eyebrow"),
+    headline: collectTypography("he-typo-headline"),
+    subtitle: collectTypography("he-typo-subtitle"),
+    statsNum: collectTypography("he-typo-stats-num"),
+    statsLabel: collectTypography("he-typo-stats-label")
   };
 
   site.floatingObjects = collectHeroDecorations();
 
   persistSite();
-  closeOverlay('hero-overlay-modal');
+  closeOverlay("hero-overlay-modal");
   renderHero(); 
-  showToast('✅ Hero updated!');
+  showToast("✅ Hero updated!");
 }
 
 // ═══════════════════════════════════════════════════════
 // FOOTER EDITOR
 // ═══════════════════════════════════════════════════════
 function startFooterEdit(){
-  const inp=document.getElementById('footer-input');
-  inp.value=site.footer||'';
-  inp.classList.add('show');
-  document.getElementById('footer-display').style.display='none';
+  const inp=document.getElementById("footer-input");
+  inp.value=site.footer||"";
+  inp.classList.add("show");
+  document.getElementById("footer-display").style.display="none";
   inp.focus();inp.select();
 }
 function saveFooterEdit(){
-  const val=document.getElementById('footer-input').value.trim();
+  const val=document.getElementById("footer-input").value.trim();
   if(val) site.footer=val;
   persistSite();
-  document.getElementById('footer-input').classList.remove('show');
-  document.getElementById('footer-display').style.display='';
+  document.getElementById("footer-input").classList.remove("show");
+  document.getElementById("footer-display").style.display="";
   renderFooter();
-  showToast('✅ Footer saved!');
+  showToast("✅ Footer saved!");
 }
 
-function askDelete(id){deletingId=id;openOverlay('confirm-overlay');}
+function askDelete(id){deletingId=id;openOverlay("confirm-overlay");}
 function confirmDelete(){
   persistDelete(deletingId);
-  closeOverlay('confirm-overlay');showToast('🗑️ Trip removed');
+  closeOverlay("confirm-overlay");showToast("🗑️ Trip removed");
 }
 
-function openOverlay(id){document.getElementById(id).classList.add('open');}
+function openOverlay(id){document.getElementById(id).classList.add("open");}
 function closeOverlay(id){
-  document.getElementById(id).classList.remove('open');
-  if(id === 'hero-overlay-modal') renderHero(); 
+  document.getElementById(id).classList.remove("open");
+  if(id === "hero-overlay-modal") renderHero(); 
 }
 function overlayClick(e,id){if(e.target===document.getElementById(id))closeOverlay(id);}
 
 function esc(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  return String(s).replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">").replace(/"/g,"\"");
 }
 function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2800);
+  const t=document.getElementById("toast");
+  t.textContent=msg;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2800);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2765,48 +2739,48 @@ let chosenVisitor = "";
 function selectVisitor(name) {
   chosenVisitor = name;
   
-  const greetTitle = document.getElementById('greet-title');
-  const greetBody = document.getElementById('greet-body');
-  const greetQuote = document.getElementById('greet-quote');
+  const greetTitle = document.getElementById("greet-title");
+  const greetBody = document.getElementById("greet-body");
+  const greetQuote = document.getElementById("greet-quote");
   
   // Reset classes to trigger entrance animations cleanly
-  greetTitle.className = '';
-  greetBody.className = '';
-  greetQuote.className = '';
+  greetTitle.className = "";
+  greetBody.className = "";
+  greetQuote.className = "";
   void greetTitle.offsetWidth; // trigger reflow
   
-  greetTitle.classList.add('magical-greet-title');
-  greetBody.classList.add('magical-greet-body');
-  greetQuote.classList.add('magical-greet-quote');
+  greetTitle.classList.add("magical-greet-title");
+  greetBody.classList.add("magical-greet-body");
+  greetQuote.classList.add("magical-greet-quote");
   
-  if (name === 'Vy') {
+  if (name === "Vy") {
     greetTitle.innerHTML = "Welcome, Vy! 🌸";
     greetBody.innerHTML = `<span style="font-size: 15px; color: var(--text-mid); line-height: 1.7; display: inline-block; max-width: 350px; margin-bottom: 8px;">Our little scrapbook of memories has been waiting for you, sweetheart. Ready to add more beautiful adventures?</span>`;
     greetQuote.innerHTML = `<span style="font-family: 'Playfair Display', serif; font-style: italic; font-size: 20px; color: var(--rose-deep); line-height: 1.55; letter-spacing: 0.01em; display: inline-block; padding: 14px 24px; border-top: 1.5px dashed var(--rose); border-bottom: 1.5px dashed var(--rose); margin-top: 16px; background: rgba(253, 244, 246, 0.6); border-radius: 12px; box-shadow: inset 0 0 10px rgba(196,99,122,0.03);">“My favorite place in the world is right next to you.”</span>`;
-    createSparkleRain('🌸', '✨', '💖', '🍀', '🦋', '🎈');
+    createSparkleRain("🌸", "✨", "💖", "🍀", "🦋", "🎈");
   } else {
     // Custom romantic message for Duy
     greetTitle.innerHTML = "Welcome, Vy! 💕";
     greetBody.innerHTML = `<span style="font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700; color: var(--rose-deep); text-shadow: 1px 1.5px 3px rgba(196,99,122,0.18); display: inline-block; margin-bottom: 8px;">Thank you for choosing me, Vy ✨</span>`;
     greetQuote.innerHTML = `<span style="font-family: 'Playfair Display', serif; font-style: italic; font-size: 20px; color: var(--text-mid); line-height: 1.55; letter-spacing: 0.01em; display: inline-block; padding: 14px 24px; border-top: 1.5px dashed var(--rose); border-bottom: 1.5px dashed var(--rose); margin-top: 16px; background: rgba(253, 244, 246, 0.6); border-radius: 12px; box-shadow: inset 0 0 10px rgba(196,99,122,0.03);">“Every adventure is better when shared with you.”</span>`;
-    createSparkleRain('💕', '✨', '⭐', '🎈', '💌', '🌹');
+    createSparkleRain("💕", "✨", "⭐", "🎈", "💌", "🌹");
   }
   
-  document.getElementById('splash-step-who').style.display = 'none';
-  const greetSec = document.getElementById('splash-step-greet');
-  greetSec.classList.add('show');
+  document.getElementById("splash-step-who").style.display = "none";
+  const greetSec = document.getElementById("splash-step-greet");
+  greetSec.classList.add("show");
 }
 
 function createSparkleRain(...symbols) {
-  const container = document.getElementById('welcome-splash');
+  const container = document.getElementById("welcome-splash");
   for (let i = 0; i < 45; i++) {
     setTimeout(() => {
-      const p = document.createElement('div');
-      p.className = 'sparkle-particle';
+      const p = document.createElement("div");
+      p.className = "sparkle-particle";
       p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-      p.style.left = (15 + Math.random() * 70) + 'vw';
-      p.style.top = (35 + Math.random() * 35) + 'vh';
-      p.style.fontSize = (18 + Math.random() * 16) + 'px';
+      p.style.left = (15 + Math.random() * 70) + "vw";
+      p.style.top = (35 + Math.random() * 35) + "vh";
+      p.style.fontSize = (18 + Math.random() * 16) + "px";
       
       const angle = Math.random() * Math.PI * 2;
       const distance = 90 + Math.random() * 240;
@@ -2814,9 +2788,9 @@ function createSparkleRain(...symbols) {
       const ty = Math.sin(angle) * distance;
       const rot = -180 + Math.random() * 360;
       
-      p.style.setProperty('--tx', `${tx}px`);
-      p.style.setProperty('--ty', `${ty}px`);
-      p.style.setProperty('--rot', `${rot}deg`);
+      p.style.setProperty("--tx", `${tx}px`);
+      p.style.setProperty("--ty", `${ty}px`);
+      p.style.setProperty("--rot", `${rot}deg`);
       
       container.appendChild(p);
       setTimeout(() => p.remove(), 1400);
@@ -2825,61 +2799,61 @@ function createSparkleRain(...symbols) {
 }
 
 function triggerFlyAway() {
-  const realLogo = document.getElementById('header-logo-container');
-  const splashOverlay = document.getElementById('welcome-splash');
+  const realLogo = document.getElementById("header-logo-container");
+  const splashOverlay = document.getElementById("welcome-splash");
   
   if (!realLogo || !splashOverlay) {
-    sessionStorage.setItem('welcomed', 'true');
-    splashOverlay.classList.remove('open');
+    sessionStorage.setItem("welcomed", "true");
+    splashOverlay.classList.remove("open");
     return;
   }
   
-  const clone = document.createElement('div');
-  clone.className = 'flying-title-clone';
-  clone.innerHTML = `<span style="font-size: 24px; margin-right: 12px;">💕</span> Duy &amp; Vy`;
+  const clone = document.createElement("div");
+  clone.className = "flying-title-clone";
+  clone.innerHTML = `<span style="font-size: 24px; margin-right: 12px;">💕</span> Duy & Vy`;
   
-  clone.style.left = '50%';
-  clone.style.top = '45%';
-  clone.style.transform = 'translate(-50%, -50%) scale(2.2)';
-  clone.style.opacity = '1';
-  clone.style.transition = 'all 1.4s cubic-bezier(0.25, 1, 0.5, 1)';
+  clone.style.left = "50%";
+  clone.style.top = "45%";
+  clone.style.transform = "translate(-50%, -50%) scale(2.2)";
+  clone.style.opacity = "1";
+  clone.style.transition = "all 1.4s cubic-bezier(0.25, 1, 0.5, 1)";
   document.body.appendChild(clone);
   
-  realLogo.style.opacity = '0';
+  realLogo.style.opacity = "0";
   
-  document.querySelector('.splash-card').style.transition = 'opacity 0.4s';
-  document.querySelector('.splash-card').style.opacity = '0';
-  splashOverlay.style.background = 'transparent';
-  splashOverlay.style.transition = 'background 0.8s';
+  document.querySelector(".splash-card").style.transition = "opacity 0.4s";
+  document.querySelector(".splash-card").style.opacity = "0";
+  splashOverlay.style.background = "transparent";
+  splashOverlay.style.transition = "background 0.8s";
   
   setTimeout(() => {
     const rect = realLogo.getBoundingClientRect();
     
-    clone.style.left = rect.left + 'px';
-    clone.style.top = rect.top + 'px';
-    clone.style.transform = 'translate(0, 0) scale(1)';
-    clone.style.fontSize = '18px';
+    clone.style.left = rect.left + "px";
+    clone.style.top = rect.top + "px";
+    clone.style.transform = "translate(0, 0) scale(1)";
+    clone.style.fontSize = "18px";
     
-    splashOverlay.style.opacity = '0';
+    splashOverlay.style.opacity = "0";
   }, 100);
   
   setTimeout(() => {
-    realLogo.style.opacity = '1';
-    clone.style.opacity = '0';
-    splashOverlay.classList.remove('open');
+    realLogo.style.opacity = "1";
+    clone.style.opacity = "0";
+    splashOverlay.classList.remove("open");
     setTimeout(() => {
       clone.remove();
     }, 300);
     
-    sessionStorage.setItem('welcomed', 'true');
+    sessionStorage.setItem("welcomed", "true");
     showToast(`✨ Welcome home, Vy!`);
   }, 1500);
 }
 
 function handleWelcomeIntro() {
-  const isWelcomed = sessionStorage.getItem('welcomed');
+  const isWelcomed = sessionStorage.getItem("welcomed");
   if (!isWelcomed) {
-    document.getElementById('welcome-splash').classList.add('open');
+    document.getElementById("welcome-splash").classList.add("open");
   }
 }
 
@@ -2887,58 +2861,63 @@ function handleWelcomeIntro() {
 // CLOUD SYNC LOGINS
 // ═══════════════════════════════════════════════════════
 function friendlyAuthError(err){
-  const c=(err&&err.code)||'';
-  if(c.includes('invalid-email')) return "That email doesn't look right.";
-  if(c.includes('wrong-password')||c.includes('user-not-found')||c.includes('invalid-credential')||c.includes('invalid-login')) return "Wrong email or password.";
-  if(c.includes('too-many-requests')) return "Too many tries — wait a moment and retry.";
-  if(c.includes('network')) return "No connection — check your internet.";
-  return (err&&err.message)||'Something went wrong. Try again.';
+  const c=(err&&err.code)||"";
+  if(c.includes("invalid-email")) return "That email doesn't look right.";
+  if(c.includes("wrong-password")||c.includes("user-not-found")||c.includes("invalid-credential")||c.includes("invalid-login")) return "Wrong email or password.";
+  if(c.includes("too-many-requests")) return "Too many tries — wait a moment and retry.";
+  if(c.includes("network")) return "No connection — check your internet.";
+  return (err&&err.message)||"Something went wrong. Try again.";
 }
 
 function doLogin() {
-  const email=document.getElementById('login-email').value.trim();
-  const pw=document.getElementById('login-pw').value;
-  const errEl=document.getElementById('login-error');
-  const btn=document.getElementById('login-btn');
-  errEl.textContent='';
-  if(!email||!pw){ errEl.textContent='Enter your email and password.'; return; }
-  btn.textContent='Signing in…';
+  const email=document.getElementById("login-email").value.trim();
+  const pw=document.getElementById("login-pw").value;
+  const errEl=document.getElementById("login-error");
+  const btn=document.getElementById("login-btn");
+  errEl.textContent="";
+  if(!email||!pw){ errEl.textContent="Enter your email and password."; return; }
+  btn.textContent="Signing in…";
   fbAuth.signInWithEmailAndPassword(email,pw)
     .then(() => {
-      sessionStorage.removeItem('welcomed');
+      sessionStorage.removeItem("welcomed");
     })
-    .catch(err=>{ errEl.textContent=friendlyAuthError(err); btn.textContent='Sign in 💕'; });
+    .catch(err=>{ errEl.textContent=friendlyAuthError(err); btn.textContent="Sign in 💕"; });
 }
-function doLogout(){ if(fbAuth) { fbAuth.signOut(); sessionStorage.removeItem('welcomed'); } }
+function doLogout(){ if(fbAuth) { fbAuth.signOut(); sessionStorage.removeItem("welcomed"); } }
 
 let cloudSubscribed=false;
 function subscribeCloud(){
   if(cloudSubscribed) return;
   cloudSubscribed=true;
-  db.collection('trips').onSnapshot(snap=>{
+  db.collection("trips").onSnapshot(snap=>{
     trips = snap.docs.map(d=>d.data());
-    document.getElementById('sync-pill').textContent='☁️ Synced';
+    document.getElementById("sync-pill").textContent="☁️ Synced";
     renderAll();
-    if(currentDetailTripId && document.getElementById('detail-overlay').classList.contains('open')
-       && !trips.find(x=>x.id===currentDetailTripId)){
-      closeOverlay('detail-overlay');
+    
+    if (posesCurrentTabIdx !== null && posesCurrentActIdx !== null && document.getElementById("poses-overlay").classList.contains("open")) {
+      if (posesCurrentViewMode === "view") renderPosesView(); else renderPosesEdit();
     }
-  }, err=>{ console.error(err); document.getElementById('sync-pill').textContent='⚠️ Offline'; });
+
+    if(currentDetailTripId && document.getElementById("detail-overlay").classList.contains("open")
+       && !trips.find(x=>x.id===currentDetailTripId)){
+      closeOverlay("detail-overlay");
+    }
+  }, err=>{ console.error(err); document.getElementById("sync-pill").textContent="⚠️ Offline"; });
   
-  db.collection('meta').doc('site').onSnapshot(doc=>{
+  db.collection("meta").doc("site").onSnapshot(doc=>{
     if(doc.exists){ site = doc.data(); renderHero(); renderFooter(); }
   }, err=>console.error(err));
 }
 
 function seedIfNeeded(){
-  return db.collection('meta').doc('site').get().then(doc=>{
+  return db.collection("meta").doc("site").get().then(doc=>{
     if(!doc.exists){
       const batch=db.batch();
-      batch.set(db.collection('meta').doc('site'), defaultSite());
-      defaultTrips().forEach(t=> batch.set(db.collection('trips').doc(t.id), t));
+      batch.set(db.collection("meta").doc("site"), defaultSite());
+      defaultTrips().forEach(t=> batch.set(db.collection("trips").doc(t.id), t));
       return batch.commit();
     }
-  }).catch(e=>console.error('Seed check failed',e));
+  }).catch(e=>console.error("Seed check failed",e));
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2947,19 +2926,19 @@ function seedIfNeeded(){
 function init(){
   populateCountriesDropdown();
   if(useCloud){
-    document.body.classList.add('cloud-mode');
+    document.body.classList.add("cloud-mode");
     renderHero(); renderFooter();
-    document.getElementById('trips-grid').innerHTML='<div class="empty-state">☁️ Syncing your journal…</div>';
+    document.getElementById("trips-grid").innerHTML='<div class="empty-state">☁️ Syncing your journal…</div>';
     fbAuth.onAuthStateChanged(user=>{
       if(user){
-        document.getElementById('login-overlay').classList.remove('open');
+        document.getElementById("login-overlay").classList.remove("open");
         seedIfNeeded().then(subscribeCloud).then(() => {
           handleWelcomeIntro();
         });
       } else {
         cloudSubscribed=false;
-        document.getElementById('login-overlay').classList.add('open');
-        document.getElementById('welcome-splash').classList.remove('open');
+        document.getElementById("login-overlay").classList.add("open");
+        document.getElementById("welcome-splash").classList.remove("open");
       }
     });
   } else {
@@ -2998,7 +2977,7 @@ init();
       justify-content: center !important;
       line-height: 1 !important;
       box-sizing: border-box !important;
-      margin: 0 !important; /* FORCE-CLEARS THE OLD 4PX TOP MARGIN */
+      margin: 0 !important;
     }
     .map-link {
       padding: 0 12px !important;
@@ -3015,6 +2994,30 @@ init();
         font-size: 11px !important;
       }
     }
+
+    .ai-advisor-card { 
+      margin-bottom: 24px; 
+      padding: 16px 20px; 
+      background: #fff8f9; 
+      border-left: 4px solid var(--rose-deep); 
+      border-radius: 0 16px 16px 0; 
+      font-family: "Inter", sans-serif;
+      box-shadow: var(--shadow);
+      animation: magicEntrance 0.4s ease both;
+    }
+    .ai-advisor-title { 
+      font-family: "Playfair Display", serif; 
+      font-size: 16px; 
+      font-weight: 600; 
+      color: var(--rose-deep); 
+      margin-bottom: 6px; 
+      display: flex; 
+      align-items: center; 
+      gap: 6px;
+    }
+    .ai-advisor-text { font-size: 13px; color: var(--text-dark); line-height: 1.6; }
+    .ai-tag-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .ai-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 50px; background: var(--white); border: 1px solid #f0dce2; color: var(--text-mid); }
   `;
   document.head.appendChild(style);
 
@@ -3067,142 +3070,93 @@ init();
   window.posesCurrentActIdx = null;
   window.posesCurrentViewMode = "view";
 
-  // 4. OVERRIDE CORE CARD GENERATOR TO INCLUDE THE BUTTON
-  window.actCardHTML = function(a, actIdx, tabIdx) {
-    const mapBtn = a.mapUrl ? `<a class="map-link" href="${esc(a.mapUrl)}" target="_blank" rel="noopener">🗺️ Open in Maps</a>` : "";
-    const imgEl = a.imgUrl ? `<img class="activity-img" src="${esc(a.imgUrl)}" alt="" onerror="this.style.display=&quot;none&quot;;var p=this.nextElementSibling;if(p&&p.classList.contains(&quot;activity-img-placeholder&quot;))p.style.display=&quot;flex&quot;;" />` : "";
-    const tipEl = a.tip ? `<div class="activity-tip" style="${getStyleString(a.styles?.tip)}"><div class="activity-tip-label">💡 Tip</div>${safeFormat(a.tip)}</div>` : "";
-    
-    let checklistHtml = "";
-    if (a.checklist && a.checklist.length) {
-      checklistHtml = `
-        <div class="checklist">
-          <div class="checklist-title">Checklist</div>
-          ${a.checklist.map((c, ci) => `
-            <div class="checklist-item ${c.done ? "checked" : ""}">
-              <input type="checkbox" data-act-idx="${actIdx}" data-item-idx="${ci}" ${c.done ? "checked" : ""}>
-              <span>${esc(c.text)}</span>
-            </div>
-          `).join("")}
-        </div>`;
+  // 4. COMPILED SEASONAL ADVISORY DATA MATRIX
+  window.getSeasonalInsight = function(destination, dateStr) {
+    const dest = String(destination || "").toLowerCase();
+    let month = 0;
+    if (dateStr) {
+      const parts = dateStr.split("-");
+      if (parts.length >= 2) month = parseInt(parts[1], 10);
     }
-    
-    const poseCount = (a.poses && a.poses.length) ? a.poses.length : 0;
-    const poseBtnLabel = poseCount > 0 ? "📸 Pose Guide (" + poseCount + ")" : "📸 Pose Guide";
-    const posesBtn = `<button class="btn btn-sm btn-outline btn-sage" onclick="openPosesModal(${tabIdx}, ${actIdx})">${poseBtnLabel}</button>`;
 
-    return `
-      <div class="activity-card">
-        ${imgEl}
-        <div class="activity-img-placeholder" style="${imgEl ? "display:none" : "display:flex"}">📍</div>
-        <div class="activity-body">
-          <div class="activity-title" style="${getStyleString(a.styles?.title)}">${safeFormat(a.title || "Activity")}</div>
-          ${a.desc ? `<div class="activity-desc" style="${getStyleString(a.styles?.desc)}">${safeFormat(a.desc)}</div>` : ""}
-          ${tipEl}
-          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:4px; margin-bottom:4px;">
-            ${mapBtn}
-            ${posesBtn}
-          </div>
-          ${checklistHtml}
-        </div>
-      </div>`;
-  };
-
-  // 5. OVERRIDE TRAFFIC RENDERER TO PASS POSITION VALUES
-  window.renderDetailTabs = function(t, ac) {
-    const bar = document.getElementById("det-tabs-bar");
-    const content = document.getElementById("det-tabs-content");
-    const tabs = t.tabs || [];
-    if (!tabs.length) { bar.innerHTML = ""; content.innerHTML = ""; return; }
-    
-    function render(idx) {
-      bar.innerHTML = tabs.map((tab, i) => {
-        const col = tab.color || ac;
-        const shp = tab.shape || "border-radius:50px;";
-        const active = i === idx;
-        return `<button class="tab-btn ${active ? "active" : ""}" style="${active ? "background:" + col + ";color:#fff;" + shp : "" + shp}" onclick="renderDetailTabs._switch(${i})">${esc(tab.label || ("Day " + (i + 1)))}</button>`;
-      }).join("");
-      
-      const tab = tabs[idx];
-      const acts = tab.activities || [];
-      content.innerHTML = `<div class="activities-list">${acts.map((a, ai) => actCardHTML(a, ai, idx)).join("")}</div>`;
-      
-      content.querySelectorAll(".checklist-item input").forEach(cb => {
-        cb.addEventListener("change", function() {
-          const item = cb.closest(".checklist-item");
-          item.classList.toggle("checked", cb.checked);
-          const ai = parseInt(cb.dataset.actIdx, 10);
-          const ci = parseInt(cb.dataset.itemIdx, 10);
-          const trip = trips.find(x => x.id === currentDetailTripId);
-          if (trip && trip.tabs[idx] && trip.tabs[idx].activities[ai] && trip.tabs[idx].activities[ai].checklist[ci]) {
-            trip.tabs[idx].activities[ai].checklist[ci].done = cb.checked;
-            if (useCloud) { db.collection("trips").doc(trip.id).set(trip).catch(e => { console.error(e); showToast(fbWriteError(e)); }); }
-            else { saveTrips(trips); }
-          }
-        });
-      });
+    if (dest.includes("singapore")) {
+      if (month === 12 || month === 1 || month === 2) {
+        return {
+          title: "Gemini Travel Strategy | Singapore Winter Monsoon 🌧️",
+          text: "You are traveling during the Northeast Monsoon season. Expect heavy, sudden downpours almost every afternoon between 2:00 PM and 5:30 PM. Keep your morning schedule focused on outdoor locations like Fort Canning, then head indoors to Jewel Changi, museums, or the cooled glass domes at Gardens by the Bay when the clouds roll in.",
+          tags: ["Bring Umbrellas", "Afternoon Rain Check", "AC Lens Fog Alert", "Morning Shoot Best"]
+        };
+      }
+      return {
+        title: "Gemini Travel Strategy | Singapore Tropical Sunshine ☀️",
+        text: "Expect high humidity and intense morning heat with brief passing showers. Schedule major walking tours early in the day, find shade by midday, and utilize the golden hour around 6:45 PM for beautiful waterfront portraits.",
+        tags: ["High Humidity", "Hydration Focus", "Golden Hour 6:45 PM"]
+      };
     }
-    renderDetailTabs._switch = function(i) { render(i); };
-    render(0);
-  };
 
-  // 6. PROTECT INTERFACES SO REGULAR FORM EDITS PRESERVE DATA LINKS
-  if (window.getActEditorInnerHtml) {
-    const originalGetActEditorInnerHtml = window.getActEditorInnerHtml;
-    window.getActEditorInnerHtml = function(aId, a) {
-      let baseHtml = originalGetActEditorInnerHtml(aId, a);
-      const savedPosesJSON = a.poses ? esc(JSON.stringify(a.poses)) : "[]";
-      baseHtml = baseHtml.replace("<div class=\"form-group\" style=\"margin-bottom:6px\">", `<input type="hidden" data-act-poses-pool value="${esc(savedPosesJSON)}" /><div class="form-group" style="margin-bottom:6px">`);
-      return baseHtml;
+    if (dest.includes("vietnam") || dest.includes("hcmc") || dest.includes("chi minh")) {
+      if (month >= 5 && month <= 10) {
+        return {
+          title: "Gemini Travel Strategy | Saigon Rainy Season ⛈️",
+          text: "Saigon summers bring high humidity and sudden, torrential afternoon downpours that can flood streets quickly. Plan your main city walks and cafe photo hunts for the morning. Keep high quality plastic ponchos handy, and have a cozy cafe backup plan ready for the afternoon shift.",
+          tags: ["Sudden Downpours", "Morning Walking Only", "Cafe Escape Ready"]
+        };
+      }
+      return {
+        title: "Gemini Travel Strategy | Saigon Golden Dry Season 🍃",
+        text: "This is the prime time to visit southern Vietnam. Days are beautifully warm, less humid, and the evenings bring a lovely breeze. Perfect conditions for evening strolls through District 3, open-air dining, and street photography.",
+        tags: ["Perfect Weather", "Clear Sunsets", "Light Pack Clothing"]
+      };
+    }
+
+    if (dest.includes("florida") || dest.includes("orlando")) {
+      if (month >= 6 && month <= 9) {
+        return {
+          title: "Gemini Travel Strategy | Florida Summer Heat ☀️⛈️",
+          text: "Intense tropical heat is standard, paired with near-guaranteed thunderstorms every single afternoon at around 4:00 PM. Tackle outdoor theme parks or nature springs early at opening, take an air-conditioned indoor break during the mid-afternoon storm, and enjoy the clear, cooled air afterward.",
+          tags: ["Extreme UV Index", "Daily 4PM Storms", "Early Park Arrival"]
+        };
+      }
+      return {
+        title: "Gemini Travel Strategy | Sunshine State Crisp Season 🍃",
+        text: "Beautiful mild daytime temperatures and beautifully crisp, cool nights. Excellent outdoor conditions all day long with very low rainfall risk.",
+        tags: ["Crisp Evenings", "Jacket for Night", "All-Day Outdoor"]
+      };
+    }
+
+    return {
+      title: "Gemini Travel Strategy | Dynamic Blueprint Tracker 🗺️",
+      text: "Ensure your travel gear is packed dynamically. For active photo trips, review seasonal sunrise and sunset tables locally to optimize shooting schedules, and pre-load your offline Google Maps areas to save device battery while navigating.",
+      tags: ["Check Local Sunset", "Battery Saver Mode", "Scrapbook Ready"]
     };
-  }
-
-  window.collectTabs = function() {
-    const tabs = [];
-    document.querySelectorAll("#tabs-editor .tab-editor-entry").forEach(tabEl => {
-      const label = tabEl.querySelector("[data-tab-label]")?.value.trim() || "";
-      const color = tabEl.querySelector("[data-tab-color]")?.value || "#e47a90";
-      const shape = tabEl.querySelector("[data-tab-shape]")?.value || TAB_SHAPES[0].style;
-      const activities = [];
-      
-      tabEl.querySelectorAll(".act-editor").forEach(actEl => {
-        const aId = actEl.id;
-        const imgUrlEl = actEl.querySelector("[data-act-img-url]");
-        const checklist = [];
-        
-        actEl.querySelector(".check-editor")?.querySelectorAll(".check-item-row").forEach(row => {
-          const txt = row.querySelector("[data-check-text]")?.value.trim() || "";
-          if (txt) checklist.push({ text: txt, done: row.dataset.done === "1" });
-        });
-        
-        let parsedPoses = [];
-        try {
-          const poolVal = actEl.querySelector("[data-act-poses-pool]")?.value;
-          parsedPoses = poolVal ? JSON.parse(poolVal) : [];
-        } catch(e) { parsedPoses = []; }
-
-        activities.push({
-          id: "a" + Date.now() + Math.random().toString(36).slice(2, 6),
-          title: actEl.querySelector("[data-act-title]")?.value.trim() || "",
-          desc: actEl.querySelector("[data-act-desc]")?.value.trim() || "",
-          tip: actEl.querySelector("[data-act-tip]")?.value.trim() || "",
-          imgUrl: imgUrlEl?.value.trim() || "",
-          mapUrl: actEl.querySelector("[data-act-map]")?.value.trim() || "",
-          checklist: checklist,
-          poses: parsedPoses,
-          styles: {
-            title: collectTypography(aId + "-title"),
-            desc: collectTypography(aId + "-desc"),
-            tip: collectTypography(aId + "-tip")
-          }
-        });
-      });
-      tabs.push({ id: "tab" + Date.now() + Math.random().toString(36).slice(2, 5), label, color, shape, activities });
-    });
-    return tabs;
   };
 
-  // 7. POSES LOGIC CORE ENGINE
+  // 5. RENDER BLUEPRINT UTILITIES
+  window.updateDestinationWeather = function(destinationStr, dateStr) {
+    let container = document.getElementById("det-weather-widget");
+    if (!container) {
+      container = document.createElement("div");
+      container.id = "det-weather-widget";
+      const detDates = document.getElementById("det-dates");
+      if (detDates) {
+        detDates.parentNode.insertBefore(container, detDates.nextSibling);
+      }
+    }
+
+    const insight = window.getSeasonalInsight(destinationStr, dateStr);
+
+    container.innerHTML = `
+      <div class="ai-advisor-card">
+        <div class="ai-advisor-title">🌸 ${esc(insight.title)}</div>
+        <div class="ai-advisor-text">${esc(insight.text)}</div>
+        <div class="ai-tag-group">
+          ${insight.tags.map(tag => `<span class="ai-tag">✨ ${esc(tag)}</span>`).join("")}
+        </div>
+      </div>
+    `;
+  };
+
+  // 6. POSES LOGIC CORE ENGINE
   window.openPosesModal = function(tabIdx, actIdx) {
     posesCurrentTabIdx = tabIdx;
     posesCurrentActIdx = actIdx;
@@ -3286,7 +3240,7 @@ init();
     `).join("");
   };
 
- window.addNewPoseLink = function() {
+  window.addNewPoseLink = function() {
     const input = document.getElementById("new-pose-url");
     const rawText = input.value.trim();
     if (!rawText) {
@@ -3299,7 +3253,6 @@ init();
 
     if (!context.act.poses) context.act.poses = [];
 
-    // This regular expression automatically extracts all direct image URLs from the text block
     const regex = /(https?:\/\/[^\s[\]&"<>]+?\.(?:jpg|jpeg|png|gif|webp|bmp))/gi;
     const matches = rawText.match(regex);
 
@@ -3314,7 +3267,6 @@ init();
       renderPosesEdit();
       showToast("✨ Bulk imported " + matches.length + " poses successfully!");
     } else {
-      // Safety fallback for single pasted links that do not use standard file extensions
       if (rawText.startsWith("http")) {
         if (!context.act.poses.includes(rawText)) {
           context.act.poses.push(rawText);
@@ -3371,153 +3323,25 @@ init();
     }
   };
 
-  // Re-run the active tabs once to immediately draw the button without requiring a page refresh
-  if (typeof currentDetailTripId !== "undefined" && currentDetailTripId) {
-    const activeTrip = trips.find(x => x.id === currentDetailTripId);
-    if (activeTrip) renderDetailTabs(activeTrip, activeTrip.color?.accent || "#e47a90");
-  }
-
-// ... This is the end of your existing template code ...
-  if (typeof currentDetailTripId !== "undefined" && currentDetailTripId) {
-    const activeTrip = trips.find(function(x) { return x.id === id; });
-    if (activeTrip) renderDetailTabs(activeTrip, activeTrip.color?.accent || "#e47a90");
-  }
-
- <!-- ── AI SEASONAL ADVISOR EXTENSION PACK ── -->
-<script>
-(function() {
-  // 1. INJECT ADVISOR DESIGN STYLES
-  const style = document.createElement("style");
-  style.textContent = `
-    .ai-advisor-card { 
-      margin-bottom: 24px; 
-      padding: 16px 20px; 
-      background: #fff8f9; 
-      border-left: 4px solid var(--rose-deep); 
-      border-radius: 0 16px 16px 0; 
-      font-family: "Inter", sans-serif;
-      box-shadow: var(--shadow);
-      animation: magicEntrance 0.4s ease both;
-    }
-    .ai-advisor-title { 
-      font-family: "Playfair Display", serif; 
-      font-size: 16px; 
-      font-weight: 600; 
-      color: var(--rose-deep); 
-      margin-bottom: 6px; 
-      display: flex; 
-      align-items: center; 
-      gap: 6px;
-    }
-    .ai-advisor-text { font-size: 13px; color: var(--text-dark); line-height: 1.6; }
-    .ai-tag-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-    .ai-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 50px; background: var(--white); border: 1px solid #f0dce2; color: var(--text-mid); }
-  `;
-  document.head.appendChild(style);
-
-  // 2. COMPILED SEASONAL ADVISORY DATA MATRIX
-  window.getSeasonalInsight = function(destination, dateStr) {
-    const dest = String(destination || "").toLowerCase();
-    
-    // Extract travel month index (1 to 12)
-    let month = 0;
-    if (dateStr) {
-      const parts = dateStr.split("-");
-      if (parts.length >= 2) month = parseInt(parts[1], 10);
-    }
-
-    // CASE A: SINGAPORE ADVISORY MATRIX
-    if (dest.includes("singapore")) {
-      if (month === 12 || month === 1 || month === 2) {
-        return {
-          title: "Gemini Travel Strategy | Singapore Winter Monsoon 🌧️",
-          text: "You are traveling during the Northeast Monsoon season. Expect heavy, sudden downpours almost every afternoon between 2:00 PM and 5:30 PM. Keep your morning schedule focused on outdoor locations like Fort Canning, then head indoors to Jewel Changi, museums, or the cooled glass domes at Gardens by the Bay when the clouds roll in.",
-          tags: ["Bring Umbrellas", "Afternoon Rain Check", "AC Lens Fog Alert", "Morning Shoot Best"]
-        };
-      }
-      return {
-        title: "Gemini Travel Strategy | Singapore Tropical Sunshine ☀️",
-        text: "Expect high humidity and intense morning heat with brief passing showers. Schedule major walking tours early in the day, find shade by midday, and utilize the golden hour around 6:45 PM for beautiful waterfront portraits.",
-        tags: ["High Humidity", "Hydration Focus", "Golden Hour 6:45 PM"]
-      };
-    }
-
-    // CASE B: VIETNAM / HO CHI MINH CITY ADVISORY MATRIX
-    if (dest.includes("vietnam") || dest.includes("hcmc") || dest.includes("chi minh")) {
-      if (month >= 5 && month <= 10) {
-        return {
-          title: "Gemini Travel Strategy | Saigon Rainy Season ⛈️",
-          text: "Saigon summers bring high humidity and sudden, torrential afternoon downpours that can flood streets quickly. Plan your main city walks and cafe photo hunts for the morning. Keep high quality plastic ponchos handy, and have a cozy cafe backup plan ready for the afternoon shift.",
-          tags: ["Sudden Downpours", "Morning Walking Only", "Cafe Escape Ready"]
-        };
-      }
-      return {
-        title: "Gemini Travel Strategy | Saigon Golden Dry Season 🍃",
-        text: "This is the prime time to visit southern Vietnam. Days are beautifully warm, less humid, and the evenings bring a lovely breeze. Perfect conditions for evening strolls through District 3, open-air dining, and street photography.",
-        tags: ["Perfect Weather", "Clear Sunsets", "Light Pack Clothing"]
-      };
-    }
-
-    // CASE C: FLORIDA / ORLANDO ADVISORY MATRIX
-    if (dest.includes("florida") || dest.includes("orlando")) {
-      if (month >= 6 && month <= 9) {
-        return {
-          title: "Gemini Travel Strategy | Florida Summer Heat ☀️⛈️",
-          text: "Intense tropical heat is standard, paired with near-guaranteed thunderstorms every single afternoon at around 4:00 PM. Tackle outdoor theme parks or nature springs early at opening, take an air-conditioned indoor break during the mid-afternoon storm, and enjoy the clear, cooled air afterward.",
-          tags: ["Extreme UV Index", "Daily 4PM Storms", "Early Park Arrival"]
-        };
-      }
-      return {
-        title: "Gemini Travel Strategy | Sunshine State Crisp Season 🍃",
-        text: "Beautiful mild daytime temperatures and beautifully crisp, cool nights. Excellent outdoor conditions all day long with very low rainfall risk.",
-        tags: ["Crisp Evenings", "Jacket for Night", "All-Day Outdoor"]
-      };
-    }
-
-    // DEFAULT FALLBACK ADVISORY FOR OTHER DESTINATIONS
-    return {
-      title: "Gemini Travel Strategy | Dynamic Blueprint Tracker 🗺️",
-      text: "Ensure your travel gear is packed dynamically. For active photo trips, review seasonal sunrise and sunset tables locally to optimize shooting schedules, and pre-load your offline Google Maps areas to save device battery while navigating.",
-      tags: ["Check Local Sunset", "Battery Saver Mode", "Scrapbook Ready"]
+  if (window.getActEditorInnerHtml) {
+    const originalGetActEditorInnerHtml = window.getActEditorInnerHtml;
+    window.getActEditorInnerHtml = function(aId, a) {
+      let baseHtml = originalGetActEditorInnerHtml(aId, a);
+      const savedPosesJSON = a.poses ? esc(JSON.stringify(a.poses)) : "[]";
+      baseHtml = baseHtml.replace("<div class=\"form-group\" style=\"margin-bottom:6px\">", `<input type="hidden" data-act-poses-pool value="${esc(savedPosesJSON)}" /><div class="form-group" style="margin-bottom:6px">`);
+      return baseHtml;
     };
-  };
+  }
 
-  // 3. RENDER LOGIC ENGINE
-  window.updateDestinationWeather = function(destinationStr, dateStr) {
-    let container = document.getElementById("det-weather-widget");
-    if (!container) {
-      container = document.createElement("div");
-      container.id = "det-weather-widget";
-      const detDates = document.getElementById("det-dates");
-      if (detDates) {
-        detDates.parentNode.insertBefore(container, detDates.nextSibling);
-      }
-    }
-
-    const insight = window.getSeasonalInsight(destinationStr, dateStr);
-
-    container.innerHTML = `
-      <div class="ai-advisor-card">
-        <div class="ai-advisor-title">🌸 ${esc(insight.title)}</div>
-        <div class="ai-advisor-text">${esc(insight.text)}</div>
-        <div class="ai-tag-group">
-          ${insight.tags.map(tag => `<span class="ai-tag">✨ ${esc(tag)}</span>`).join("")}
-        </div>
-      </div>
-    `;
-  };
-
-  // 4. INTERCEPT DETAIL VIEW EVENT TO TRIGGER INSIGHT CHANGER
+  // 8. MONITOR COMPILATION INTERCEPTS TO RENDER ADVISOR MODULATOR
   if (window.openDetail) {
     const originalOpenDetail = window.openDetail;
     window.openDetail = function(id) {
       originalOpenDetail(id);
-      
       const currentTrip = trips.find(function(x) { return x.id === id; });
       if (currentTrip) {
         const queryDestination = currentTrip.country || currentTrip.title || "";
         const queryDate = currentTrip.startDate || "";
-        
         setTimeout(function() {
           window.updateDestinationWeather(queryDestination, queryDate);
         }, 50);
@@ -3526,8 +3350,4 @@ init();
   }
 })();
 </script>
-
-})();
-</script>
-
 </html>
