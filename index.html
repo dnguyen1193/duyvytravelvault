@@ -3383,102 +3383,147 @@ init();
     if (activeTrip) renderDetailTabs(activeTrip, activeTrip.color?.accent || "#e47a90");
   }
 
-  // ═══════════════════════════════════════════════════════
-  //   🌤️ INTERACTIVE BACKGROUND WEATHER ENGINE
-  // ═══════════════════════════════════════════════════════
-  window.weatherCache = {};
+ <!-- ── AI SEASONAL ADVISOR EXTENSION PACK ── -->
+<script>
+(function() {
+  // 1. INJECT ADVISOR DESIGN STYLES
+  const style = document.createElement("style");
+  style.textContent = `
+    .ai-advisor-card { 
+      margin-bottom: 24px; 
+      padding: 16px 20px; 
+      background: #fff8f9; 
+      border-left: 4px solid var(--rose-deep); 
+      border-radius: 0 16px 16px 0; 
+      font-family: "Inter", sans-serif;
+      box-shadow: var(--shadow);
+      animation: magicEntrance 0.4s ease both;
+    }
+    .ai-advisor-title { 
+      font-family: "Playfair Display", serif; 
+      font-size: 16px; 
+      font-weight: 600; 
+      color: var(--rose-deep); 
+      margin-bottom: 6px; 
+      display: flex; 
+      align-items: center; 
+      gap: 6px;
+    }
+    .ai-advisor-text { font-size: 13px; color: var(--text-dark); line-height: 1.6; }
+    .ai-tag-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .ai-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 50px; background: var(--white); border: 1px solid #f0dce2; color: var(--text-mid); }
+  `;
+  document.head.appendChild(style);
 
-  const weatherStyle = document.createElement("style");
-  weatherStyle.textContent = ".weather-fade-in { animation: magicEntrance 0.4s ease both; } .weather-badge { font-weight: 600; color: var(--rose-deep); background: #fff; padding: 2px 8px; border-radius: 20px; border: 1px solid #f0dce2; }";
-  document.head.appendChild(weatherStyle);
-
-  function getWeatherCondition(code) {
-    if (code === 0) return { text: "Clear Skies", emoji: "☀️" };
-    if (code >= 1 && code <= 3) return { text: "Partly Cloudy", emoji: "⛅" };
-    if (code === 45 || code === 48) return { text: "Foggy", emoji: "🌫️" };
-    if (code >= 51 && code <= 55) return { text: "Light Drizzle", emoji: "🌧️" };
-    if (code >= 61 && code <= 65) return { text: "Rainy", emoji: "🌧️" };
-    if (code >= 71 && code <= 75) return { text: "Snowy", emoji: "❄️" };
-    if (code >= 80 && code <= 82) return { text: "Rain Showers", emoji: "🌦️" };
-    if (code === 95 || code === 96) return { text: "Thunderstorm", emoji: "⛈️" };
-    return { text: "Clear", emoji: "🌸" };
-  }
-
-  window.updateDestinationWeather = async function(destinationStr) {
-    if (!destinationStr) return;
+  // 2. COMPILED SEASONAL ADVISORY DATA MATRIX
+  window.getSeasonalInsight = function(destination, dateStr) {
+    const dest = String(destination || "").toLowerCase();
     
-    const cleanName = destinationStr.split(/[\uD800-\uDFFF\u2600-\u27BF]/)[0].trim();
-    if (!cleanName) return;
-
-    const cacheKey = cleanName.toLowerCase();
-
-    let weatherDiv = document.getElementById("det-weather-widget");
-    if (!weatherDiv) {
-      weatherDiv = document.createElement("div");
-      weatherDiv.id = "det-weather-widget";
-      weatherDiv.style.cssText = "margin-bottom: 20px; padding: 12px 16px; background: var(--rose-light); border-radius: 12px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dark); border: 1px solid #f0dce2; font-family: \"Inter\", sans-serif;";
-      const detDates = document.getElementById("det-dates");
-      if (detDates) {
-        detDates.parentNode.insertBefore(weatherDiv, detDates.nextSibling);
-      }
+    // Extract travel month index (1 to 12)
+    let month = 0;
+    if (dateStr) {
+      const parts = dateStr.split("-");
+      if (parts.length >= 2) month = parseInt(parts[1], 10);
     }
 
-    if (window.weatherCache[cacheKey]) {
-      weatherDiv.innerHTML = window.weatherCache[cacheKey];
-      return;
+    // CASE A: SINGAPORE ADVISORY MATRIX
+    if (dest.includes("singapore")) {
+      if (month === 12 || month === 1 || month === 2) {
+        return {
+          title: "Gemini Travel Strategy | Singapore Winter Monsoon 🌧️",
+          text: "You are traveling during the Northeast Monsoon season. Expect heavy, sudden downpours almost every afternoon between 2:00 PM and 5:30 PM. Keep your morning schedule focused on outdoor locations like Fort Canning, then head indoors to Jewel Changi, museums, or the cooled glass domes at Gardens by the Bay when the clouds roll in.",
+          tags: ["Bring Umbrellas", "Afternoon Rain Check", "AC Lens Fog Alert", "Morning Shoot Best"]
+        };
+      }
+      return {
+        title: "Gemini Travel Strategy | Singapore Tropical Sunshine ☀️",
+        text: "Expect high humidity and intense morning heat with brief passing showers. Schedule major walking tours early in the day, find shade by midday, and utilize the golden hour around 6:45 PM for beautiful waterfront portraits.",
+        tags: ["High Humidity", "Hydration Focus", "Golden Hour 6:45 PM"]
+      };
     }
 
-    weatherDiv.innerHTML = "<span style=\"color: var(--text-soft);\">✨ Loading destination forecast...</span>";
-
-    try {
-      const geoUrl = "https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(cleanName) + "&count=1&language=en&format=json";
-      const geoResponse = await fetch(geoUrl);
-      const geoData = await geoResponse.json();
-
-      if (!geoData.results || geoData.results.length === 0) {
-        weatherDiv.innerHTML = "🍃 Ready for adventures in " + esc(cleanName);
-        return;
+    // CASE B: VIETNAM / HO CHI MINH CITY ADVISORY MATRIX
+    if (dest.includes("vietnam") || dest.includes("hcmc") || dest.includes("chi minh")) {
+      if (month >= 5 && month <= 10) {
+        return {
+          title: "Gemini Travel Strategy | Saigon Rainy Season ⛈️",
+          text: "Saigon summers bring high humidity and sudden, torrential afternoon downpours that can flood streets quickly. Plan your main city walks and cafe photo hunts for the morning. Keep high quality plastic ponchos handy, and have a cozy cafe backup plan ready for the afternoon shift.",
+          tags: ["Sudden Downpours", "Morning Walking Only", "Cafe Escape Ready"]
+        };
       }
-
-      const location = geoData.results[0];
-      const lat = location.latitude;
-      const lon = location.longitude;
-
-      const weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&current_weather=true&temperature_unit=fahrenheit";
-      const weatherResponse = await fetch(weatherUrl);
-      const weatherData = await weatherResponse.json();
-
-      if (!weatherData.current_weather) {
-        weatherDiv.innerHTML = "🍃 Ready for adventures in " + esc(cleanName);
-        return;
-      }
-
-      const temp = Math.round(weatherData.current_weather.temperature);
-      const condition = getWeatherCondition(weatherData.current_weather.weathercode);
-
-      weatherDiv.innerHTML = "<div class=\"weather-fade-in\" style=\"display: flex; align-items: center; gap: 8px; width: 100%;\"><span style=\"font-size: 18px;\">" + condition.emoji + "</span><div style=\"flex: 1;\">Right now in <b>" + esc(location.name) + "</b>, it is " + condition.text.toLowerCase() + " and feels like <span class=\"weather-badge\">" + temp + "°F</span></div></div>";
-      window.weatherCache[cacheKey] = weatherDiv.innerHTML;
-
-    } catch (error) {
-      console.warn("Weather sync failed quietly:", error);
-      weatherDiv.innerHTML = "🍃 Destination ready!";
+      return {
+        title: "Gemini Travel Strategy | Saigon Golden Dry Season 🍃",
+        text: "This is the prime time to visit southern Vietnam. Days are beautifully warm, less humid, and the evenings bring a lovely breeze. Perfect conditions for evening strolls through District 3, open-air dining, and street photography.",
+        tags: ["Perfect Weather", "Clear Sunsets", "Light Pack Clothing"]
+      };
     }
+
+    // CASE C: FLORIDA / ORLANDO ADVISORY MATRIX
+    if (dest.includes("florida") || dest.includes("orlando")) {
+      if (month >= 6 && month <= 9) {
+        return {
+          title: "Gemini Travel Strategy | Florida Summer Heat ☀️⛈️",
+          text: "Intense tropical heat is standard, paired with near-guaranteed thunderstorms every single afternoon at around 4:00 PM. Tackle outdoor theme parks or nature springs early at opening, take an air-conditioned indoor break during the mid-afternoon storm, and enjoy the clear, cooled air afterward.",
+          tags: ["Extreme UV Index", "Daily 4PM Storms", "Early Park Arrival"]
+        };
+      }
+      return {
+        title: "Gemini Travel Strategy | Sunshine State Crisp Season 🍃",
+        text: "Beautiful mild daytime temperatures and beautifully crisp, cool nights. Excellent outdoor conditions all day long with very low rainfall risk.",
+        tags: ["Crisp Evenings", "Jacket for Night", "All-Day Outdoor"]
+      };
+    }
+
+    // DEFAULT FALLBACK ADVISORY FOR OTHER DESTINATIONS
+    return {
+      title: "Gemini Travel Strategy | Dynamic Blueprint Tracker 🗺️",
+      text: "Ensure your travel gear is packed dynamically. For active photo trips, review seasonal sunrise and sunset tables locally to optimize shooting schedules, and pre-load your offline Google Maps areas to save device battery while navigating.",
+      tags: ["Check Local Sunset", "Battery Saver Mode", "Scrapbook Ready"]
+    };
   };
 
+  // 3. RENDER LOGIC ENGINE
+  window.updateDestinationWeather = function(destinationStr, dateStr) {
+    let container = document.getElementById("det-weather-widget");
+    if (!container) {
+      container = document.createElement("div");
+      container.id = "det-weather-widget";
+      const detDates = document.getElementById("det-dates");
+      if (detDates) {
+        detDates.parentNode.insertBefore(container, detDates.nextSibling);
+      }
+    }
+
+    const insight = window.getSeasonalInsight(destinationStr, dateStr);
+
+    container.innerHTML = `
+      <div class="ai-advisor-card">
+        <div class="ai-advisor-title">🌸 ${esc(insight.title)}</div>
+        <div class="ai-advisor-text">${esc(insight.text)}</div>
+        <div class="ai-tag-group">
+          ${insight.tags.map(tag => `<span class="ai-tag">✨ ${esc(tag)}</span>`).join("")}
+        </div>
+      </div>
+    `;
+  };
+
+  // 4. INTERCEPT DETAIL VIEW EVENT TO TRIGGER INSIGHT CHANGER
   if (window.openDetail) {
     const originalOpenDetail = window.openDetail;
     window.openDetail = function(id) {
       originalOpenDetail(id);
+      
       const currentTrip = trips.find(function(x) { return x.id === id; });
-      if (currentTrip && (currentTrip.country || currentTrip.title)) {
-        const queryDestination = currentTrip.country || currentTrip.title;
+      if (currentTrip) {
+        const queryDestination = currentTrip.country || currentTrip.title || "";
+        const queryDate = currentTrip.startDate || "";
+        
         setTimeout(function() {
-          window.updateDestinationWeather(queryDestination);
+          window.updateDestinationWeather(queryDestination, queryDate);
         }, 50);
       }
     };
   }
-
 })();
 </script>
 
