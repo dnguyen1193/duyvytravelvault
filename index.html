@@ -2990,7 +2990,7 @@ init();
     .pose-url-text {flex:1; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text-mid);}
     .pose-controls {display:flex; gap:4px;}
 
-    /* PIXEL PERFECT HEIGHT ALIGNMENT FOR DESKTOP & MOBILE */
+    /* PIXEL PERFECT HEIGHT & MARGIN ALIGNMENT FOR DESKTOP & MOBILE */
     .map-link, .btn-sage {
       height: 30px !important;
       display: inline-flex !important;
@@ -2998,6 +2998,7 @@ init();
       justify-content: center !important;
       line-height: 1 !important;
       box-sizing: border-box !important;
+      margin: 0 !important; /* FORCE-CLEARS THE OLD 4PX TOP MARGIN */
     }
     .map-link {
       padding: 0 12px !important;
