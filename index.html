@@ -2990,19 +2990,28 @@ init();
     .pose-url-text {flex:1; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text-mid);}
     .pose-controls {display:flex; gap:4px;}
 
-    /* NEW COORD MATCHER FOR MAP LINK THICKNESS */
-    .map-link {
-      padding: 5px 12px !important;
-      font-size: 12px !important;
+    /* PIXEL PERFECT HEIGHT ALIGNMENT FOR DESKTOP & MOBILE */
+    .map-link, .btn-sage {
+      height: 30px !important;
       display: inline-flex !important;
       align-items: center !important;
+      justify-content: center !important;
+      line-height: 1 !important;
+      box-sizing: border-box !important;
+    }
+    .map-link {
+      padding: 0 12px !important;
+      font-size: 12px !important;
       border: 1.5px solid transparent !important;
     }
     @media(max-width:640px){
-      .map-link {
-        padding: 4px 8px !important;
-        font-size: 11px !important;
+      .map-link, .btn-sage {
         min-height: 32px !important;
+        height: 32px !important;
+      }
+      .map-link {
+        padding: 0 8px !important;
+        font-size: 11px !important;
       }
     }
   `;
@@ -3078,7 +3087,7 @@ init();
     }
     
     const poseCount = (a.poses && a.poses.length) ? a.poses.length : 0;
-    const poseBtnLabel = poseCount > 0 ? `📸 Poses Guide (${poseCount})` : "📸 Poses Guide";
+    const poseBtnLabel = poseCount > 0 ? "📸 Pose Guide (" + poseCount + ")" : "📸 Pose Guide";
     const posesBtn = `<button class="btn btn-sm btn-outline btn-sage" onclick="openPosesModal(${tabIdx}, ${actIdx})">${poseBtnLabel}</button>`;
 
     return `
